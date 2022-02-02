@@ -1,3 +1,15 @@
-<resources>
+<resources >
     <string name="app_name">App_zur_Aussagenlogik</string>
+    <string name="a">a</string>
+    <string name="b">b</string>
+    <string name="c">c</string>
+    <string name="d">d</string>
+    <string name="e">e</string>
+    <string name="negative">\u00AC</string>
+    <string name="or">\u22C1</string>
+    <string name="and">\u2227</string>
+    <string name="toArrow">\u2192</string>
+    <string name="leftRightArrow">\u2194</string>
+    <string name="delete">\u232B</string>
+    <string name="enter">\u23CE</string>
 </resources>

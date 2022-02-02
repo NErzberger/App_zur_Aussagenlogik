@@ -12,5 +12,15 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="ButtonFontStyle">
+        <item name="android:textSize">23dp</item>
+    </style>
+
+    <style name="ButtonFontSpecialChar">
+        <item name="android:textSize">25dp</item>
+        <item name="android:baselineAligned">false</item>
     </style>
 </resources>
