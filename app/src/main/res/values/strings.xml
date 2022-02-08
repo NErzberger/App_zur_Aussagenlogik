@@ -12,4 +12,6 @@
     <string name="leftRightArrow">\u2194</string>
     <string name="delete">\u232B</string>
     <string name="enter">\u23CE</string>
+    <string name="solution">Lösung</string>
+    <string name="input">Bitte Formel eingeben</string>
 </resources>
