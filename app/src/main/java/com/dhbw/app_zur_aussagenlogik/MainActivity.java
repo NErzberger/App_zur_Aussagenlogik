@@ -1,6 +1,7 @@
 package com.dhbw.app_zur_aussagenlogik;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonKlammerAuf;
     private Button buttonKlammerZu;
 
+    private FragmentManager fragmentManager;
+
     private Modi modus = Modi.DNF;
 
     @Override
@@ -74,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
         buttonKlammerZu = findViewById(R.id.buttonKlammerZu);
 
         inputText = findViewById(R.id.input);
+
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.resolutionFragment, Resolution.class, null, "tag")
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .commit();
 
         // OnClickListener für das TabLayout
 
@@ -199,7 +209,15 @@ public class MainActivity extends AppCompatActivity {
         buttonReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchParser();
+                switch (modus) {
+                    case RESOLUTION:
+                        // Resolution Fragment aufmachen
+                        Resolution r = (Resolution) fragmentManager.findFragmentByTag("tag");
+
+                    case TABLEAUX:
+                        // Tableaux Fragment aufmachen
+                }
+                //launchParser();
             }
         });
 
