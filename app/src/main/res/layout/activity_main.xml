@@ -57,9 +57,11 @@
         android:inputType="text"
         android:text="@string/input"
         android:hint="@string/inputPlaceholder"
+        android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 
     <EditText

@@ -3,6 +3,7 @@ package com.dhbw.app_zur_aussagenlogik;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 import com.dhbw.app_zur_aussagenlogik.parser.Parser;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -213,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
                 inputText.setText(inputText.getText() + ")");
             }
         });
+
+
     }
 
     private void launchParser(){
