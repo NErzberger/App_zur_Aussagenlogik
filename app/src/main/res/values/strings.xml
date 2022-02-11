@@ -12,7 +12,9 @@
     <string name="leftRightArrow">\u2194</string>
     <string name="delete">\u232B</string>
     <string name="enter">\u23CE</string>
-    <string name="solution">Lösung</string>
+    <string name="solution"></string>
     <string name="input"></string>
+    <string name="inputPlaceholder">Bitte geben Sie eine Formel ein.</string>
+    <string name="solutionPlaceholder">Lösung</string>
     <string name="ca">ce</string>
 </resources>

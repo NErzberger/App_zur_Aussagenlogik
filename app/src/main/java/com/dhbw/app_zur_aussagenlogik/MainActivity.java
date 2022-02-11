@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.dhbw.app_zur_aussagenlogik.parser.Parser;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -151,7 +152,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String formular = inputText.getText().toString();
-                inputText.setText(formular.substring(0, formular.length() - 1));
+                if(!formular.isEmpty()) {
+                    inputText.setText(formular.substring(0, formular.length() - 1));
+                }
             }
         });
 
@@ -216,54 +219,6 @@ public class MainActivity extends AppCompatActivity {
         Parser parser = Parser.getInstance();
         parser.setParserParameter(modus, inputText.getText().toString());
     }
-
-/*
-
-Button reset = (Button) view.findViewById(R.id.reset);
-reset.setOnClickListener(this);
-
-@Override
-public void onClick(View v) {
-switch (v.getId()){
-
-        item1.setOnClickListener(view -> {
-            modus = Modi.DNF;
-            System.out.println("Ich setze den Modus DNF.");
-        });
-
-
-        item2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modus = Modi.KNF;
-                System.out.println("Ich setze den Modus KNF.");
-            }
-        });
-
-        item3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modus = Modi.RESOLUTION;
-                System.out.println("Ich setze den Modus Resolution.");
-            }
-        });
-
-        item4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modus = Modi.FORMELN;
-                System.out.println("Jetzt möchte ich zwei Formeln vergleichen.");
-            }
-        });
-
-        item5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modus = Modi.TABLEAUX;
-                System.out.println("TABLEAUX.");
-            }
-        });
-        */
 
 
 }
