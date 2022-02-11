@@ -20,28 +20,28 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/buttonA"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/a" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/buttonB"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/b" />
 
             <Button
-                android:id="@+id/button8"
+                android:id="@+id/buttonC"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/c" />
 
             <Button
-                android:id="@+id/button22"
+                android:id="@+id/buttonDelete"
                 style="@style/ButtonFontSpecialChar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,25 +54,32 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/buttonD"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/d" />
 
             <Button
-                android:id="@+id/button10"
+                android:id="@+id/buttonE"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/e" />
 
             <Button
-                android:id="@+id/button11"
+                android:id="@+id/buttonNegaition"
                 style="@style/ButtonFontSpecialChar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/negative" />
+
+            <Button
+                android:id="@+id/buttonCE"
+                style="@style/ButtonFontStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ca" />
 
         </TableRow>
 
@@ -81,28 +88,28 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button14"
+                android:id="@+id/buttonAnd"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/and" />
 
             <Button
-                android:id="@+id/button15"
+                android:id="@+id/buttonOr"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/or" />
 
             <Button
-                android:id="@+id/button16"
+                android:id="@+id/buttonImplikation"
                 style="@style/ButtonFontSpecialChar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/toArrow" />
 
             <Button
-                android:id="@+id/button17"
+                android:id="@+id/buttonReturn"
                 style="@style/ButtonFontSpecialChar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,21 +122,21 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button18"
+                android:id="@+id/buttonKlammerAuf"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="(" />
 
             <Button
-                android:id="@+id/button19"
+                android:id="@+id/buttonKlammerZu"
                 style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=")" />
 
             <Button
-                android:id="@+id/button20"
+                android:id="@+id/buttonImplikationBeidseitig"
                 style="@style/ButtonFontSpecialChar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -153,6 +160,7 @@
 
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -161,16 +169,19 @@
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DNF" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="KNF" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Resolution" />
