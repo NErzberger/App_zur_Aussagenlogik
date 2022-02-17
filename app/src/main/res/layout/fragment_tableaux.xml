@@ -26,7 +26,7 @@
         android:layout_marginTop="218dp"
         android:background="#18EF21"
         android:backgroundTint="#16F41F"
-        android:text="@string/hello_blank_fragment"
+        android:text="Test"
         app:layout_constraintTop_toBottomOf="@+id/buttonHome"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="10dp" />

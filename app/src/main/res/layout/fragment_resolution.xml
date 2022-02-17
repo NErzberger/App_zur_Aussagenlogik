@@ -2,22 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/resolutionFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.Resolution"
-    android:id="@+id/resolutionFragment">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="390dp"
-        android:layout_height="195dp"
-        android:layout_marginTop="218dp"
-        android:autoText="false"
-        android:background="#C51D1D"
-        android:text="@string/hello_blank_fragment"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHome"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="10dp" />
+    tools:context=".fragments.Resolution">
 
     <Button
         android:id="@+id/buttonHome"
@@ -30,5 +18,47 @@
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="10dp"
+        android:autoText="false"
+        android:background="#C51D1D"
+        android:text="Hier würde die Formel stehen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonHome"
+        tools:ignore="MissingConstraints" />
+
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="349dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:minHeight="48dp"
+        android:text="Hier sehen Sie, ob es eine oder keine Tautologie ist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+    <ExpandableListView
+        android:id="@+id/expandableList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" >
+
+    </ExpandableListView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

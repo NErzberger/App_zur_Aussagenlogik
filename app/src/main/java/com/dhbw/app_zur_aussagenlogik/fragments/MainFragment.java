@@ -89,7 +89,7 @@ public class MainFragment extends Fragment {
         buttonC = view.findViewById(R.id.buttonC);
         buttonD = view.findViewById(R.id.buttonD);
         buttonE = view.findViewById(R.id.buttonE);
-        buttonNegation = view.findViewById(R.id.buttonNegaition);
+        buttonNegation = view.findViewById(R.id.buttonNegation);
         buttonDelete = view.findViewById(R.id.buttonDelete);
         buttonCE = view.findViewById(R.id.buttonCE);
         buttonAnd = view.findViewById(R.id.buttonAnd);
@@ -108,7 +108,7 @@ public class MainFragment extends Fragment {
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                String tabName = tab.getText().toString();
+                String tabName = tab.getText().toString(); // Achtung Text nicht ändern oder über id?
                 switch (tabName) {
                     case "DNF":
                         modus = Modi.DNF;
@@ -116,13 +116,13 @@ public class MainFragment extends Fragment {
                     case "KNF":
                         modus = Modi.KNF;
                         break;
-                    case "Resolution":
+                    case "Resolu-tion":
                         modus = Modi.RESOLUTION;
                         break;
-                    case "2 Formeln":
+                    case "2 For-\nmeln":
                         modus = Modi.FORMELN;
                         break;
-                    case "Tableaux":
+                    case "Tab-\nleaux":
                         modus = Modi.TABLEAUX;
                         break;
                 }

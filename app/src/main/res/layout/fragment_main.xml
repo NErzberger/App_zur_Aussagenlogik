@@ -32,19 +32,19 @@
             android:id="@+id/tabItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resolution" />
+            android:text="Resolu-tion" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2 Formeln" />
+            android:text="2 For-\nmeln" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tableaux" />
+            android:text="Tab-\nleaux" />
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -143,7 +143,7 @@
                 android:text="@string/e" />
 
             <Button
-                android:id="@+id/buttonNegaition"
+                android:id="@+id/buttonNegation"
                 style="@style/ButtonFontSpecialChar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
