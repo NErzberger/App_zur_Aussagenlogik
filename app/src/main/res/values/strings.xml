@@ -1,4 +1,4 @@
-<resources >
+<resources>
     <string name="app_name">App_zur_Aussagenlogik</string>
     <string name="a">a</string>
     <string name="b">b</string>
@@ -12,4 +12,9 @@
     <string name="leftRightArrow">\u2194</string>
     <string name="delete">\u232B</string>
     <string name="enter">\u23CE</string>
+    <string name="solution"></string>
+    <string name="input"></string>
+    <string name="inputPlaceholder">Bitte geben Sie eine Formel ein.</string>
+    <string name="solutionPlaceholder">Lösung</string>
+    <string name="ca">ce</string>
 </resources>
