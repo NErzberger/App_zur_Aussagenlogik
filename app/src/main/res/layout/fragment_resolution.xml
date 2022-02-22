@@ -19,21 +19,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <TextView
+        android:id="@+id/textIhreFormel"
+        android:layout_width="202dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:autoText="false"
+        android:text="Ihre Formel"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonHome" />
+
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="96dp"
+        android:layout_width="226dp"
+        android:layout_height="56dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="88dp"
         android:autoText="false"
-        android:background="#C51D1D"
-        android:text="Hier würde die Formel stehen"
+        android:text="(A->B)v(B->A)"
+        android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHome"
-        tools:ignore="MissingConstraints" />
-
+        app:layout_constraintTop_toBottomOf="@+id/buttonHome"/>
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -49,16 +59,78 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_margin="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schritt 1 negieren"
+                android:textSize="18dp"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schritt 2 KNF bilden"
+                android:textSize="18dp"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schritt 3 Klauselmengen"
+                android:textSize="18dp"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schritt 4 Resolution"
+                android:textSize="18dp"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+        </TableRow>
+
+    </TableLayout>
+
+
     <ExpandableListView
         android:id="@+id/expandableList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="252dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" >
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
     </ExpandableListView>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
