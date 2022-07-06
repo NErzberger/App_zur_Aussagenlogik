@@ -233,7 +233,7 @@ public class MainFragment extends Fragment {
                 switch (modus) {
                     case KNF:
 
-                        resultText.setText(launchParser(Modi.KNF));
+                        resultText.setText(String.valueOf(launchParser(Modi.KNF)));
                         break;
                     case RESOLUTION:
                        mainActivity.replaceFragment(new Resolution(mainActivity));

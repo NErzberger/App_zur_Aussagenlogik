@@ -64,7 +64,7 @@ public class Parser {
                 countClose++;
             }
             if(Character.toString(c).matches("[a-e]]")){
-                if((i+1)<formulaArray.length) {
+                if((i+1)<=formulaArray.length) {
                     if (Character.toString(formulaArray[i + 1]).matches("[a-e( \\u00AC]")){
                         // Fehler: Nach Buchstabe muss ein Operator kommen
                         return -2;
