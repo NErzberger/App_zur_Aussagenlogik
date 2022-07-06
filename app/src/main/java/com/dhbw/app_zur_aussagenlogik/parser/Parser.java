@@ -63,11 +63,38 @@ public class Parser {
             }else if(Character.compare(c, ')')==0){
                 countClose++;
             }
-            if(Character.toString(c).matches("[a-e]]")){
-                if((i+1)<=formulaArray.length) {
-                    if (Character.toString(formulaArray[i + 1]).matches("[a-e( \\u00AC]")){
+            /*
+            \\u00AC = Negation
+            \\u2192 = Pfeil
+            \\u2194 = Pfeil beidseitig
+            \\u22C1 = Oder
+            \\u2227 = Und
+             */
+            if((i+1)<formulaArray.length) {
+                if(Character.toString(c).matches("[a-e]")){
+                    if (Character.toString(formulaArray[i + 1]).matches("[a-e(\\u00AC]")){
                         // Fehler: Nach Buchstabe muss ein Operator kommen
                         return -2;
+                    }
+                }
+                else if(Character.compare(c, '(')==0){
+                    if(Character.toString(formulaArray[i + 1]).matches("[\\u22C1\\u2227\\u2194\\u2194]")){
+                        return -3;
+                    }
+                }
+                else if(Character.compare(c, ')')==0){
+                    if(Character.toString(formulaArray[i+1]).matches("[a-e\\u00AC(]")){
+                        return -4;
+                    }
+                }
+                else if(Character.toString(c).matches("[\\u00AC]")){
+                    if(Character.toString(formulaArray[i+1]).matches("[\\u22C1\\u2227\\u2192\\u2194)\\u00AC]")){
+                        return -5;
+                    }
+                }
+                else if(Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")){
+                    if(Character.toString(formulaArray[i+1]).matches("[\\u2192\\u2194\\u22C1\\u2227)]")){
+                        return -6;
                     }
                 }
             }
