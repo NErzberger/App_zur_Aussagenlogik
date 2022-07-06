@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.parser.Parser;
 import com.google.android.material.tabs.TabLayout;
 
 /**
@@ -25,6 +26,7 @@ public class MainFragment extends Fragment {
 
     private TabLayout layout;
     private EditText inputText;
+    private EditText resultText;
     private Button buttonA;
     private Button buttonB;
     private Button buttonC;
@@ -101,7 +103,7 @@ public class MainFragment extends Fragment {
         buttonKlammerZu = view.findViewById(R.id.buttonKlammerZu);
 
         inputText = view.findViewById(R.id.input);
-
+        resultText = view.findViewById(R.id.solution);
 
         // OnClickListener für das TabLayout
 
@@ -229,6 +231,10 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 switch (modus) {
+                    case KNF:
+
+                        resultText.setText(launchParser(Modi.KNF));
+                        break;
                     case RESOLUTION:
                        mainActivity.replaceFragment(new Resolution(mainActivity));
                        break;
@@ -237,7 +243,8 @@ public class MainFragment extends Fragment {
                         mainActivity.replaceFragment(new Tableaux(mainActivity));
                         break;
                 }
-                //launchParser();
+
+
             }
         });
 
@@ -257,5 +264,10 @@ public class MainFragment extends Fragment {
 
 
         return this.view;
+    }
+
+    private int launchParser(Modi modus){
+        Parser parser = Parser.getInstance();
+        return parser.parseFormula(inputText.getText().toString());
     }
 }
