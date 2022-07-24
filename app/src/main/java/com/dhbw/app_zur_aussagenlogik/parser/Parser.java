@@ -49,7 +49,7 @@ public class Parser {
             return fehlercode;
         }
         setFormula(parsedFormula);
-        char[] resultArray = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
+        //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
         return fehlercode;
     }
 
@@ -116,7 +116,7 @@ public class Parser {
         return 42;
     }
 
-    
+
     public char[] pfeileAufloesen(char[] formel) {
         char[] bFormel = formel;
         for (int i = 0; i < bFormel.length; i++) {
@@ -417,7 +417,7 @@ public class Parser {
 
     private boolean weitereAufloesungNotwendig(char[] formel) {
         for (int i = 0; i < formel.length; i++) {
-            if((formel[i]=='+'&&formel[i+1]=='(')||(formel[i]=='+'&&formel[i-1]==')')) {
+            if((formel[i]=='+'&&formel[i+1]=='(')||(formel[i]=='+'&&formel[i-1]==')')||(formel[i]=='+'&&Character.toString(formel[i+1]).matches("[a-eA-E]"))) {
                 return true;
             }
         }
