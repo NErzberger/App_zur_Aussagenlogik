@@ -277,7 +277,7 @@ public class Parser {
                     count++;
                 }
 
-                if(i-1>0 && i+count+1 < bFormel.length){
+                if(i-1>0 && i+count+1 <= bFormel.length){
                     if((bFormel[i-1]=='1'||bFormel[i-1]=='2'||bFormel[i-1]=='*')||
                             (bFormel[i+count+1]=='1'||bFormel[i+count+1]=='2'||bFormel[i+count+1]=='*')){
                         // Klammer muss bestehen bleiben
