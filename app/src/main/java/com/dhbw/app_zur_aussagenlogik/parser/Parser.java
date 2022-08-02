@@ -143,7 +143,7 @@ public class Parser {
                 }
 
                 // Per Regex
-                if(Character.toString(bFormel[i+1]).matches("[a-eA-E]")) {
+                if(Character.toString(bFormel[i-1]).matches("[a-eA-E]")) {
                     laengeVordererBlock = 1;
                 }
                 char[] blockVorne = new char[laengeVordererBlock];
@@ -199,7 +199,7 @@ public class Parser {
         for (int i = 0; i < newArray.length; i++) {
             c = zeichenHinzufügen(c, newArray[i]);
         }
-        for (int i = ende-1; i < targetArray.length; i++) {
+        for (int i = ende+1; i < targetArray.length; i++) {
             c = zeichenHinzufügen(c, targetArray[i]);
         }
         return c;
@@ -238,8 +238,73 @@ public class Parser {
     }
 
 
-    public char[] deMorgan(char[] formel) {
-        return new char[0];
+    public char[] deMorgen(char[] formel) {
+        char[] bFormel = formel;
+        for (int i = 0; i < bFormel.length; i++) {
+
+            char c = bFormel[i];
+            char[] fDeMorgen = new char[0];
+
+            // Zeichen umdrehen und Buchstaben negieren
+            if(c=='n' && bFormel[i+1]=='('){
+                boolean weiterMachen = true;
+                int count = i+2;
+                int klammern = 1;
+                fDeMorgen=zeichenHinzufügen(fDeMorgen, '(');
+                while(weiterMachen){
+                    if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]=='n'){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, bFormel[count]);
+                    }else if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]!='n'){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, 'n');
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, bFormel[count]);
+                    }else if(bFormel[count]=='+'){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '*');
+                    }else if(bFormel[count]=='*'){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '+');
+                    }else if(bFormel[count]=='('){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '(');
+                        klammern++;
+                    }else if(bFormel[count]=='n'&&bFormel[count+1]=='('){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '(');
+                        klammern++;
+                    }else if(bFormel[count]==')'){
+                        fDeMorgen = zeichenHinzufügen(fDeMorgen, ')');
+                        klammern--;
+                    }
+                    if(klammern==0){
+                        break;
+                    }
+                    count++;
+                }
+
+                if(i-1>0 && i+count+1 < bFormel.length){
+                    if((bFormel[i-1]=='1'||bFormel[i-1]=='2'||bFormel[i-1]=='*')||
+                            (bFormel[i+count+1]=='1'||bFormel[i+count+1]=='2'||bFormel[i+count+1]=='*')){
+                        // Klammer muss bestehen bleiben
+                        bFormel = blockEinsetzen(bFormel, fDeMorgen, i, i+count);
+                    }else{
+                        // Klammer kann weg gemacht werden
+                        char[] neueDeMorgen = new char[0];
+                        for (int j = 1; j < fDeMorgen.length-1; j++){
+                            neueDeMorgen = zeichenHinzufügen(neueDeMorgen, fDeMorgen[j]);
+                        }
+
+                        bFormel = blockEinsetzen(bFormel, neueDeMorgen, i, i+count);
+
+                    }
+                }else if(i==0 && count+1 == bFormel.length){
+                    // Klammer unnötig
+                    char[] neueDeMorgen = new char[0];
+                    for (int j = 1; j < fDeMorgen.length-1; j++){
+                        neueDeMorgen = zeichenHinzufügen(neueDeMorgen, fDeMorgen[j]);
+                    }
+                    return neueDeMorgen;
+                }
+
+            }
+        }
+
+        return bFormel;
     }
 
 
