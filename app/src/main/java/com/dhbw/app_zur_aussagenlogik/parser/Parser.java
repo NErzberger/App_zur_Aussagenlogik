@@ -238,12 +238,12 @@ public class Parser {
     }
 
 
-    public char[] deMorgen(char[] formel) {
+    public char[] deMorgan(char[] formel) {
         char[] bFormel = formel;
         for (int i = 0; i < bFormel.length; i++) {
 
             char c = bFormel[i];
-            char[] fDeMorgen = new char[0];
+            char[] fDeMorgan = new char[0];
 
             // Zeichen umdrehen und Buchstaben negieren
             if(c=='n' && bFormel[i+1]=='('){
@@ -251,20 +251,20 @@ public class Parser {
                 int count = i+2;
                 int klammern = 1;
                 boolean eineKlammerÜberspringen = false;
-                fDeMorgen=zeichenHinzufügen(fDeMorgen, '(');
+                fDeMorgan=zeichenHinzufügen(fDeMorgan, '(');
                 while(weiterMachen){
                     if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]=='n'){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, bFormel[count]);
+                        fDeMorgan = zeichenHinzufügen(fDeMorgan, bFormel[count]);
                     }else if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]!='n'){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, 'n');
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, bFormel[count]);
+                        fDeMorgan = zeichenHinzufügen(fDeMorgan, 'n');
+                        fDeMorgan = zeichenHinzufügen(fDeMorgan, bFormel[count]);
                     }else if(bFormel[count]=='+'){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '*');
+                        fDeMorgan = zeichenHinzufügen(fDeMorgan, '*');
                     }else if(bFormel[count]=='*'){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '+');
+                        fDeMorgan = zeichenHinzufügen(fDeMorgan, '+');
                     }else if(bFormel[count]=='('){
                         if(klammerNotwendig(bFormel,count)) {
-                            fDeMorgen = zeichenHinzufügen(fDeMorgen, '(');
+                            fDeMorgan = zeichenHinzufügen(fDeMorgan, '(');
                             klammern++;
                         }else{
                             eineKlammerÜberspringen=true;
@@ -274,7 +274,7 @@ public class Parser {
                         continue;
                     }else if(bFormel[count]==')'){
                         if(!eineKlammerÜberspringen) {
-                            fDeMorgen = zeichenHinzufügen(fDeMorgen, ')');
+                            fDeMorgan = zeichenHinzufügen(fDeMorgan, ')');
                             klammern--;
                         }else{
                             eineKlammerÜberspringen=false;
@@ -290,24 +290,24 @@ public class Parser {
                     if((bFormel[i-1]=='1'||bFormel[i-1]=='2'||bFormel[i-1]=='*')||
                             (bFormel[count+1]=='1'||bFormel[count+1]=='2'||bFormel[count+1]=='*')){
                         // Klammer muss bestehen bleiben
-                        bFormel = blockEinsetzen(bFormel, fDeMorgen, i, count);
+                        bFormel = blockEinsetzen(bFormel, fDeMorgan, i, count);
                     }else{
                         // Klammer kann weg gemacht werden
-                        char[] neueDeMorgen = new char[0];
-                        for (int j = 1; j < fDeMorgen.length-1; j++){
-                            neueDeMorgen = zeichenHinzufügen(neueDeMorgen, fDeMorgen[j]);
+                        char[] neueDeMorgan = new char[0];
+                        for (int j = 1; j < fDeMorgan.length-1; j++){
+                            neueDeMorgan = zeichenHinzufügen(neueDeMorgan, fDeMorgan[j]);
                         }
 
-                        bFormel = blockEinsetzen(bFormel, neueDeMorgen, i, count);
+                        bFormel = blockEinsetzen(bFormel, neueDeMorgan, i, count);
 
                     }
                 }else if(i==0 && count+1 == bFormel.length){
                     // Klammer unnötig
-                    char[] neueDeMorgen = new char[0];
-                    for (int j = 1; j < fDeMorgen.length-1; j++){
-                        neueDeMorgen = zeichenHinzufügen(neueDeMorgen, fDeMorgen[j]);
+                    char[] neueDeMorgan = new char[0];
+                    for (int j = 1; j < fDeMorgan.length-1; j++){
+                        neueDeMorgan = zeichenHinzufügen(neueDeMorgan, fDeMorgan[j]);
                     }
-                    return neueDeMorgen;
+                    return neueDeMorgan;
                 }
 
             }
