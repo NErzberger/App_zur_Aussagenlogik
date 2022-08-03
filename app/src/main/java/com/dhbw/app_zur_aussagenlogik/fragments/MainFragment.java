@@ -17,6 +17,8 @@ import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.parser.Parser;
 import com.google.android.material.tabs.TabLayout;
 
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MainFragment#newInstance} factory method to
@@ -104,6 +106,13 @@ public class MainFragment extends Fragment {
 
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
+
+        //normale Tastatur wird direkt wieder geschlossen
+        inputText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UIUtil.hideKeyboard(view.getContext(), view);
+            }});
 
         // OnClickListener für das TabLayout
 
