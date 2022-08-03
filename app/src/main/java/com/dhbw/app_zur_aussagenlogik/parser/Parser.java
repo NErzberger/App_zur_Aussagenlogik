@@ -497,6 +497,159 @@ public class Parser {
         return null;
     }
 
+    public char[] ausmultiplizieren(char[] formel) {
+        boolean keineKlammmerGefunden = true;
+        for (int i = 0; keineKlammmerGefunden; i++) {
+            if((formel[i]=='*'&&formel[i+1]=='(')||(formel[i]=='*'&&formel[i-1]==')')||(formel[i]=='*'&&Character.toString(formel[i+1]).matches("[a-eA-E]"))) {
+                keineKlammmerGefunden = false;
+                char[] ersterTeil = new char[i+1];
+                char[] zweiterTeil = new char[formel.length-1-i];
+                for (int j = i; j >= 0; j--) {
+                    ersterTeil[j] = formel[j];
+                }
+                for(int j = 0; j < formel.length-i-1; j++) {
+                    zweiterTeil[j] = formel[j+i+1];
+                }
+                char[] neuerHinterTeil;
+                boolean hintererTeilInKNF = false;
+                if(weitereAufloesungNotwendig(zweiterTeil)) {
+                    neuerHinterTeil = ausaddieren(zweiterTeil);
+                    hintererTeilInKNF = true;
+                }else {
+                    neuerHinterTeil = new char[zweiterTeil.length];
+                    for (int j = 0; j < zweiterTeil.length; j++) {
+                        neuerHinterTeil[j] = zweiterTeil[j];
+                    }
+                }
+
+                List<char[]> listVordereElemente = new ArrayList<char[]>();
+                List<char[]> listHintereElemente = new ArrayList<char[]>();
+
+                char[] zeichenErsterBlock = new char[0];
+                char[] zeichenZweiterBlock = new char[0];
+                boolean inBlock=true;
+                int j = 0;
+                int klammern = 0;
+                while(inBlock) {
+                    if(j == ersterTeil.length  // Am Ende der Reihe
+                            || j<ersterTeil.length // Oder noch nicht am Ende der Reihe
+                            &&((ersterTeil[j]=='+'&&Character.toString(ersterTeil[j]).matches("[a-eA-E]")) // Und 'Und' verkn�pfte Buchstaben
+                            ||(klammern==1&&ersterTeil[j]==')'))) { // Oder es wurde bereits eine Klammer ge�ffnet und es ist eine schlie�ende Klammer
+                        listVordereElemente.add(zeichenErsterBlock);
+                        inBlock=false;
+                        break;
+                    }
+
+                    if(Character.toString(ersterTeil[j]).matches("[a-eA-E]")) {
+                        zeichenErsterBlock = zeichenHinzufügen(zeichenErsterBlock, ersterTeil[j]);
+                    }else if(ersterTeil[j]==')') {
+                        klammern++;
+                    }else if(ersterTeil[j]=='(') {
+                        klammern--;
+                    }else if(klammern==0&&ersterTeil[j]=='*') {
+                        listVordereElemente.add(zeichenErsterBlock);
+                        zeichenErsterBlock=new char[0];
+                    }
+                    j++;
+                }
+                int q = 0;
+                int klammernHintererBlock = 0;
+                boolean inHinteremBlock =true;
+                while(inHinteremBlock) { //||(klammernHintererBlock==0&&neuerHinterTeil[q]=='+')
+                    if(q==neuerHinterTeil.length
+                            || q<neuerHinterTeil.length
+                            && ((neuerHinterTeil[q]=='+'&&Character.toString(neuerHinterTeil[q]).matches("[a-eA-E]"))
+                            ||(klammernHintererBlock==1&&neuerHinterTeil[q]=='('))) {
+                        listHintereElemente.add(zeichenZweiterBlock);
+                        inBlock=false;
+                        break;
+                    }
+                    if(Character.toString(neuerHinterTeil[q]).matches("[a-eA-E]")) {
+                        zeichenZweiterBlock = zeichenHinzufügen(zeichenZweiterBlock, neuerHinterTeil[q]);
+                    }else if(neuerHinterTeil[q]=='('){
+                        klammernHintererBlock++;
+                    }else if(neuerHinterTeil[q]==')') {
+                        klammernHintererBlock--;
+                    }else if(neuerHinterTeil[q]=='+') {
+                        listHintereElemente.add(zeichenZweiterBlock);
+                        zeichenZweiterBlock=new char[0];
+                    }
+                    q++;
+                }
+
+                List<char[]> resultCharSet = new ArrayList<char[]>();
+
+                if(!hintererTeilInKNF) {
+                    for(int w = 0; w<listVordereElemente.size(); w++) {
+                        for(int e = 0; e<listVordereElemente.get(w).length; e++) {
+                            for(int r = 0; r<listHintereElemente.size(); r++) {
+                                for(int t = 0; t<listHintereElemente.get(r).length; t++) {
+                                    char[] c = new char[1];
+                                    c[0]='(';
+									/*if(e>0) {
+										c = zeichenHinzufügen(c, '*');
+									}*/
+                                    c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    c = zeichenHinzufügen(c, '*');
+                                    c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    c = zeichenHinzufügen(c, ')');
+                                    resultCharSet.add(c);
+                                }
+                            }
+                        }
+                    }
+                }else {
+                    for(int w = 0; w<listVordereElemente.size(); w++) {
+                        for(int e = 0; e<listVordereElemente.get(w).length; e++) {
+                            for(int r = 0; r<listHintereElemente.size(); r++) {
+
+                                char[] c = new char[1];
+                                c[0]='(';
+                                for(int t = 0; t<listHintereElemente.get(r).length; t++) {
+                                    c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    if(t<listHintereElemente.get(r).length-1) {
+                                        c = zeichenHinzufügen(c, '*');
+                                    }
+                                }
+                                if(!existsChar(c, listVordereElemente.get(w)[e])) {
+                                    c = zeichenHinzufügen(c, '*');
+                                    c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                }
+                                c = zeichenHinzufügen(c, ')');
+                                resultCharSet.add(c);
+                            }
+                        }
+                    }
+                }
+
+                char[] finalResult = new char[0];
+                for (int k = 0; k < resultCharSet.size(); k++) {
+                    for(int l = 0; l < resultCharSet.get(k).length;l++) {
+                        finalResult = zeichenHinzufügen(finalResult, resultCharSet.get(k)[l]);
+                    }
+                    if(k < resultCharSet.size()-1) {
+                        finalResult = zeichenHinzufügen(finalResult, '+');
+                    }
+                }
+                /*System.out.println("--------------------------");
+                System.out.println("Input:");
+                for (int k = 0; k < formel.length; k++) {
+                    System.out.print(formel[k]);
+                }
+                System.out.println("\n");
+                System.out.println("Ausaddiert:");
+                for(int o = 0; o<finalResult.length; o++) {
+                    System.out.print(finalResult[o]);
+                }
+                System.out.println("\n");*/
+
+                return finalResult;
+            }
+        }
+
+        return null;
+    }
+
 
     private boolean existsChar(char[] charArray, char c) {
         for (int i = 0; i < charArray.length; i++) {
