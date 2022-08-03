@@ -21,5 +21,5 @@ public class AusmultiplizierenTest {
         assertArrayEquals(expectedFormel, p.ausmultiplizieren(formel));
     }
 
-    
+
 }

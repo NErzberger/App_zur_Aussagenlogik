@@ -25,7 +25,6 @@ public class Parser {
         parseFormula(formula);
     }
 
-
     public int parseFormula(String formula){
         String unparsedFormula = formula;
 
@@ -80,7 +79,7 @@ public class Parser {
             \\u2227 = Und
              */
             if((i+1)<formulaArray.length) {
-                if(Character.toString(c).matches("[a-e]")){
+                if(Character.toString(c).matches("[a-n]")){
                     if (Character.toString(formulaArray[i + 1]).matches("[a-e(\\u00AC]")){
                         // Fehler: Nach Buchstabe muss ein Operator kommen
                         return -2;
@@ -141,19 +140,15 @@ public class Parser {
                         laengeVordererBlock++;
                     }
                 }
-
                 // Per Regex
-                if(Character.toString(bFormel[i-1]).matches("[a-eA-E]")) {
+                if(Character.toString(bFormel[i-1]).matches("[a-n]")) {
                     laengeVordererBlock = 1;
                 }
                 char[] blockVorne = new char[laengeVordererBlock];
-                //System.out.println("Länge vorderer Block: " + laengeVordererBlock);
                 for (int j = 0; j < blockVorne.length; j++) {
                     blockVorne[j] = bFormel[i-laengeVordererBlock+j];
                 }
-
                 // Block hinten
-
                 int laengeHintererBlock = 1;
                 if(bFormel[i+1]=='(') {
                     int counter = 1;
@@ -167,28 +162,48 @@ public class Parser {
                         laengeHintererBlock++;
                     }
                 }
-
-
                 // Per Regex
-                if(Character.toString(bFormel[i+1]).matches("[a-eA-E]")) {
+                if(Character.toString(bFormel[i+1]).matches("[a-n]")) {
                     laengeHintererBlock = 1;
                 }
                 char[] blockHinten = new char[laengeHintererBlock];
                 for (int j = 0; j < blockHinten.length; j++) {
                     blockHinten[j] = bFormel[i+j+1];
                 }
-
                 if(c=='1') {
                     bFormel = blockEinsetzen(bFormel, einseitigeImplikation(blockVorne, blockHinten), i-laengeVordererBlock, i+laengeHintererBlock);
                 }else if(c=='2') {
                     bFormel = blockEinsetzen(bFormel, beidseitigeImplikation(blockVorne, blockHinten), i-laengeVordererBlock, i+laengeHintererBlock);
                 }
-
-
             }
         }
-        return bFormel;
 
+        // Unnötige Klammern weg machen
+        /*for (int j = 0; j<bFormel.length; j++){
+            if(bFormel[j]=='(' && klammerNotwendig(bFormel,j)){
+                continue;
+            }else{
+                char[] teilInKlammer = new char[0];
+                int klammern = 1;
+                int count = j+1;
+                while(klammern>0){
+                    if(bFormel[count]==')'){
+                        klammern--;
+                        if(klammern==0){
+                            break;
+                        }
+                    }else if(bFormel[count]=='('){
+                        klammern++;
+                    }
+                    teilInKlammer = zeichenHinzufügen(teilInKlammer, bFormel[count]);
+                    count++;
+                }
+                bFormel = blockEinsetzen(bFormel, teilInKlammer, j, count);
+            }
+        }
+        */
+
+        return bFormel;
     }
 
     private char[] blockEinsetzen(char[] targetArray, char[] newArray, int anfang, int ende) {
@@ -211,7 +226,6 @@ public class Parser {
         for (int i = 0; i < b1.length; i++) {
             result = zeichenHinzufügen(result, b1[i]);
         }
-
         result = zeichenHinzufügen(result, '+');
         for (int i = 0; i < b2.length; i++) {
             result = zeichenHinzufügen(result, b2[i]);
@@ -224,13 +238,14 @@ public class Parser {
         char[] r2 = einseitigeImplikation(b2, b1);
         char[] result = new char[1];
         result[0] = '(';
-        for (int i = 0; i < r1.length; i++) {
+        for (int i = 0; i < r1.length; i++){
             result = zeichenHinzufügen(result, r1[i]);
         }
         result = zeichenHinzufügen(result, ')');
         result = zeichenHinzufügen(result, '*');
         result = zeichenHinzufügen(result, '(');
         for (int i = 0; i < r2.length; i++) {
+
             result = zeichenHinzufügen(result, r2[i]);
         }
         result = zeichenHinzufügen(result, ')');
@@ -241,10 +256,8 @@ public class Parser {
     public char[] deMorgan(char[] formel) {
         char[] bFormel = formel;
         for (int i = 0; i < bFormel.length; i++) {
-
             char c = bFormel[i];
             char[] fDeMorgan = new char[0];
-
             // Zeichen umdrehen und Buchstaben negieren
             if(c=='n' && bFormel[i+1]=='('){
                 boolean weiterMachen = true;
@@ -253,9 +266,9 @@ public class Parser {
                 boolean eineKlammerÜberspringen = false;
                 fDeMorgan=zeichenHinzufügen(fDeMorgan, '(');
                 while(weiterMachen){
-                    if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]=='n'){
+                    if(Character.toString(bFormel[count]).matches("[a-e]")&&bFormel[count-1]=='n'){
                         fDeMorgan = zeichenHinzufügen(fDeMorgan, bFormel[count]);
-                    }else if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]!='n'){
+                    }else if(Character.toString(bFormel[count]).matches("[a-e]")&&bFormel[count-1]!='n'){
                         fDeMorgan = zeichenHinzufügen(fDeMorgan, 'n');
                         fDeMorgan = zeichenHinzufügen(fDeMorgan, bFormel[count]);
                     }else if(bFormel[count]=='+'){
@@ -297,9 +310,7 @@ public class Parser {
                         for (int j = 1; j < fDeMorgan.length-1; j++){
                             neueDeMorgan = zeichenHinzufügen(neueDeMorgan, fDeMorgan[j]);
                         }
-
                         bFormel = blockEinsetzen(bFormel, neueDeMorgan, i, count);
-
                     }
                 }else if(i==0 && count+1 == bFormel.length){
                     // Klammer unnötig
@@ -308,11 +319,15 @@ public class Parser {
                         neueDeMorgan = zeichenHinzufügen(neueDeMorgan, fDeMorgan[j]);
                     }
                     return neueDeMorgan;
+                }else if(i>=0 && count+1 < bFormel.length){
+                    char[] neueDeMorgan = new char[0];
+                    for (int j = 0; j < fDeMorgan.length; j++){
+                        neueDeMorgan = zeichenHinzufügen(neueDeMorgan, fDeMorgan[j]);
+                    }
+                    bFormel = blockEinsetzen(bFormel, neueDeMorgan, i, count);
                 }
-
             }
         }
-
         return bFormel;
     }
 
@@ -322,7 +337,6 @@ public class Parser {
             boolean endklammerNichtGefunden = true;
             int indexEndklammer = indexÖffnedeKlammer+1;
             int anzahlKlammern = 1;
-
             while (endklammerNichtGefunden) {
                 if (formel[indexEndklammer] == '(') {
                     anzahlKlammern++;
@@ -335,8 +349,8 @@ public class Parser {
                 }
                 indexEndklammer++;
             }
-            if ((formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2') ||
-                    (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2')) {
+            if ((formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2' || formel[indexÖffnedeKlammer - 1] == 'n') ||
+                    (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2' || formel[indexEndklammer + 1] == 'n')) {
                 return true;
             }
         }
@@ -347,7 +361,7 @@ public class Parser {
     public char[] ausaddieren(char[] formel) {
         boolean keineKlammmerGefunden = true;
         for (int i = 0; keineKlammmerGefunden; i++) {
-            if((formel[i]=='+'&&formel[i+1]=='(')||(formel[i]=='+'&&formel[i-1]==')')||(formel[i]=='+'&&Character.toString(formel[i+1]).matches("[a-eA-E]"))) {
+            if((formel[i]=='+'&&formel[i+1]=='(')||(formel[i]=='+'&&formel[i-1]==')')||(formel[i]=='+'&&Character.toString(formel[i+1]).matches("[a-n]"))) {
                 keineKlammmerGefunden = false;
                 char[] ersterTeil = new char[i+1];
                 char[] zweiterTeil = new char[formel.length-1-i];
@@ -368,10 +382,8 @@ public class Parser {
                         neuerHinterTeil[j] = zweiterTeil[j];
                     }
                 }
-
                 List<char[]> listVordereElemente = new ArrayList<char[]>();
                 List<char[]> listHintereElemente = new ArrayList<char[]>();
-
                 char[] zeichenErsterBlock = new char[0];
                 char[] zeichenZweiterBlock = new char[0];
                 boolean inBlock=true;
@@ -380,14 +392,13 @@ public class Parser {
                 while(inBlock) {
                     if(j == ersterTeil.length  // Am Ende der Reihe
                             || j<ersterTeil.length // Oder noch nicht am Ende der Reihe
-                            &&((ersterTeil[j]=='*'&&Character.toString(ersterTeil[j]).matches("[a-eA-E]")) // Und 'Und' verkn�pfte Buchstaben
+                            &&((ersterTeil[j]=='*'&&Character.toString(ersterTeil[j]).matches("[a-n]")) // Und 'Und' verkn�pfte Buchstaben
                             ||(klammern==1&&ersterTeil[j]==')'))) { // Oder es wurde bereits eine Klammer ge�ffnet und es ist eine schlie�ende Klammer
                         listVordereElemente.add(zeichenErsterBlock);
                         inBlock=false;
                         break;
                     }
-
-                    if(Character.toString(ersterTeil[j]).matches("[a-eA-E]")) {
+                    if(Character.toString(ersterTeil[j]).matches("[a-n]")) {
                         zeichenErsterBlock = zeichenHinzufügen(zeichenErsterBlock, ersterTeil[j]);
                     }else if(ersterTeil[j]==')') {
                         klammern++;
@@ -405,13 +416,13 @@ public class Parser {
                 while(inHinteremBlock) { //||(klammernHintererBlock==0&&neuerHinterTeil[q]=='+')
                     if(q==neuerHinterTeil.length
                             || q<neuerHinterTeil.length
-                            && ((neuerHinterTeil[q]=='*'&&Character.toString(neuerHinterTeil[q]).matches("[a-eA-E]"))
+                            && ((neuerHinterTeil[q]=='*'&&Character.toString(neuerHinterTeil[q]).matches("[a-n]"))
                             ||(klammernHintererBlock==1&&neuerHinterTeil[q]=='('))) {
                         listHintereElemente.add(zeichenZweiterBlock);
                         inBlock=false;
                         break;
                     }
-                    if(Character.toString(neuerHinterTeil[q]).matches("[a-eA-E]")) {
+                    if(Character.toString(neuerHinterTeil[q]).matches("[a-n]")) {
                         zeichenZweiterBlock = zeichenHinzufügen(zeichenZweiterBlock, neuerHinterTeil[q]);
                     }else if(neuerHinterTeil[q]=='('){
                         klammernHintererBlock++;
@@ -423,9 +434,7 @@ public class Parser {
                     }
                     q++;
                 }
-
                 List<char[]> resultCharSet = new ArrayList<char[]>();
-
                 if(!hintererTeilInKNF) {
                     for(int w = 0; w<listVordereElemente.size(); w++) {
                         for(int e = 0; e<listVordereElemente.get(w).length; e++) {
@@ -433,12 +442,21 @@ public class Parser {
                                 for(int t = 0; t<listHintereElemente.get(r).length; t++) {
                                     char[] c = new char[1];
                                     c[0]='(';
-									/*if(e>0) {
-										c = zeichenHinzufügen(c, '*');
-									}*/
-                                    c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    if(listVordereElemente.get(w)[e]=='n'){
+                                        c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                        e++;
+                                        c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    }else {
+                                        c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    }
                                     c = zeichenHinzufügen(c, '+');
-                                    c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    if(listHintereElemente.get(r)[t]=='n') {
+                                        c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                        t++;
+                                        c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    }else{
+                                        c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    }
                                     c = zeichenHinzufügen(c, ')');
                                     resultCharSet.add(c);
                                 }
@@ -449,7 +467,6 @@ public class Parser {
                     for(int w = 0; w<listVordereElemente.size(); w++) {
                         for(int e = 0; e<listVordereElemente.get(w).length; e++) {
                             for(int r = 0; r<listHintereElemente.size(); r++) {
-
                                 char[] c = new char[1];
                                 c[0]='(';
                                 for(int t = 0; t<listHintereElemente.get(r).length; t++) {
@@ -468,7 +485,6 @@ public class Parser {
                         }
                     }
                 }
-
                 char[] finalResult = new char[0];
                 for (int k = 0; k < resultCharSet.size(); k++) {
                     for(int l = 0; l < resultCharSet.get(k).length;l++) {
@@ -478,29 +494,16 @@ public class Parser {
                         finalResult = zeichenHinzufügen(finalResult, '*');
                     }
                 }
-                System.out.println("--------------------------");
-                System.out.println("Input:");
-                for (int k = 0; k < formel.length; k++) {
-                    System.out.print(formel[k]);
-                }
-                System.out.println("\n");
-                System.out.println("Ausaddiert:");
-                for(int o = 0; o<finalResult.length; o++) {
-                    System.out.print(finalResult[o]);
-                }
-                System.out.println("\n");
-
                 return finalResult;
             }
         }
-
         return null;
     }
 
     public char[] ausmultiplizieren(char[] formel) {
         boolean keineKlammmerGefunden = true;
         for (int i = 0; keineKlammmerGefunden; i++) {
-            if((formel[i]=='*'&&formel[i+1]=='(')||(formel[i]=='*'&&formel[i-1]==')')||(formel[i]=='*'&&Character.toString(formel[i+1]).matches("[a-eA-E]"))) {
+            if((formel[i]=='*'&&formel[i+1]=='(')||(formel[i]=='*'&&formel[i-1]==')')||(formel[i]=='*'&&Character.toString(formel[i+1]).matches("[a-n]"))) {
                 keineKlammmerGefunden = false;
                 char[] ersterTeil = new char[i+1];
                 char[] zweiterTeil = new char[formel.length-1-i];
@@ -521,10 +524,8 @@ public class Parser {
                         neuerHinterTeil[j] = zweiterTeil[j];
                     }
                 }
-
                 List<char[]> listVordereElemente = new ArrayList<char[]>();
                 List<char[]> listHintereElemente = new ArrayList<char[]>();
-
                 char[] zeichenErsterBlock = new char[0];
                 char[] zeichenZweiterBlock = new char[0];
                 boolean inBlock=true;
@@ -533,14 +534,13 @@ public class Parser {
                 while(inBlock) {
                     if(j == ersterTeil.length  // Am Ende der Reihe
                             || j<ersterTeil.length // Oder noch nicht am Ende der Reihe
-                            &&((ersterTeil[j]=='+'&&Character.toString(ersterTeil[j]).matches("[a-eA-E]")) // Und 'Und' verkn�pfte Buchstaben
+                            &&((ersterTeil[j]=='+'&&Character.toString(ersterTeil[j]).matches("[a-n]")) // Und 'Und' verkn�pfte Buchstaben
                             ||(klammern==1&&ersterTeil[j]==')'))) { // Oder es wurde bereits eine Klammer ge�ffnet und es ist eine schlie�ende Klammer
                         listVordereElemente.add(zeichenErsterBlock);
                         inBlock=false;
                         break;
                     }
-
-                    if(Character.toString(ersterTeil[j]).matches("[a-eA-E]")) {
+                    if(Character.toString(ersterTeil[j]).matches("[a-n]")) {
                         zeichenErsterBlock = zeichenHinzufügen(zeichenErsterBlock, ersterTeil[j]);
                     }else if(ersterTeil[j]==')') {
                         klammern++;
@@ -558,13 +558,13 @@ public class Parser {
                 while(inHinteremBlock) { //||(klammernHintererBlock==0&&neuerHinterTeil[q]=='+')
                     if(q==neuerHinterTeil.length
                             || q<neuerHinterTeil.length
-                            && ((neuerHinterTeil[q]=='+'&&Character.toString(neuerHinterTeil[q]).matches("[a-eA-E]"))
+                            && ((neuerHinterTeil[q]=='+'&&Character.toString(neuerHinterTeil[q]).matches("[a-n]"))
                             ||(klammernHintererBlock==1&&neuerHinterTeil[q]=='('))) {
                         listHintereElemente.add(zeichenZweiterBlock);
                         inBlock=false;
                         break;
                     }
-                    if(Character.toString(neuerHinterTeil[q]).matches("[a-eA-E]")) {
+                    if(Character.toString(neuerHinterTeil[q]).matches("[a-n]")) {
                         zeichenZweiterBlock = zeichenHinzufügen(zeichenZweiterBlock, neuerHinterTeil[q]);
                     }else if(neuerHinterTeil[q]=='('){
                         klammernHintererBlock++;
@@ -576,9 +576,7 @@ public class Parser {
                     }
                     q++;
                 }
-
                 List<char[]> resultCharSet = new ArrayList<char[]>();
-
                 if(!hintererTeilInKNF) {
                     for(int w = 0; w<listVordereElemente.size(); w++) {
                         for(int e = 0; e<listVordereElemente.get(w).length; e++) {
@@ -586,12 +584,21 @@ public class Parser {
                                 for(int t = 0; t<listHintereElemente.get(r).length; t++) {
                                     char[] c = new char[1];
                                     c[0]='(';
-									/*if(e>0) {
-										c = zeichenHinzufügen(c, '*');
-									}*/
-                                    c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    if(listVordereElemente.get(w)[e]=='n'){
+                                        c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                        e++;
+                                        c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    }else {
+                                        c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                    }
                                     c = zeichenHinzufügen(c, '*');
-                                    c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    if(listHintereElemente.get(r)[t]=='n') {
+                                        c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                        t++;
+                                        c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    }else{
+                                        c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
+                                    }
                                     c = zeichenHinzufügen(c, ')');
                                     resultCharSet.add(c);
                                 }
@@ -621,7 +628,6 @@ public class Parser {
                         }
                     }
                 }
-
                 char[] finalResult = new char[0];
                 for (int k = 0; k < resultCharSet.size(); k++) {
                     for(int l = 0; l < resultCharSet.get(k).length;l++) {
@@ -631,22 +637,9 @@ public class Parser {
                         finalResult = zeichenHinzufügen(finalResult, '+');
                     }
                 }
-                /*System.out.println("--------------------------");
-                System.out.println("Input:");
-                for (int k = 0; k < formel.length; k++) {
-                    System.out.print(formel[k]);
-                }
-                System.out.println("\n");
-                System.out.println("Ausaddiert:");
-                for(int o = 0; o<finalResult.length; o++) {
-                    System.out.print(finalResult[o]);
-                }
-                System.out.println("\n");*/
-
                 return finalResult;
             }
         }
-
         return null;
     }
 
@@ -671,18 +664,12 @@ public class Parser {
 
     private boolean weitereAufloesungNotwendig(char[] formel) {
         for (int i = 0; i < formel.length; i++) {
-            if((formel[i]=='+'&&formel[i+1]=='(')||(formel[i]=='+'&&formel[i-1]==')')||(formel[i]=='+'&&Character.toString(formel[i+1]).matches("[a-eA-E]"))) {
+            if((formel[i]=='+'&&formel[i+1]=='(')||(formel[i]=='+'&&formel[i-1]==')')||(formel[i]=='+'&&Character.toString(formel[i+1]).matches("[a-n]"))) {
                 return true;
             }
         }
         return false;
     }
-
-
-
-
-    // Getter und Setter
-
     public void setModus(Modi modus){
         this.modus = modus;
     }
@@ -698,8 +685,4 @@ public class Parser {
     public String getFormula(){
         return formula;
     }
-
-
-
-
 }
