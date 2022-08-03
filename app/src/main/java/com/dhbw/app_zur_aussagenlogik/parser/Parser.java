@@ -250,6 +250,7 @@ public class Parser {
                 boolean weiterMachen = true;
                 int count = i+2;
                 int klammern = 1;
+                boolean eineKlammerÜberspringen = false;
                 fDeMorgen=zeichenHinzufügen(fDeMorgen, '(');
                 while(weiterMachen){
                     if(Character.toString(bFormel[count]).matches("[a-eA-E]")&&bFormel[count-1]=='n'){
@@ -262,14 +263,22 @@ public class Parser {
                     }else if(bFormel[count]=='*'){
                         fDeMorgen = zeichenHinzufügen(fDeMorgen, '+');
                     }else if(bFormel[count]=='('){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '(');
-                        klammern++;
+                        if(klammerNotwendig(bFormel,count)) {
+                            fDeMorgen = zeichenHinzufügen(fDeMorgen, '(');
+                            klammern++;
+                        }else{
+                            eineKlammerÜberspringen=true;
+                        }
                     }else if(bFormel[count]=='n'&&bFormel[count+1]=='('){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, '(');
-                        klammern++;
+                        count++;
+                        continue;
                     }else if(bFormel[count]==')'){
-                        fDeMorgen = zeichenHinzufügen(fDeMorgen, ')');
-                        klammern--;
+                        if(!eineKlammerÜberspringen) {
+                            fDeMorgen = zeichenHinzufügen(fDeMorgen, ')');
+                            klammern--;
+                        }else{
+                            eineKlammerÜberspringen=false;
+                        }
                     }
                     if(klammern==0){
                         break;
@@ -277,11 +286,11 @@ public class Parser {
                     count++;
                 }
 
-                if(i-1>0 && i+count+1 <= bFormel.length){
+                if(i-1>0 && count+1 <= bFormel.length){
                     if((bFormel[i-1]=='1'||bFormel[i-1]=='2'||bFormel[i-1]=='*')||
-                            (bFormel[i+count+1]=='1'||bFormel[i+count+1]=='2'||bFormel[i+count+1]=='*')){
+                            (bFormel[count+1]=='1'||bFormel[count+1]=='2'||bFormel[count+1]=='*')){
                         // Klammer muss bestehen bleiben
-                        bFormel = blockEinsetzen(bFormel, fDeMorgen, i, i+count);
+                        bFormel = blockEinsetzen(bFormel, fDeMorgen, i, count);
                     }else{
                         // Klammer kann weg gemacht werden
                         char[] neueDeMorgen = new char[0];
@@ -289,7 +298,7 @@ public class Parser {
                             neueDeMorgen = zeichenHinzufügen(neueDeMorgen, fDeMorgen[j]);
                         }
 
-                        bFormel = blockEinsetzen(bFormel, neueDeMorgen, i, i+count);
+                        bFormel = blockEinsetzen(bFormel, neueDeMorgen, i, count);
 
                     }
                 }else if(i==0 && count+1 == bFormel.length){
@@ -305,6 +314,33 @@ public class Parser {
         }
 
         return bFormel;
+    }
+
+
+    private boolean klammerNotwendig(char[] formel, int indexÖffnedeKlammer){
+        if(indexÖffnedeKlammer-1>0 && indexÖffnedeKlammer+1 <= formel.length) {
+            boolean endklammerNichtGefunden = true;
+            int indexEndklammer = indexÖffnedeKlammer+1;
+            int anzahlKlammern = 1;
+
+            while (endklammerNichtGefunden) {
+                if (formel[indexEndklammer] == '(') {
+                    anzahlKlammern++;
+                } else if (formel[indexEndklammer] == ')') {
+                    anzahlKlammern--;
+                }
+                if (anzahlKlammern == 0) {
+                    endklammerNichtGefunden = false;
+                    break;
+                }
+                indexEndklammer++;
+            }
+            if ((formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2') ||
+                    (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2')) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

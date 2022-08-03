@@ -27,4 +27,20 @@ public class DeMorgenTest {
         char[] expectedFormel = {'a', '+', 'n', 'b', '+', 'c', '+', 'd'};
         assertArrayEquals(expectedFormel, p.deMorgen(formel));
     }
+
+    @Test
+    public void testDrei(){
+        Parser p = new Parser();
+        char[] formel = {'a', '+', 'n', '(', 'b', '*', 'n', 'c', ')', '*', 'd'};
+        char[] expectedFormel = {'a', '+', '(', 'n', 'b', '+', 'c', ')', '*', 'd'};
+        assertArrayEquals(expectedFormel, p.deMorgen(formel));
+    }
+
+    @Test
+    public void testVier(){
+        Parser p = new Parser();
+        char[] formel = {'(', 'a', '+', 'b', ')', '*', 'n', '(', 'b', '*', 'n', 'c', '*', 'n', '(', 'd', '+', 'n', 'e', ')', ')', '*', 'n', 'a'};
+        char[] expectedFormel = {'(', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'c', '+', 'n', 'd', '*', 'e', ')', '*', 'n', 'a'};
+        assertArrayEquals(expectedFormel, p.deMorgen(formel));
+    }
 }
