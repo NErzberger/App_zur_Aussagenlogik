@@ -178,30 +178,32 @@ public class Parser {
             }
         }
 
-        // Unnötige Klammern weg machen
-        /*for (int j = 0; j<bFormel.length; j++){
-            if(bFormel[j]=='(' && klammerNotwendig(bFormel,j)){
-                continue;
-            }else{
-                char[] teilInKlammer = new char[0];
-                int klammern = 1;
-                int count = j+1;
-                while(klammern>0){
-                    if(bFormel[count]==')'){
-                        klammern--;
-                        if(klammern==0){
-                            break;
+      // Unnötige Klammern weg machen
+        for (int j = 0; j<bFormel.length; j++) {
+            if (bFormel[j] == '(') {
+                if (klammerNotwendig(bFormel, j)) {
+                    continue;
+                } else {
+                    char[] teilInKlammer = new char[0];
+                    int klammern = 1;
+                    int count = j + 1;
+                    while (klammern > 0) {
+                        if (bFormel[count] == ')') {
+                            klammern--;
+                            if (klammern == 0) {
+                                break;
+                            }
+                        } else if (bFormel[count] == '(') {
+                            klammern++;
                         }
-                    }else if(bFormel[count]=='('){
-                        klammern++;
+                        teilInKlammer = zeichenHinzufügen(teilInKlammer, bFormel[count]);
+                        count++;
                     }
-                    teilInKlammer = zeichenHinzufügen(teilInKlammer, bFormel[count]);
-                    count++;
+                    bFormel = blockEinsetzen(bFormel, teilInKlammer, j, count);
                 }
-                bFormel = blockEinsetzen(bFormel, teilInKlammer, j, count);
             }
         }
-        */
+
 
         return bFormel;
     }
@@ -333,7 +335,7 @@ public class Parser {
 
 
     private boolean klammerNotwendig(char[] formel, int indexÖffnedeKlammer){
-        if(indexÖffnedeKlammer-1>0 && indexÖffnedeKlammer+1 <= formel.length) {
+        if(indexÖffnedeKlammer>=0 && indexÖffnedeKlammer+1 <= formel.length) {
             boolean endklammerNichtGefunden = true;
             int indexEndklammer = indexÖffnedeKlammer+1;
             int anzahlKlammern = 1;
@@ -349,9 +351,19 @@ public class Parser {
                 }
                 indexEndklammer++;
             }
-            if ((formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2' || formel[indexÖffnedeKlammer - 1] == 'n') ||
-                    (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2' || formel[indexEndklammer + 1] == 'n')) {
-                return true;
+            if(indexÖffnedeKlammer>0 && (indexEndklammer+1)==formel.length){
+                if (formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2' || formel[indexÖffnedeKlammer - 1] == 'n') {
+                    return true;
+                }
+            }else if(indexÖffnedeKlammer>0 && (indexEndklammer+1)<=formel.length) {
+                if ((formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2' || formel[indexÖffnedeKlammer - 1] == 'n') ||
+                        (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2' || formel[indexEndklammer + 1] == 'n')) {
+                    return true;
+                }
+            }else if(indexÖffnedeKlammer==0){
+                if (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2' || formel[indexEndklammer + 1] == 'n') {
+                    return true;
+                }
             }
         }
         return false;
