@@ -14,12 +14,47 @@ import com.dhbw.app_zur_aussagenlogik.parser.Parser;
 public class AusaddierenTest {
 
     @Test
+    public void knfTest(){
+        Parser p = new Parser();
+        char[] formel = {'(', 'a', '+', 'b', ')', '*', '(', 'c', '+', 'd', ')'};
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(formel, ausaddiert);
+    }
+
+    @Test
     public void einfacheFormeln() {
         Parser p = new Parser();
         char[] formel = {'a','+', '(', 'b', '*', 'c', ')'};
         char[] expectedFormel = {'(', 'a' , '+', 'b', ')', '*', '(', 'a', '+', 'c', ')'};
-        assertArrayEquals(expectedFormel, p.ausaddieren(formel));
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
+    }
 
+    @Test
+    public void zweiKlammern(){
+        Parser p = new Parser();
+        char[] formel = {'(', 'a','*', 'b', ')', '+', '(', 'c', '*', 'd', ')'};
+        char[] expectedFormel = {'(', 'b', '+', 'c', ')', '*', '(', 'b', '+', 'd', ')', '*', '(', 'a' , '+', 'c', ')', '*', '(', 'a', '+', 'd', ')'};
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
+    }
+
+    @Test
+    public void testDrei(){
+        Parser p = new Parser();
+        char[] formel = {'d', '+','(', '(', 'a', '+', 'b', ')', '*', '(', 'a', '+', 'c', ')', ')'};
+        char[] expectedFormel = {'(', 'a', '+', 'b', '+', 'd' ,')', '*', '(', 'a', '+', 'c', '+', 'd', ')' };
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
+    }
+
+    @Test
+    public void testVier(){
+        Parser p = new Parser();
+        char[] formel = {'(', '(', 'a', '+', 'b', ')', '*', '(', 'a', '+', 'c', ')', ')', '+', 'd'};
+        char[] expectedFormel = {'(', 'c', '+', 'a', '+', 'd' ,')', '*', '(', 'b', '+', 'a', '+', 'd', ')' };
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
     }
 
     @Test
@@ -27,16 +62,18 @@ public class AusaddierenTest {
         Parser p = new Parser();
         char[] formel = {'d', '+', 'a','+', '(', 'b', '*', 'c', ')'};
         char[] expectedFormel = {'(', 'a', '+', 'b', '+', 'd' ,')', '*', '(', 'a', '+', 'c', '+', 'd', ')' };
-        assertArrayEquals(expectedFormel, p.ausaddieren(formel));
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
     }
 
     @Test
     public void einfacheRekursion() {
         Parser p = new Parser();
         char[] formel = {'a', '+', '(', '(', 'b', '*', 'e', ')', '+', '(', 'c', '*', 'd', ')', ')'};
-        char[] expectedFormel = {'(', 'b', '+', 'c', '+', 'a', ')', '*', '(', 'b', '+', 'd', '+', 'a', ')', '*',
-                '(', 'e', '+', 'c', '+', 'a', ')', '*', '(', 'e', '+', 'd', '+', 'a', ')'};
-        assertArrayEquals(expectedFormel, p.ausaddieren(formel));
+        char[] expectedFormel = {'(', 'e', '+', 'c', '+', 'a', ')', '*', '(', 'e', '+', 'd', '+', 'a', ')', '*',
+                '(', 'b', '+', 'c', '+', 'a', ')', '*', '(', 'b', '+', 'd', '+', 'a', ')'};
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
     }
 
     @Test
@@ -49,15 +86,17 @@ public class AusaddierenTest {
                 '(', 'a', '*', 'c', '*', 'd', ')', '+', '(', 'a', '*', 'c', '*', 'd', '*', 'e', ')', '+',
                 '(', 'a', '*', '*', 'f',')', '+', '(', 'a', '*', 'c', '*', 'f', '*', 'e', ')', '+', '(', 'a', '*', 'e', '*', 'd', ')',
                 '+', '(', 'a', '*', 'e', '*', 'd', ')', '+', '(', 'a', '*', 'e', '*', 'f', ')', '+', '(', 'a', '*', 'e', '*', 'f', ')'};
-        assertArrayEquals(expectedFormel, p.ausaddieren(formel));
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
     }
 
-    @Test
+    /*@Test
     public void mehrfacheRekursionZwei() {
         Parser p = new Parser();
-        char[] formel = {'(', '(', 'a', '*', 'b', '*', 'c', '*', 'd', ')', '+', 'e', 'a', ')', '+', '(', 'a', '*', 'e', ')', '+',
+        char[] formel = {'(', '(', 'a', '*', 'b', '*', 'c', '*', 'd', ')', '+', 'e', '+', 'a', ')', '+', '(', 'a', '*', 'e', ')', '+',
                 '(', 'e', '*', 'd', '*', 'c', '*', 'b', ')', '+', '(', 'd', '*', 'b', ')', '+', '(', 'b', '*', 'a', ')', '+', '(', 'd', '*', 'e', ')'};
         char[] expectedFormel = {};
-        assertArrayEquals(expectedFormel, p.ausaddieren(formel));
-    }
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
+    }*/
 }

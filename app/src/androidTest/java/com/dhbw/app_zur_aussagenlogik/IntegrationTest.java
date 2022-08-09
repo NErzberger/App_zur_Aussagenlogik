@@ -23,19 +23,20 @@ public class IntegrationTest {
         assertArrayEquals(expectedFormel, ausaddiert);
     }
 
+    /*
+    Test läuft noch nicht, weil beim Ausaddieren der zweite Block mit ausaddiert wird, was falsch ist.
+     */
     @Test
     public void testZwei(){
         Parser p = new Parser();
         char[] formel = {'(', 'a', '+', 'b', ')', '2', 'c'};
-        char[] expectedFormel = {'(', 'n', 'c', '+', 'a', '+', 'b', ')', '*', '(', 'n', 'a', '+', 'c', ')', '*', '(', 'n', 'b', '+', 'c', ')'};
+        char[] expectedFormel = {'(', 'n', 'a', '+', 'c', ')', '*', '(', 'n', 'b', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')', };
 
         char[] aufgelöstePfeile = p.pfeileAufloesen(formel);
         char[] deMorgan = p.deMorgan(aufgelöstePfeile);
         char[] ausaddiert = p.ausaddieren(deMorgan);
         assertArrayEquals(expectedFormel, ausaddiert);
     }
-
-
 
     @Test
     public void zweiKlammernTest(){
@@ -45,7 +46,7 @@ public class IntegrationTest {
         char[] aufgelöstePfeile = p.pfeileAufloesen(formel);
         char[] deMorgan = p.deMorgan(aufgelöstePfeile);
         char[] ausaddiert = p.ausaddieren(deMorgan);
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        assertArrayEquals(expectedFormel, ausaddiert);
     }
 
 
