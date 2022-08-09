@@ -40,7 +40,8 @@ public class DeMorganTest {
     public void testVier(){
         Parser p = new Parser();
         char[] formel = {'(', 'a', '+', 'b', ')', '*', 'n', '(', 'b', '*', 'n', 'c', '*', 'n', '(', 'd', '+', 'n', 'e', ')', ')', '*', 'n', 'a'};
-        char[] expectedFormel = {'(', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'c', '+', 'n', 'd', '*', 'e', ')', '*', 'n', 'a'};
-        assertArrayEquals(expectedFormel, p.deMorgan(formel));
+        char[] expectedFormel = {'(', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'c', '+', '(', 'n', 'd', '*', 'e', ')', ')', '*', 'n', 'a'};
+        char[] result = p.deMorgan(formel);
+        assertArrayEquals(expectedFormel, result);
     }
 }

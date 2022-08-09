@@ -177,8 +177,10 @@ public class Parser {
                 }
             }
         }
+        return klammernPrüfen(bFormel);
+    }
 
-      // Unnötige Klammern weg machen
+    public char[] klammernPrüfen(char[] bFormel){
         for (int j = 0; j<bFormel.length; j++) {
             if (bFormel[j] == '(') {
                 if (klammerNotwendig(bFormel, j)) {
@@ -203,8 +205,6 @@ public class Parser {
                 }
             }
         }
-
-
         return bFormel;
     }
 
@@ -330,7 +330,7 @@ public class Parser {
                 }
             }
         }
-        return bFormel;
+        return klammernPrüfen(bFormel);
     }
 
 
@@ -339,11 +339,17 @@ public class Parser {
             boolean endklammerNichtGefunden = true;
             int indexEndklammer = indexÖffnedeKlammer+1;
             int anzahlKlammern = 1;
+            boolean malInKlammer = false;
+            boolean plusInKlammer = false;
             while (endklammerNichtGefunden) {
                 if (formel[indexEndklammer] == '(') {
                     anzahlKlammern++;
                 } else if (formel[indexEndklammer] == ')') {
                     anzahlKlammern--;
+                }else if(formel[indexEndklammer]=='*' && anzahlKlammern==1){
+                    malInKlammer = true;
+                } else if(formel[indexEndklammer]=='+'&& anzahlKlammern==1){
+                    plusInKlammer = true;
                 }
                 if (anzahlKlammern == 0) {
                     endklammerNichtGefunden = false;
@@ -352,16 +358,32 @@ public class Parser {
                 indexEndklammer++;
             }
             if(indexÖffnedeKlammer>0 && (indexEndklammer+1)==formel.length){
-                if (formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2' || formel[indexÖffnedeKlammer - 1] == 'n') {
+                if ((formel[indexÖffnedeKlammer - 1] == '*' && plusInKlammer )
+                        ||(formel[indexÖffnedeKlammer - 1] == '+' && malInKlammer)
+                        || formel[indexÖffnedeKlammer - 1] == '1'
+                        || formel[indexÖffnedeKlammer - 1] == '2'
+                        || formel[indexÖffnedeKlammer - 1] == 'n') {
                     return true;
                 }
             }else if(indexÖffnedeKlammer>0 && (indexEndklammer+1)<=formel.length) {
-                if ((formel[indexÖffnedeKlammer - 1] == '*' || formel[indexÖffnedeKlammer - 1] == '1' || formel[indexÖffnedeKlammer - 1] == '2' || formel[indexÖffnedeKlammer - 1] == 'n') ||
-                        (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2' || formel[indexEndklammer + 1] == 'n')) {
+                if (((formel[indexÖffnedeKlammer - 1] == '*' && plusInKlammer )
+                        ||(formel[indexÖffnedeKlammer - 1] == '+' && malInKlammer)
+                        || formel[indexÖffnedeKlammer - 1] == '1'
+                        || formel[indexÖffnedeKlammer - 1] == '2'
+                        || formel[indexÖffnedeKlammer - 1] == 'n') ||
+                        ((formel[indexEndklammer + 1] == '*' && plusInKlammer)
+                                || (formel[indexEndklammer + 1] == '+' && malInKlammer)
+                                || formel[indexEndklammer + 1] == '1'
+                                || formel[indexEndklammer + 1] == '2'
+                                || formel[indexEndklammer + 1] == 'n')) {
                     return true;
                 }
             }else if(indexÖffnedeKlammer==0){
-                if (formel[indexEndklammer + 1] == '*' || formel[indexEndklammer + 1] == '1' || formel[indexEndklammer + 1] == '2' || formel[indexEndklammer + 1] == 'n') {
+                if ((formel[indexEndklammer + 1] == '*' && plusInKlammer)
+                        || (formel[indexEndklammer + 1] == '+' && malInKlammer)
+                        || formel[indexEndklammer + 1] == '1'
+                        || formel[indexEndklammer + 1] == '2'
+                        || formel[indexEndklammer + 1] == 'n') {
                     return true;
                 }
             }
@@ -439,6 +461,7 @@ public class Parser {
                 boolean inBlock=true;
                 int j = ersterTeil.length-2;
                 int klammern = 0;
+                int index = 0;
                 char[] vordererKNFTeil = new char[0];
                 while(inBlock) {
                     if(j == -1  // Am Ende der Reihe
@@ -455,8 +478,13 @@ public class Parser {
 
                         break;
                     }
-                    if(Character.toString(ersterTeil[j]).matches("[a-n]")) {
+                    if(Character.toString(ersterTeil[j]).matches("[a-e]")) {
                         zeichenErsterBlock = zeichenHinzufügen(zeichenErsterBlock, ersterTeil[j]);
+                        index++;
+                    }else if(ersterTeil[j]=='n'){
+                        zeichenErsterBlock = zeichenHinzufügen(zeichenErsterBlock, ersterTeil[j+1]);
+                        zeichenErsterBlock[index-1]='n';
+                        index++;
                     }else if(ersterTeil[j]==')') {
                         klammern--;
                     }else if(ersterTeil[j]=='(') {
@@ -537,13 +565,16 @@ public class Parser {
                                     }
                                 }
                                 c = zeichenHinzufügen(c, ')');
-                                resultCharSet.add(c);
+                                if(blockHinzufügen(resultCharSet, c)) {
+                                    resultCharSet.add(c);
+                                }
                             }
                         }
                     }
                 }else if(hintererTeilInKNF){
                     for(int w = 0; w<listVordereElemente.size(); w++) {
                         for(int e = 0; e<listVordereElemente.get(w).length; e++) {
+                            boolean vordereElementNegiert = false;
                             for(int r = 0; r<listHintereElemente.size(); r++) {
                                 char[] c = new char[1];
                                 c[0]='(';
@@ -561,22 +592,31 @@ public class Parser {
                                 }
                                 if(!existsChar(c, listVordereElemente.get(w)[e])) {
                                     c = zeichenHinzufügen(c, '+');
+
                                     if(listVordereElemente.get(w)[e]=='n'){
                                         c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
                                         e++;
                                         c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                        e--;
+                                        vordereElementNegiert = true;
                                     }else {
                                         c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
                                     }
                                 }
                                 c = zeichenHinzufügen(c, ')');
-                                resultCharSet.add(c);
+                                if(blockHinzufügen(resultCharSet, c)) {
+                                    resultCharSet.add(c);
+                                }
+                            }
+                            if(vordereElementNegiert){
+                                e++;
                             }
                         }
                     }
-                }else if(!hintererTeilInKNF||!vordererTeilInKNF) {
+                }else if(!hintererTeilInKNF&&!vordererTeilInKNF) {
                     for(int w = 0; w<listVordereElemente.size(); w++) {
                         for(int e = 0; e<listVordereElemente.get(w).length; e++) {
+                            boolean hintereCharNegiert = false;
                             for(int r = 0; r<listHintereElemente.size(); r++) {
                                 for(int t = 0; t<listHintereElemente.get(r).length; t++) {
                                     char[] c = new char[1];
@@ -585,6 +625,8 @@ public class Parser {
                                         c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
                                         e++;
                                         c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
+                                        e--;
+                                        hintereCharNegiert = true;
                                     }else {
                                         c = zeichenHinzufügen(c, listVordereElemente.get(w)[e]);
                                     }
@@ -597,8 +639,13 @@ public class Parser {
                                         c = zeichenHinzufügen(c, listHintereElemente.get(r)[t]);
                                     }
                                     c = zeichenHinzufügen(c, ')');
-                                    resultCharSet.add(c);
+                                    if(blockHinzufügen(resultCharSet, c)) {
+                                        resultCharSet.add(c);
+                                    }
                                 }
+                            }
+                            if(hintereCharNegiert){
+                                e++;
                             }
                         }
                     }
@@ -635,6 +682,27 @@ public class Parser {
             }
         }
         return formel;
+    }
+
+    public boolean blockHinzufügen(List<char[]> blockList, char[] block){
+        for(int i = 0; i < blockList.size(); i++){
+            char[] b = blockList.get(i);
+            if(b.length == block.length){
+                for(int j = 0; j < b.length; j++){
+                    boolean match = false;
+                    for(int k = 0; k < block.length; k++){
+                        if(b[j]==block[k]){
+                            match = true;
+                        }
+                    }
+                    if(!match){
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
     }
 
     public char[] ausmultiplizieren(char[] formel) {
@@ -783,7 +851,7 @@ public class Parser {
 
     private boolean existsChar(char[] charArray, char c) {
         for (int i = 0; i < charArray.length; i++) {
-            if(charArray[i]==c) {
+            if(charArray[i]==c && c !='n') {
                 return true;
             }
         }

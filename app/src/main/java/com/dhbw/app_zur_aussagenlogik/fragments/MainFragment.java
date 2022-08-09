@@ -241,13 +241,11 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 switch (modus) {
                     case KNF:
-
                         resultText.setText(String.valueOf(launchParser(Modi.KNF)));
                         break;
                     case RESOLUTION:
                        mainActivity.replaceFragment(new Resolution(mainActivity));
                        break;
-
                     case TABLEAUX:
                         mainActivity.replaceFragment(new Tableaux(mainActivity));
                         break;

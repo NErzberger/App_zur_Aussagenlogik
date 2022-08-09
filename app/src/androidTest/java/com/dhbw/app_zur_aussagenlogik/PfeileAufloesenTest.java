@@ -74,8 +74,9 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         char[] formel = {'(', '(', 'a', '+', 'b', ')', '2', 'c', ')', '2', 'e'};
         char[] expectedFormel = {'(', 'n', '(', '(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')', ')', '+', 'e', ')',
-                '*', '(', 'n', 'e', '+', '(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')', ')'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+                '*', '(', 'n', 'e', '+', '(', '(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')', ')', ')'};
+        char[] aufgelöst = p.pfeileAufloesen(formel);
+        assertArrayEquals(expectedFormel, aufgelöst);
     }
 
     @Test
@@ -83,9 +84,10 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         char[] formel = {'(', 'a', '2', '(', 'b', '+', 'c', ')', '2', 'd', ')', '2', 'e'};
         char[] expectedFormel = {'(', 'n', '(', '(', 'n', 'a', '+', 'b', '+', 'c', ')', '*', '(', 'n', '(', 'n', '(', 'b', '+', 'c', ')', '+', 'a', ')', '+', 'd', ')',
-        '*', '(', 'n', 'd', '+', 'n', '(', 'b', '+', 'c', ')', '+','a', ')', ')', '+', 'e', ')', '*', '(', 'n', 'e', '+','(', 'n', 'a', '+', 'b', '+', 'c', ')', '*',
-          '(', 'n', '(', 'n', '(', 'b', '+', 'c', ')','+', 'a', ')', '+', 'd', ')', '*', '(', 'n', 'd', '+', 'n', '(', 'b', '+', 'c', ')', '+', 'a', ')', ')'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        '*', '(', 'n', 'd', '+', 'n', '(', 'b', '+', 'c', ')', '+','a', ')', ')', '+', 'e', ')', '*', '(', 'n', 'e', '+','(', '(', 'n', 'a', '+', 'b', '+', 'c', ')', '*',
+          '(', 'n', '(', 'n', '(', 'b', '+', 'c', ')','+', 'a', ')', '+', 'd', ')', '*', '(', 'n', 'd', '+', 'n', '(', 'b', '+', 'c', ')', '+', 'a', ')', ')', ')'};
+        char[] aufgelöst = p.pfeileAufloesen(formel);
+        assertArrayEquals(expectedFormel, aufgelöst);
     }
 
     @Test
@@ -102,8 +104,8 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         char[] formel = {'(', 'a', '2', 'b', ')', '2', '(', 'c', '2', 'd', ')'};
         char[] expectedFormel = {'(', 'n', '(', '(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')', ')', '+',
-        '(', 'n', 'c', '+', 'd', ')', '*', '(', 'n', 'd', '+', 'c', ')', ')', '*', '(', 'n', '(', '(', 'n', 'c', '+', 'd', ')',
-        '*', '(', 'n', 'd', '+', 'c', ')', ')', '+', '(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')', ')'};
+        '(', '(', 'n', 'c', '+', 'd', ')', '*', '(', 'n', 'd', '+', 'c', ')', ')', ')', '*', '(', 'n', '(', '(', 'n', 'c', '+', 'd', ')',
+        '*', '(', 'n', 'd', '+', 'c', ')', ')', '+', '(', '(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')', ')', ')'};
         char[] ergebnis = p.pfeileAufloesen(formel);
         assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
     }
