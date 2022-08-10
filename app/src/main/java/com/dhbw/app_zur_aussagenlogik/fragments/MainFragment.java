@@ -15,6 +15,7 @@ import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.parser.Parser;
+import com.dhbw.app_zur_aussagenlogik.parser.ParserException;
 import com.google.android.material.tabs.TabLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
@@ -241,7 +242,10 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 switch (modus) {
                     case KNF:
-                        resultText.setText(String.valueOf(launchParser(Modi.KNF)));
+                        launchParser(Modi.KNF);
+                        break;
+                    case DNF:
+                        launchParser(Modi.DNF);
                         break;
                     case RESOLUTION:
                        mainActivity.replaceFragment(new Resolution(mainActivity));
@@ -273,8 +277,15 @@ public class MainFragment extends Fragment {
         return this.view;
     }
 
-    private int launchParser(Modi modus){
+    private void launchParser(Modi modus){
         Parser parser = Parser.getInstance();
-        return parser.parseFormula(inputText.getText().toString());
+        String eingabeFormel = inputText.getText().toString();
+        try {
+            parser.setModus(modus);
+            String resultFormel = parser.parseFormula(eingabeFormel);
+            resultText.setText(resultFormel);
+        }catch (ParserException pe){
+
+        }
     }
 }

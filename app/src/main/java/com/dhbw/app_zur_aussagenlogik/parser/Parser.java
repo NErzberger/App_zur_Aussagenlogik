@@ -18,20 +18,22 @@ public class Parser {
     private String formula;
     private char[] formulaArray;
 
+    private char[] resultArray;
+
     // Methode zum setzen
 
-    public void setParserParameter(Modi modus, String formula){
+    public void setParserParameter(Modi modus, String formula) throws ParserException {
         setModus(modus);
         parseFormula(formula);
     }
 
-    public int parseFormula(String formula){
+    public String parseFormula(String formula) throws ParserException{
         String unparsedFormula = formula;
 
         // Formel parsen
-        formulaArray = new char[formula.length()];
+        this.formulaArray = new char[formula.length()];
         for(int i = 0; i<formula.length(); i++){
-            formulaArray[i] = formula.charAt(i);
+            this.formulaArray[i] = formula.charAt(i);
         }
 
         /*
@@ -45,11 +47,32 @@ public class Parser {
             fehlercode = checkUserInput();
             parsedFormula = unparsedFormula;
         }catch (Exception e){
-            return fehlercode;
+            throw new ParserException(fehlercode);
         }
         setFormula(parsedFormula);
+
         //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
-        return fehlercode;
+        char[] pfeileAufgeloest = pfeileAufloesen(this.formulaArray);
+        char[] deMorgan = deMorgan(pfeileAufgeloest);
+
+        switch (getModus()){
+            case KNF:
+                resultArray = ausaddieren(deMorgan);
+                break;
+            case DNF:
+                resultArray = ausmultiplizieren(deMorgan);
+                break;
+            case RESOLUTION:
+                break;
+            case FORMELN:
+                break;
+        }
+        zeichenersetzungZurueck();
+        String resultString = "";
+        for(int i = 0; i < resultArray.length; i++){
+            resultString = resultString + resultArray[i];
+        }
+        return resultString;
     }
 
     private int checkUserInput(){
@@ -57,8 +80,8 @@ public class Parser {
         int countOpen = 0;
         int countClose = 0;
 
-        for(int i = 0; i < formulaArray.length; i++){
-            char c = formulaArray[i];
+        for(int i = 0; i < this.formulaArray.length; i++){
+            char c = this.formulaArray[i];
 
             /*
             Character.compare vergleicht die Character nach der Ascii Tabelle
@@ -78,30 +101,30 @@ public class Parser {
             \\u22C1 = Oder
             \\u2227 = Und
              */
-            if((i+1)<formulaArray.length) {
+            if((i+1)<this.formulaArray.length) {
                 if(Character.toString(c).matches("[a-n]")){
-                    if (Character.toString(formulaArray[i + 1]).matches("[a-e(\\u00AC]")){
+                    if (Character.toString(this.formulaArray[i + 1]).matches("[a-e(\\u00AC]")){
                         // Fehler: Nach Buchstabe muss ein Operator kommen
                         return -2;
                     }
                 }
                 else if(Character.compare(c, '(')==0){
-                    if(Character.toString(formulaArray[i + 1]).matches("[\\u22C1\\u2227\\u2194\\u2194]")){
+                    if(Character.toString(this.formulaArray[i + 1]).matches("[\\u22C1\\u2227\\u2194\\u2194]")){
                         return -3;
                     }
                 }
                 else if(Character.compare(c, ')')==0){
-                    if(Character.toString(formulaArray[i+1]).matches("[a-e\\u00AC(]")){
+                    if(Character.toString(this.formulaArray[i+1]).matches("[a-e\\u00AC(]")){
                         return -4;
                     }
                 }
                 else if(Character.toString(c).matches("[\\u00AC]")){
-                    if(Character.toString(formulaArray[i+1]).matches("[\\u22C1\\u2227\\u2192\\u2194)\\u00AC]")){
+                    if(Character.toString(this.formulaArray[i+1]).matches("[\\u22C1\\u2227\\u2192\\u2194)\\u00AC]")){
                         return -5;
                     }
                 }
                 else if(Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")){
-                    if(Character.toString(formulaArray[i+1]).matches("[\\u2192\\u2194\\u22C1\\u2227)]")){
+                    if(Character.toString(this.formulaArray[i+1]).matches("[\\u2192\\u2194\\u22C1\\u2227)]")){
                         return -6;
                     }
                 }
@@ -112,9 +135,68 @@ public class Parser {
             // Fehlermeldung
             return -1;
         }
+
+        /*
+        Zeichenersetzung
+        oder wird +
+        und wird *
+        -> wird 1
+        <-> wird 2
+        negation wird n
+         */
+        for(int i = 0; i < this.formulaArray.length; i++){
+
+            //Negation
+            if(Character.toString(this.formulaArray[i]).matches("\\u00AC")){
+                this.formulaArray[i]='n';
+            }// Oder
+            else if(Character.toString(this.formulaArray[i]).matches("\\u22C1")){
+                this.formulaArray[i]='+';
+            }// Und
+            else if(Character.toString(this.formulaArray[i]).matches("\\u2227")){
+                this.formulaArray[i]='*';
+            }// ->
+            else if(Character.toString(this.formulaArray[i]).matches("\\u2192")){
+                this.formulaArray[i]='1';
+            }// <->
+            else if(Character.toString(this.formulaArray[i]).matches("\\u2194")){
+                this.formulaArray[i]='2';
+            }
+        }
         return 42;
     }
 
+
+    private void zeichenersetzungZurueck(){
+        /*
+        Zeichenersetzung
+        oder wird +
+        und wird *
+        -> wird 1
+        <-> wird 2
+        negation wird n
+         */
+
+        for(int i = 0; i < this.resultArray.length; i++){
+
+            //Negation
+            if(this.resultArray[i]=='n'){
+                this.resultArray[i]='\u00AC';
+            }// Oder
+            else if(this.resultArray[i] == '+'){
+                this.resultArray[i]='\u22C1';
+            }// Und
+            else if(this.resultArray[i]=='*'){
+                this.resultArray[i]='\u2227';
+            }// ->
+            else if(this.resultArray[i]=='1'){
+                this.resultArray[i]='\u2192';
+            }// <->
+            else if(this.resultArray[i]=='2'){
+                this.resultArray[i]='\u2194';
+            }
+        }
+    }
 
     public char[] pfeileAufloesen(char[] formel) {
         char[] bFormel = formel;
