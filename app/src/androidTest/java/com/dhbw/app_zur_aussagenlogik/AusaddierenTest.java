@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-import com.dhbw.app_zur_aussagenlogik.parser.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
 @RunWith(AndroidJUnit4.class)
 public class AusaddierenTest {

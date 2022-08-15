@@ -4,7 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.dhbw.app_zur_aussagenlogik.parser.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

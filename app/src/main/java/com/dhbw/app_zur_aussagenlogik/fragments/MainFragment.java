@@ -14,8 +14,8 @@ import android.widget.EditText;
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
-import com.dhbw.app_zur_aussagenlogik.parser.Parser;
-import com.dhbw.app_zur_aussagenlogik.parser.ParserException;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.ParserException;
 import com.google.android.material.tabs.TabLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
