@@ -109,13 +109,4 @@ public class PfeileAufloesenTest {
         char[] ergebnis = p.pfeileAufloesen(formel);
         assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
     }
-
-  /*  @Test
-    public void beidseitigVerschachtelteKlammern(){
-        Parser p = new Parser();
-        char[] formel = {'(','(', 'a', '2', 'c', ')', '2','(', '(', 'a', '2', 'b', ')', '2', '(', 'c', '2', 'd', ')', ')', ')', '2', '(', 'a', '+', 'b', '+', 'c', '2', 'd', '1', 'e', ')'};
-        char[] expectedFormel = {'(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')'};
-        char[] ergebnis = p.pfeileAufloesen(formel);
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
-    }*/
 }

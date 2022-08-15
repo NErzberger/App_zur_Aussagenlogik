@@ -77,6 +77,16 @@ public class AusaddierenTest {
     }
 
     @Test
+    public void einfacheRekursionZwei() {
+        Parser p = new Parser();
+        char[] formel = {'a', '+', '(', '(', 'b', '*', 'c', ')', '*', '(', 'd', '+', 'e', ')', ')'};
+        char[] expectedFormel = {'(', 'e', '+', 'c', '+', 'a', ')', '*', '(', 'e', '+', 'd', '+', 'a', ')', '*',
+                '(', 'b', '+', 'c', '+', 'a', ')', '*', '(', 'b', '+', 'd', '+', 'a', ')'};
+        char[] ausaddiert = p.ausaddieren(formel);
+        assertArrayEquals(expectedFormel, ausaddiert);
+    }
+
+    @Test
     public void mehrfacheRekursion() {
         Parser p = new Parser();
         char[] formel = {'a', '+', '(', '(', 'b', '*', 'c', '*', 'e', ')', '+', '(', '(', 'd', '*', 'a', ')', '+',
@@ -88,6 +98,14 @@ public class AusaddierenTest {
                 '+', '(', 'a', '*', 'e', '*', 'd', ')', '+', '(', 'a', '*', 'e', '*', 'f', ')', '+', '(', 'a', '*', 'e', '*', 'f', ')'};
         char[] ausaddiert = p.ausaddieren(formel);
         assertArrayEquals(expectedFormel, ausaddiert);
+    }
+
+    @Test
+    public void asdf(){
+        Parser p = new Parser();
+        char[] formel = {'(', 'a', '*', '(', 'b', '+', 'c', ')', ')', '+', '(', '(', 'b', '*', 'a', ')', '+', 'c', ')'};
+        char[] expected = {'(', 'a', '+', 'c', ')', '*', '(', 'b', '+', 'c', ')'};
+        char[] ausaddiert = p.ausaddieren(formel);
     }
 
     /*@Test
