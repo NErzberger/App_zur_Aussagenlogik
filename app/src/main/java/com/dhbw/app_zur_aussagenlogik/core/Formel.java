@@ -133,6 +133,21 @@ public class Formel {
         return false;
     }
 
+    public char[] toCharArray(){
+        String s = "";
+        for(int i = 0; i < formel.length; i++){
+            if(formel[i].isNegiert()){
+                s = s + "n";
+            }
+            s = s + formel[i].getZeichen();
+        }
+        char[] result = new char[s.length()];
+        for(int i = 0; i<result.length; i++){
+            result[i] = s.charAt(i);
+        }
+        return result;
+    }
+
 
     public void blockEinsetzen(Formel newArray, int anfang, int ende) {
         Formel neueFormel = new Formel();

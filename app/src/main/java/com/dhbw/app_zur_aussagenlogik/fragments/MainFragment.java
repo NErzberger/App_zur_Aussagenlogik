@@ -123,18 +123,23 @@ public class MainFragment extends Fragment {
                 String tabName = tab.getText().toString(); // Achtung Text nicht ändern oder über id?
                 switch (tabName) {
                     case "DNF":
+                        resultText.setEnabled(false);
                         modus = Modi.DNF;
                         break;
                     case "KNF":
+                        resultText.setEnabled(false);
                         modus = Modi.KNF;
                         break;
                     case "Resolu-tion":
+                        resultText.setEnabled(false);
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
+                        resultText.setEnabled(true);
                         modus = Modi.FORMELN;
                         break;
                     case "Tab-\nleaux":
+                        resultText.setEnabled(false);
                         modus = Modi.TABLEAUX;
                         break;
                 }
