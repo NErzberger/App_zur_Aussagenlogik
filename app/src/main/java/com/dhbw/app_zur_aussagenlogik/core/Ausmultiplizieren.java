@@ -292,7 +292,7 @@ public class Ausmultiplizieren extends Normalformen{
             }
         }
         return formel;
-    }
+
     }
 
 }

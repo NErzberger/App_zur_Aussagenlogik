@@ -37,7 +37,7 @@ public class Formel {
     }
 
     public void setChar(int index, char c){
-        this.formel[index].setZeichen(c);
+        this.formel[index] = new Zeichen(c);
     }
 
     public Zeichen[] getFormel(){
@@ -154,6 +154,7 @@ public class Formel {
             newZeichenSatz[i] = this.formel[i];
         }
         newZeichenSatz[this.formel.length] = new Zeichen(z);
+        this.formel = newZeichenSatz;
     }
 
     class Zeichen{
