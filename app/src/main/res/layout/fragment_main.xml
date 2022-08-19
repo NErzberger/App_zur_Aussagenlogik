@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MainFragment"
-    android:id="@+id/fragment_main">
+    android:id="@+id/fragment_main"
+    android:background="#CCFFFF">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -48,6 +49,17 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+    <Button
+        android:id="@+id/buttonHistory"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="320dp"
+        android:text="@string/history"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.111" />
 
     <EditText
         android:id="@+id/input"
@@ -101,6 +113,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/a" />
 
+            <!--   style="@style/ButtonFontSpecialChar" -->
+
             <Button
                 android:id="@+id/buttonB"
                 style="@style/ButtonFontStyle"
@@ -117,7 +131,7 @@
 
             <Button
                 android:id="@+id/buttonDelete"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delete" />
@@ -144,7 +158,7 @@
 
             <Button
                 android:id="@+id/buttonNegation"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/negative" />
@@ -178,14 +192,14 @@
 
             <Button
                 android:id="@+id/buttonImplikation"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/toArrow" />
 
             <Button
                 android:id="@+id/buttonReturn"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enter" />
@@ -212,10 +226,17 @@
 
             <Button
                 android:id="@+id/buttonImplikationBeidseitig"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/leftRightArrow" />
+
+            <Button
+                android:id="@+id/buttonOneBack"
+                style="@style/ButtonFontStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/oneBack" />
 
         </TableRow>
 

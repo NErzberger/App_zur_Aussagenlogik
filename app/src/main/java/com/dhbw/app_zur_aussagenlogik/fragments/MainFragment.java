@@ -45,6 +45,8 @@ public class MainFragment extends Fragment {
     private Button buttonReturn;
     private Button buttonKlammerAuf;
     private Button buttonKlammerZu;
+    private Button buttonHistory;
+    private Button buttonOneBack;
 
 
     private Modi modus = Modi.DNF;
@@ -104,6 +106,8 @@ public class MainFragment extends Fragment {
         buttonReturn = view.findViewById(R.id.buttonReturn);
         buttonKlammerAuf = view.findViewById(R.id.buttonKlammerAuf);
         buttonKlammerZu = view.findViewById(R.id.buttonKlammerZu);
+        buttonHistory = view.findViewById(R.id.buttonHistory);
+        buttonOneBack = view.findViewById(R.id.buttonOneBack);
 
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
@@ -273,6 +277,20 @@ public class MainFragment extends Fragment {
             }
         });
 
+        buttonHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(new History(mainActivity));
+// History erstellen
+            }
+        });
+
+        buttonOneBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // eine Formel zurück
+            }
+        });
 
         return this.view;
     }
