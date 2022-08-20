@@ -49,47 +49,78 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+
     <Button
-        android:id="@+id/buttonHistory"
+        android:id="@+id/buttonRechenweg"
         style="@style/ButtonFontStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="320dp"
-        android:text="@string/history"
+        android:layout_marginStart="220dp"
+        android:text="Rechenweg"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.111" />
+        app:layout_constraintVertical_bias="0.557" />
+
+    <TextView
+        android:id="@+id/textIhreFormel"
+        android:layout_width="202dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="20dp"
+        android:autoText="false"
+        android:text="Ihre Formel"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/input"
-        android:layout_width="263dp"
+        android:layout_width="0dp"
         android:layout_height="101dp"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
         android:ems="10"
+        android:hint="@string/inputPlaceholder"
         android:inputType="text"
         android:text="@string/input"
-        android:hint="@string/inputPlaceholder"
-        android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintVertical_bias="0.314" />
+
+    <TextView
+        android:id="@+id/textIhreFormelErgebnis"
+        android:layout_width="202dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="20dp"
+        android:autoText="false"
+        android:text="Lösung"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/solution"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input" />
 
 
     <EditText
         android:id="@+id/solution"
-        android:layout_width="264dp"
+        android:layout_width="0dp"
         android:layout_height="79dp"
-        android:layout_marginStart="52dp"
         android:layout_marginTop="26dp"
         android:layout_marginBottom="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
+        android:enabled="false"
+        android:hint="@string/solutionPlaceholder"
         android:inputType="textPersonName"
         android:text="@string/solution"
-        android:hint="@string/solutionPlaceholder"
-        android:enabled="false"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input" />
 

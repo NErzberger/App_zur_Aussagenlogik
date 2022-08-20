@@ -1,23 +1,22 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Resolution#newInstance} factory method to
+ * Use the {@link HistoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Resolution extends Fragment {
+public class HistoryFragment extends Fragment {
 
 
     private MainActivity mainActivity;
@@ -26,8 +25,8 @@ public class Resolution extends Fragment {
 
     private Button homeButton;
 
-    public Resolution(MainActivity mainActivity) {
-       super(R.layout.fragment_resolution);
+    public HistoryFragment(MainActivity mainActivity) {
+       super(R.layout.fragment_history);
        this.mainActivity = mainActivity;
     }
 
@@ -38,8 +37,8 @@ public class Resolution extends Fragment {
 
      * @return A new instance of fragment Resolution.
      */
-    public static Resolution newInstance(MainActivity mainActivity) {
-        Resolution fragment = new Resolution(mainActivity);
+    public static HistoryFragment newInstance(MainActivity mainActivity) {
+        HistoryFragment fragment = new HistoryFragment(mainActivity);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -56,7 +55,7 @@ public class Resolution extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_resolution, container, false);
+        view =  inflater.inflate(R.layout.fragment_history, container, false);
 
         homeButton = view.findViewById(R.id.buttonHome);
 

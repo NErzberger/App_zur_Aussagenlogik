@@ -19,4 +19,8 @@
     <string name="inputPlaceholder">Bitte geben Sie eine Formel ein.</string>
     <string name="solutionPlaceholder">Lösung</string>
     <string name="ca">ce</string>
+    <string name="anleitung">Anleitung</string>
+    <string name="aboutUs">Über uns</string>
+    <string name="historyMenu">Verlauf</string>
+
 </resources>

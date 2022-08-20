@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
     private Button buttonReturn;
     private Button buttonKlammerAuf;
     private Button buttonKlammerZu;
-    private Button buttonHistory;
+    private Button buttonRechenweg;
     private Button buttonOneBack;
 
 
@@ -106,7 +106,7 @@ public class MainFragment extends Fragment {
         buttonReturn = view.findViewById(R.id.buttonReturn);
         buttonKlammerAuf = view.findViewById(R.id.buttonKlammerAuf);
         buttonKlammerZu = view.findViewById(R.id.buttonKlammerZu);
-        buttonHistory = view.findViewById(R.id.buttonHistory);
+        buttonRechenweg = view.findViewById(R.id.buttonRechenweg);
         buttonOneBack = view.findViewById(R.id.buttonOneBack);
 
         inputText = view.findViewById(R.id.input);
@@ -257,10 +257,10 @@ public class MainFragment extends Fragment {
                         launchParser(Modi.DNF);
                         break;
                     case RESOLUTION:
-                       mainActivity.replaceFragment(new Resolution(mainActivity));
+                       mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
                        break;
                     case TABLEAUX:
-                        mainActivity.replaceFragment(new Tableaux(mainActivity));
+                        mainActivity.replaceFragment(new TableauxFragment(mainActivity));
                         break;
                 }
 
@@ -282,11 +282,11 @@ public class MainFragment extends Fragment {
             }
         });
 
-        buttonHistory.setOnClickListener(new View.OnClickListener() {
+        buttonRechenweg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new History(mainActivity));
-// History erstellen
+                mainActivity.replaceFragment(new NormalformFragment(mainActivity));
+// Rechenweg erstellen
             }
         });
 

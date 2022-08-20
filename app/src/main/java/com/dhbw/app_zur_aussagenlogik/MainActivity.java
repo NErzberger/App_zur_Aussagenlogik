@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.dhbw.app_zur_aussagenlogik.fragments.MainFragment;
 
@@ -28,5 +29,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        menu.add("Verlauf");
+        menu.add("Über uns");
+        return super.onCreateOptionsMenu(menu);
     }
 }

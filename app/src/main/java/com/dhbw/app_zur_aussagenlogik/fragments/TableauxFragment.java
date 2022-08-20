@@ -1,23 +1,23 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import androidx.fragment.app.Fragment;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link History#newInstance} factory method to
+ * Use the {@link TableauxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class History extends Fragment {
-
+public class TableauxFragment extends Fragment {
 
     private MainActivity mainActivity;
 
@@ -25,20 +25,19 @@ public class History extends Fragment {
 
     private Button homeButton;
 
-    public History(MainActivity mainActivity) {
-       super(R.layout.fragment_history);
-       this.mainActivity = mainActivity;
+    public TableauxFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-
-     * @return A new instance of fragment Resolution.
+     * @return A new instance of fragment Tableaux.
      */
-    public static History newInstance(MainActivity mainActivity) {
-        History fragment = new History(mainActivity);
+    // TODO: Rename and change types and number of parameters
+    public static TableauxFragment newInstance(MainActivity mainActivity) {
+        TableauxFragment fragment = new TableauxFragment(mainActivity);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -55,7 +54,7 @@ public class History extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_history, container, false);
+        view = inflater.inflate(R.layout.fragment_tableaux, container, false);
 
         homeButton = view.findViewById(R.id.buttonHome);
 
