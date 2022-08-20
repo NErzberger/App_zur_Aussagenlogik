@@ -16,11 +16,12 @@
     </style>
 
     <style name="ButtonFontStyle">
-        <item name="android:textSize">23dp</item>
+        <item name="android:textSize">25dp</item>
         <item name="android:layout_marginRight">2dp</item>
         <item name="android:layout_marginLeft">2dp</item>
     </style>
 
+    <!--nicht notwendig, weil alle in Font Style-->
     <style name="ButtonFontSpecialChar">
         <item name="android:textSize">25dp</item>
         <item name="android:baselineAligned">false</item>

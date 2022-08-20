@@ -12,6 +12,8 @@
     <string name="leftRightArrow">\u2194</string>
     <string name="delete">\u232B</string>
     <string name="enter">\u23CE</string>
+    <string name="oneBack">\u21E4</string>
+    <string name="history">\u27F3</string>
     <string name="solution"></string>
     <string name="input"></string>
     <string name="inputPlaceholder">Bitte geben Sie eine Formel ein.</string>
