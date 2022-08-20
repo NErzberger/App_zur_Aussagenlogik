@@ -14,8 +14,8 @@ import android.widget.EditText;
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
-import com.dhbw.app_zur_aussagenlogik.parser.Parser;
-import com.dhbw.app_zur_aussagenlogik.parser.ParserException;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.ParserException;
 import com.google.android.material.tabs.TabLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
@@ -127,18 +127,23 @@ public class MainFragment extends Fragment {
                 String tabName = tab.getText().toString(); // Achtung Text nicht ändern oder über id?
                 switch (tabName) {
                     case "DNF":
+                        resultText.setEnabled(false);
                         modus = Modi.DNF;
                         break;
                     case "KNF":
+                        resultText.setEnabled(false);
                         modus = Modi.KNF;
                         break;
                     case "Resolu-tion":
+                        resultText.setEnabled(false);
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
+                        resultText.setEnabled(true);
                         modus = Modi.FORMELN;
                         break;
                     case "Tab-\nleaux":
+                        resultText.setEnabled(false);
                         modus = Modi.TABLEAUX;
                         break;
                 }
