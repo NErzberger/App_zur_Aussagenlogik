@@ -102,7 +102,9 @@ public class Ausaddieren extends Normalformen{
                     }else if(klammern==0&&ersterTeil.getChar(j)=='+') {
                         listVordereElemente.add(zeichenErsterBlock);
                         zeichenErsterBlock=new Formel();
-                    }else if(ersterTeil.getChar(j)=='*'&&ersterTeil.getChar(j+1)=='('&&ersterTeil.getChar(j-1)==')'){
+                    }else if((ersterTeil.getChar(j)=='*'&&ersterTeil.getChar(j+1)=='('&&ersterTeil.getChar(j-1)==')')
+                            ||(Character.toString(ersterTeil.getChar(j-1)).matches("[a-e]")&&ersterTeil.getChar(j)=='*'&&ersterTeil.getChar(j+1)=='(')
+                            ||(Character.toString(ersterTeil.getChar(j+1)).matches("[a-e]")&&ersterTeil.getChar(j)=='*'&&ersterTeil.getChar(j-1)==')')){
                         listVordereElemente.add(zeichenErsterBlock);
                         zeichenErsterBlock=new Formel();
                     }

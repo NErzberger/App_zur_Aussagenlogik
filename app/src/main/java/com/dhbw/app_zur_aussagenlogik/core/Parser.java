@@ -20,6 +20,8 @@ public class Parser {
 
     private Formel resultFormula;
 
+    private List<Formel> rechenweg = new ArrayList<>();
+
     // Methode zum setzen
 
     public void setParserParameter(Modi modus, String formula) throws ParserException {
@@ -32,6 +34,9 @@ public class Parser {
 
         // Formel übernehmen
         this.formula = new Formel(formula);
+
+        rechenweg.add(new Formel(formula));
+
 
         /*
         Fehlercodes
@@ -47,7 +52,11 @@ public class Parser {
 
         //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
         Formel pfeileAufgeloest = pfeileAufloesen(this.formula);
+        Formel rPA = pfeileAufgeloest.copy();
+
         Formel deMorgan = deMorgan(pfeileAufgeloest);
+        Formel rDM = deMorgan.copy();
+
 
         switch (getModus()){
             case KNF:
@@ -61,7 +70,10 @@ public class Parser {
             case FORMELN:
                 break;
         }
-        zeichenersetzungZurueck();
+        resultFormula = zeichenersetzungZurueck(resultFormula);
+        rechenweg.add(zeichenersetzungZurueck(rPA));
+        rechenweg.add(zeichenersetzungZurueck(rDM));
+        rechenweg.add(resultFormula);
         String resultString = "";
         for(int i = 0; i < resultFormula.length(); i++){
             resultString = resultString + resultFormula.getChar(i);
@@ -161,7 +173,9 @@ public class Parser {
     }
 
 
-    private void zeichenersetzungZurueck(){
+
+
+    private Formel zeichenersetzungZurueck(Formel formel){
         /*
         Zeichenersetzung
         oder wird +
@@ -171,26 +185,28 @@ public class Parser {
         negation wird n
          */
 
-        for(int i = 0; i < this.resultFormula.length(); i++){
+        for(int i = 0; i < formel.length(); i++){
 
             //Negation
-            if(this.resultFormula.getChar(i)=='n'){
-                this.resultFormula.setChar(i,'\u00AC');
+            if(formel.getChar(i)=='n'){
+                formel.setChar(i,'\u00AC');
             }// Oder
-            else if(this.resultFormula.getChar(i) == '+'){
-                this.resultFormula.setChar(i,'\u22C1');
+            else if(formel.getChar(i) == '+'){
+                formel.setChar(i,'\u22C1');
             }// Und
-            else if(this.resultFormula.getChar(i)=='*'){
-                this.resultFormula.setChar(i, '\u2227');
+            else if(formel.getChar(i)=='*'){
+                formel.setChar(i, '\u2227');
             }// ->
-            else if(this.resultFormula.getChar(i)=='1'){
-                this.resultFormula.setChar(i, '\u2192');
+            else if(formel.getChar(i)=='1'){
+                formel.setChar(i, '\u2192');
             }// <->
-            else if(this.resultFormula.getChar(i)=='2'){
-                this.resultFormula.setChar(i, '\u2194');
+            else if(formel.getChar(i)=='2'){
+                formel.setChar(i, '\u2194');
             }
         }
+        return formel;
     }
+
 
     // Prozedur
 
@@ -674,6 +690,14 @@ public class Parser {
     Ende: 2 Formeln vergleichen
     #############################################################
      */
+
+    public List<Formel> getRechenweg() {
+        return rechenweg;
+    }
+
+    public void setRechenweg(List<Formel> rechenweg) {
+        this.rechenweg = rechenweg;
+    }
 
     public void setModus(Modi modus){
         this.modus = modus;

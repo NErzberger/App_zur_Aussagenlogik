@@ -14,6 +14,22 @@ import org.junit.runner.RunWith;
 public class DeMorganTest {
 
     @Test
+    public void aPlusB(){
+        Parser p = new Parser();
+        Formel formel = new Formel("na+b");
+        Formel expectedFormel = new Formel("na+b");
+        assertArrayEquals(expectedFormel.getFormel(), p.deMorgan(formel).getFormel());
+    }
+
+    @Test
+    public void aPlusBMitKlammer(){
+        Parser p = new Parser();
+        Formel formel = new Formel("n(a+b)");
+        Formel expectedFormel = new Formel("na*nb");
+        assertArrayEquals(expectedFormel.getFormel(), p.deMorgan(formel).getFormel());
+    }
+
+    @Test
     public void einfacherTest(){
         Parser p = new Parser();
         Formel formel = new Formel("n(a*nb)");
@@ -42,6 +58,15 @@ public class DeMorganTest {
         Parser p = new Parser();
         Formel formel = new Formel("(a+b)*n(b*nc*n(d+ne))*na");
         Formel expectedFormel = new Formel("(a+b)*(nb+c+(nd*e))*na");
+        char[] result = p.deMorgan(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), result);
+    }
+
+    @Test
+    public void testFünf(){
+        Parser p = new Parser();
+        Formel formel = new Formel("n(a*b)+(c*d)");
+        Formel expectedFormel = new Formel("na+nb+(c*d)");
         char[] result = p.deMorgan(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), result);
     }

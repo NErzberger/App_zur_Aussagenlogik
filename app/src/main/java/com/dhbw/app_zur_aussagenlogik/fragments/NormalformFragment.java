@@ -8,9 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
+import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.core.Formel;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +32,14 @@ public class NormalformFragment extends Fragment {
     private View view;
 
     private Button homeButton;
+    private TextView pfeileErgebnis;
+    private TextView deMorganErgebnis;
+    private TextView normalformErgebnis;
+    private TextView normalformText;
+    private TextView orginalformel;
+
+    private Modi modi;
+    private List<Formel> rechenweg;
 
     public NormalformFragment(MainActivity mainActivity) {
         super(R.layout.fragment_normalform);
@@ -43,6 +58,10 @@ public class NormalformFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Parser p = Parser.getInstance();
+        rechenweg = new ArrayList<>();
+        rechenweg = p.getRechenweg();
+        modi = p.getModus();
     }
 
     @Override
@@ -59,6 +78,29 @@ public class NormalformFragment extends Fragment {
                 mainActivity.replaceFragment(new MainFragment(mainActivity));
             }
         });
+
+        pfeileErgebnis = view.findViewById(R.id.pfeileErgebnis);
+        deMorganErgebnis = view.findViewById(R.id.deMorganErgebnis);
+        normalformErgebnis = view.findViewById(R.id.normalformErgebnis);
+        normalformText = view.findViewById(R.id.normalformText);
+        orginalformel = view.findViewById(R.id.orginalformel);
+
+        if(modi == Modi.DNF){
+            normalformText.setText("DNF");
+        }else if(modi == Modi.KNF){
+            normalformText.setText("KNF");
+        }
+
+        /**
+         * Rechenweg 0 = Orginale Formel
+         * Rechenweg 1 = Pfeile Auflösen Ergebnis
+         * Rechenweg 2 = DeMorgan Ergebnis
+         * Rechenweg 3 = Normalform
+         */
+        orginalformel.setText(rechenweg.get(0).toString());
+        pfeileErgebnis.setText(rechenweg.get(1).toString());
+        deMorganErgebnis.setText(rechenweg.get(2).toString());
+        normalformErgebnis.setText(rechenweg.get(3).toString());
 
         return view;
     }

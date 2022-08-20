@@ -36,8 +36,20 @@ public class Formel {
         return this.formel;
     }
 
+    public String toString(){
+        String s = "";
+        for(int i = 0; i < formel.length; i++) {
+            s = s + formel[i];
+        }
+        return s;
+    }
+
     public int length(){
         return this.formel.length;
+    }
+
+    public Formel copy(){
+        return new Formel(this.formel);
     }
 
     public Formel klammernPrüfen(){
