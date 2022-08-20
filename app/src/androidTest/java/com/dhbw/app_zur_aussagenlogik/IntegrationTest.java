@@ -27,10 +27,10 @@ public class IntegrationTest {
         Formel formel = new Formel("(a+b)1c");
         Formel expectedFormel = new Formel("(c+nb)*(c+na)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     /*
@@ -42,10 +42,10 @@ public class IntegrationTest {
         Formel formel = new Formel("(a+b)2c");
         Formel expectedFormel = new Formel("(c+nb)*(nc+a+b)*(c*na)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -54,10 +54,10 @@ public class IntegrationTest {
         Formel formel = new Formel("(a+b)1(c*d)");
         Formel expectedFormel = new Formel("(nb+c)*(nb+d)*(na+c)*(na+d)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -66,10 +66,10 @@ public class IntegrationTest {
         Formel formel = new Formel("(a*b)1(c*d)");
         Formel expectedFormel = new Formel("(nb+c+na)*(nb+d+na)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -78,10 +78,10 @@ public class IntegrationTest {
         Formel formel = new Formel("(a+b)2(c*d");
         Formel expectedFormel = new Formel("(nb+c)*(nb+d)*(na+c)*(na+d)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -90,10 +90,10 @@ public class IntegrationTest {
         Formel formel = new Formel("(a*b)2(c*d)");
         Formel expectedFormel = new Formel("n(a*b)+(c*d)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -102,10 +102,10 @@ public class IntegrationTest {
         Formel formel = new Formel("e+((a+b)1(c*d))");
         Formel expectedFormel = new Formel("(nb+c+e)*(nb+d+e)*(na+c+e)*(na+d+e)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -114,10 +114,10 @@ public class IntegrationTest {
         Formel formel = new Formel("e+((a*b)1(c*d))");
         Formel expectedFormel = new Formel("(nb+c+na+e)*(nb+d+na+e)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -126,10 +126,10 @@ public class IntegrationTest {
         Formel formel = new Formel("e+((a+b)2(c*d))");
         Formel expectedFormel = new Formel("(nb+c+e)*(nb+d+e)*(na+c+e)*(na+d+e)*(nc+nd+a+b+e)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
@@ -138,10 +138,10 @@ public class IntegrationTest {
         Formel formel = new Formel("e+((a*b)2(c*d))");
         Formel expectedFormel = new Formel("n(a*b)+(c*d)");
 
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).toCharArray();
-        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).toCharArray();
-        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] aufgelöstePfeile = p.pfeileAufloesen(formel).getFormel();
+        char[] deMorgan = p.deMorgan(new Formel(aufgelöstePfeile)).getFormel();
+        char[] ausaddiert = Ausaddieren.ausaddieren(new Formel(deMorgan)).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
  /*  @Test

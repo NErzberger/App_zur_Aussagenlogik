@@ -20,7 +20,7 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("(a*b)1c");
         Formel expectedFormel = new Formel("n(a*b)+c");
-        assertArrayEquals(expectedFormel.toCharArray(), p.pfeileAufloesen(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("((a*b)1c)1d");
         Formel expectedFormel = new Formel("n(n(a*b)+c)+d");
-        assertArrayEquals(expectedFormel.toCharArray(), p.pfeileAufloesen(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
@@ -36,8 +36,8 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("(a*b)1(c*d)");
         Formel expectedFormel = new Formel("n(a*b)+(c*d)");
-        char[] ergebnis = p.pfeileAufloesen(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ergebnis);
+        char[] ergebnis = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ergebnis);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("a1b1c1d1e");
         Formel expectedFormel = new Formel("na+nb+nc+nd+e");
-        assertArrayEquals(expectedFormel.toCharArray(), p.pfeileAufloesen(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("na1nb1nc1nd1ne");
         Formel expectedFormel = new Formel("nna+nnb+nnc+nnd+ne");
-        assertArrayEquals(expectedFormel.toCharArray(), p.pfeileAufloesen(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
@@ -61,15 +61,15 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("a2b");
         Formel expectedFormel = new Formel("(na+b)*(nb+a)");
-        assertArrayEquals(expectedFormel.toCharArray(), p.pfeileAufloesen(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void beidseitigZwei(){
         Parser p = new Parser();
-        Formel formel = new Formel("a+b)2c");
+        Formel formel = new Formel("(a+b)2c");
         Formel expectedFormel = new Formel("(n(a+b)+c)*(nc+a+b)");
-        assertArrayEquals(expectedFormel.toCharArray(), p.pfeileAufloesen(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
@@ -77,8 +77,8 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("((a+b)2c)2e");
         Formel expectedFormel = new Formel("(n((n(a+b)+c)*(nc+a+b))+e)*(ne+((n(a+b)+c)*(nc+a+b)))");
-        char[] aufgelöst = p.pfeileAufloesen(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), aufgelöst);
+        char[] aufgelöst = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), aufgelöst);
     }
 
     @Test
@@ -87,8 +87,8 @@ public class PfeileAufloesenTest {
         Formel formel = new Formel("(a2(b+c)2d)2e");
         Formel expectedFormel = new Formel("(n((na+b+c)*(n(n(b+c)+a)+d)*(nd+n(b+c)+a))+e)*" +
                 "(ne+((na+b+c)*(n(n(b+c)+a)+d)*(nd+n(b+c)+a)))");
-        char[] aufgelöst = p.pfeileAufloesen(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), aufgelöst);
+        char[] aufgelöst = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), aufgelöst);
     }
 
     @Test
@@ -96,8 +96,8 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("(a+b)2(c+d)");
         Formel expectedFormel = new Formel("(n(a+b)+c+d)*(n(c+d)+a+b)");
-        char[] ergebnis = p.pfeileAufloesen(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ergebnis);
+        char[] ergebnis = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ergebnis);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class PfeileAufloesenTest {
         Parser p = new Parser();
         Formel formel = new Formel("(a2b)2(c2d)");
         Formel expectedFormel = new Formel("(n((na+b)*(nb+a))+((nc+d)*(nd+c)))*(n((nc+d)*(nd+c))+((na+b)*(nb+a)))");
-        char[] ergebnis = p.pfeileAufloesen(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ergebnis);
+        char[] ergebnis = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ergebnis);
     }
 }

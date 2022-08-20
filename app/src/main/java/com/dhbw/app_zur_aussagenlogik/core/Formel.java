@@ -2,24 +2,16 @@ package com.dhbw.app_zur_aussagenlogik.core;
 
 public class Formel {
 
-    private Zeichen[] formel = new Zeichen[0];
+    private char[] formel = new char[0];
 
     public Formel(String formel){
-        this.formel = new Zeichen[formel.length()];
+        this.formel = new char[formel.length()];
         for(int i = 0; i<formel.length(); i++){
-            this.formel[i] = new Zeichen(formel.charAt(i));
+            this.formel[i] = formel.charAt(i);
         }
     }
 
     public Formel(char[] formel){
-        this.formel = new Zeichen[formel.length];
-        for (int i = 0; i < formel.length; i++){
-            this.formel[i] = new Zeichen(formel[i]);
-        }
-    }
-
-    public Formel(Zeichen[] formel){
-        this.formel = new Zeichen[formel.length];
         this.formel = formel;
     }
 
@@ -28,19 +20,19 @@ public class Formel {
     }
 
     public Formel(int length){
-        this.formel = new Zeichen[length];
+        this.formel = new char[length];
     }
 
 
     public char getChar(int index){
-        return this.formel[index].getZeichen();
+        return this.formel[index];
     }
 
     public void setChar(int index, char c){
-        this.formel[index] = new Zeichen(c);
+        this.formel[index] = c;
     }
 
-    public Zeichen[] getFormel(){
+    public char[] getFormel(){
         return this.formel;
     }
 
@@ -133,22 +125,6 @@ public class Formel {
         return false;
     }
 
-    public char[] toCharArray(){
-        String s = "";
-        for(int i = 0; i < formel.length; i++){
-            if(formel[i].isNegiert()){
-                s = s + "n";
-            }
-            s = s + formel[i].getZeichen();
-        }
-        char[] result = new char[s.length()];
-        for(int i = 0; i<result.length; i++){
-            result[i] = s.charAt(i);
-        }
-        return result;
-    }
-
-
     public void blockEinsetzen(Formel newArray, int anfang, int ende) {
         Formel neueFormel = new Formel();
         for (int i = 0; i < anfang; i++) {
@@ -164,43 +140,12 @@ public class Formel {
     }
 
     public void zeichenHinzufügen(char z) {
-        Zeichen[] newZeichenSatz = new Zeichen[this.formel.length+1];
+        char[] newZeichenSatz = new char[this.formel.length+1];
         for (int i = 0; i < this.formel.length; i++) {
             newZeichenSatz[i] = this.formel[i];
         }
-        newZeichenSatz[this.formel.length] = new Zeichen(z);
+        newZeichenSatz[this.formel.length] = z;
         this.formel = newZeichenSatz;
-    }
-
-    class Zeichen{
-        char zeichen;
-        boolean negiert;
-
-        Zeichen(char zeichen){
-            this.zeichen = zeichen;
-            this.negiert = false;
-        }
-
-        Zeichen(char zeichen, boolean negiert){
-            this.zeichen = zeichen;
-            this.negiert = negiert;
-        }
-
-        public char getZeichen() {
-            return zeichen;
-        }
-
-        public boolean isNegiert() {
-            return negiert;
-        }
-
-        public void setZeichen(char zeichen) {
-            this.zeichen = zeichen;
-        }
-
-        public void setNegiert(boolean negiert) {
-            this.negiert = negiert;
-        }
     }
 
 }

@@ -30,72 +30,72 @@ public class AusaddierenTest {
         Parser p = new Parser();
         Formel formel = new Formel("a+(b*c)");
         Formel expectedFormel = new Formel("(a+b)*(a+c)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void zweiKlammern(){
         Formel formel = new Formel("(a*b)+(c*d)");
         Formel expectedFormel = new Formel("(b+c)*(b+d)*(a+c)*(a+d)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void testDrei(){
         Formel formel = new Formel("d+((a+b)*(a+c))");
         Formel expectedFormel = new Formel("(a+b+d)*(a+c+d)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void testVier(){
         Formel formel = new Formel("((a+b)*(a+c))+d");
         Formel expectedFormel = new Formel("(c+a+d)*(b+a+d)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void zweiEinfacheOder() {
         Formel formel = new Formel("d+a+(b*c)");
         Formel expectedFormel = new Formel("(a+b+d)*(a+c+d)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void einfacheRekursion() {
         Formel formel = new Formel("a+((b*e)+(c*d))");
         Formel expectedFormel = new Formel("(e+c+a)*(e+d+a)*(b+c+a)*(b+d+a)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void einfacheRekursionZwei() {
         Formel formel = new Formel("a+((b*c)*(d+e))");
         Formel expectedFormel = new Formel("(e+c+a)*(e+d+a)*(b+c+a)*(b+d+a)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void mehrfacheRekursion() {
         Formel formel = new Formel("a+((b*c*e)+((d*a)+(d*e)+(f*a)+(f*e)))");
         Formel expectedFormel = new Formel("(a*b*d)+(a*b*d*e)+(a*b*f)+(a*b*f*e)+(a*c*d)+(a*c*d*e)+(a*f)+(a*c*f*e)+(a*e*d)+(a*e*d)+(a*e*f)+(a*e*f)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     @Test
     public void asdf(){
         Formel formel = new Formel("(a*(b+c))+((b*a)+c)");
         Formel expectedFormel = new Formel("(a+c)*(b+c)");
-        char[] ausaddiert = Ausaddieren.ausaddieren(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), ausaddiert);
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
 
     /*@Test

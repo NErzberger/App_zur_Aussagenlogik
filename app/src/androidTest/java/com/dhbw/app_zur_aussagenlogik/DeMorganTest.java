@@ -18,7 +18,7 @@ public class DeMorganTest {
         Parser p = new Parser();
         Formel formel = new Formel("n(a*nb)");
         Formel expectedFormel = new Formel("na+b");
-        assertArrayEquals(expectedFormel.toCharArray(), p.deMorgan(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.deMorgan(formel).getFormel());
     }
 
     @Test
@@ -26,7 +26,7 @@ public class DeMorganTest {
         Parser p = new Parser();
         Formel formel = new Formel("a+n(b*nc)+d");
         Formel expectedFormel = new Formel("a+nb+c+d");
-        assertArrayEquals(expectedFormel.toCharArray(), p.deMorgan(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.deMorgan(formel).getFormel());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class DeMorganTest {
         Parser p = new Parser();
         Formel formel = new Formel("a+n(b*nc)*d");
         Formel expectedFormel = new Formel("a+(nb+c)*d");
-        assertArrayEquals(expectedFormel.toCharArray(), p.deMorgan(formel).toCharArray());
+        assertArrayEquals(expectedFormel.getFormel(), p.deMorgan(formel).getFormel());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class DeMorganTest {
         Parser p = new Parser();
         Formel formel = new Formel("(a+b)*n(b*nc*n(d+ne))*na");
         Formel expectedFormel = new Formel("(a+b)*(nb+c+(nd*e))*na");
-        char[] result = p.deMorgan(formel).toCharArray();
-        assertArrayEquals(expectedFormel.toCharArray(), result);
+        char[] result = p.deMorgan(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), result);
     }
 }
