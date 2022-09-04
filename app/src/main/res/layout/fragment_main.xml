@@ -55,10 +55,10 @@
         style="@style/ButtonFontStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="220dp"
+        android:layout_marginStart="180dp"
         android:text="Rechenweg"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textIhreFormelErgebnis"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.557" />
 
@@ -95,8 +95,8 @@
 
     <TextView
         android:id="@+id/textIhreFormelErgebnis"
-        android:layout_width="202dp"
-        android:layout_height="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:autoText="false"
         android:text="Lösung"

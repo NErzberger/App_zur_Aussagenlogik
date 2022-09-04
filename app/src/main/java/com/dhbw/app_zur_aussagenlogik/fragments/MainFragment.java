@@ -47,6 +47,9 @@ public class MainFragment extends Fragment {
     private Button buttonKlammerZu;
     private Button buttonRechenweg;
     private Button buttonOneBack;
+    private Button itemVerlauf;
+    private Button itemAnleitung;
+    private Button itemUeberUns;
 
 
     private Modi modus = Modi.DNF;
@@ -109,6 +112,10 @@ public class MainFragment extends Fragment {
         buttonRechenweg = view.findViewById(R.id.buttonRechenweg);
         buttonOneBack = view.findViewById(R.id.buttonOneBack);
 
+        itemVerlauf = view.findViewById(R.id.history);
+        itemAnleitung = view.findViewById(R.id.anleitung);
+        itemUeberUns = view.findViewById(R.id.UeberUns);
+
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
 
@@ -156,7 +163,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
-
         });
 
 
@@ -285,6 +291,7 @@ public class MainFragment extends Fragment {
         buttonRechenweg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               // if (solution not empty)
                 mainActivity.replaceFragment(new NormalformFragment(mainActivity));
 // Rechenweg erstellen
             }
@@ -296,6 +303,29 @@ public class MainFragment extends Fragment {
                 // eine Formel zurück
             }
         });
+
+      /*  itemUeberUns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(new AboutUsFragment(mainActivity));
+            }
+        });
+
+        itemVerlauf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(new HistoryFragment(mainActivity));
+            }
+        });
+
+        itemAnleitung.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //          mainActivity.replaceFragment(new AboutUsFragment(mainActivity));
+            }
+        });
+
+       */
 
         return this.view;
     }

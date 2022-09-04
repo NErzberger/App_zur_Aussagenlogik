@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/UeberUns"
         android:title="@string/aboutUs" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/anleitung"
         android:title="@string/anleitung" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/history"
         android:title="@string/historyMenu" />
 
 </menu>
