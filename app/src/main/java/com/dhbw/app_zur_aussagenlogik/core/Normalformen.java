@@ -20,17 +20,17 @@ public class Normalformen {
             Formel b = blockList.get(i);
             if(b.length() == block.length()){
                 for(int j = 0; j < b.length(); j++){
-                    boolean match = false;
+                    int match = 0;
                     for(int k = 0; k < block.length(); k++){
                         if(b.getChar(j)==block.getChar(k)){
-                            match = true;
+                            match++;
                         }
                     }
-                    if(!match){
-                        return true;
+                    if(match==block.length()){
+                        return false;
                     }
                 }
-                return false;
+                return true;
             }
         }
         return true;

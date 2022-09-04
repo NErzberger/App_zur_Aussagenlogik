@@ -1,13 +1,17 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -90,6 +94,10 @@ public class MainFragment extends Fragment {
 
         layout = view.findViewById(R.id.tabLayout);
 
+
+
+
+
         // Deklaration der Tastatur
         buttonA = view.findViewById(R.id.buttonA);
         buttonB = view.findViewById(R.id.buttonB);
@@ -116,10 +124,11 @@ public class MainFragment extends Fragment {
         inputText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UIUtil.hideKeyboard(view.getContext(), view);
-            }});
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-        // OnClickListener für das TabLayout
+
+            }});
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

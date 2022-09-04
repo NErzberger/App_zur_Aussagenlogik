@@ -140,7 +140,10 @@ public class Ausaddieren extends Normalformen{
                         klammernHintererBlock++;
                     }else if(neuerHinterTeil.getChar(q)==')') {
                         klammernHintererBlock--;
-                    }else if(neuerHinterTeil.getChar(q)=='*'&&(neuerHinterTeil.getChar(q-1)==')'&&neuerHinterTeil.getChar(q+1)=='(')) {
+                    }else if((neuerHinterTeil.getChar(q)=='*'&&(neuerHinterTeil.getChar(q-1)==')'&&neuerHinterTeil.getChar(q+1)=='(')
+                            ||(Character.toString(neuerHinterTeil.getChar(q-1)).matches("[a-e]")&&neuerHinterTeil.getChar(q)=='*'&&neuerHinterTeil.getChar(q+1)==')')
+                            ||(Character.toString(neuerHinterTeil.getChar(q+1)).matches("[a-e]")&&neuerHinterTeil.getChar(q)=='*'&&neuerHinterTeil.getChar(q-1)=='(')
+                            ||(neuerHinterTeil.getChar(q)=='*'&&Character.toString(neuerHinterTeil.getChar(q+1)).matches("[a-e]")&&Character.toString(neuerHinterTeil.getChar(q*1)).matches("[a-e]")))) {
                         listHintereElemente.add(zeichenZweiterBlock);
                         zeichenZweiterBlock=new Formel();
                     }

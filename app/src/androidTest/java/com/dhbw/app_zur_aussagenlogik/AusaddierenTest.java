@@ -77,7 +77,7 @@ public class AusaddierenTest {
     @Test
     public void einfacheRekursionZwei() {
         Formel formel = new Formel("a+((b*c)*(d+e))");
-        Formel expectedFormel = new Formel("(e+c+a)*(e+d+a)*(b+c+a)*(b+d+a)");
+        Formel expectedFormel = new Formel("(b+a)*(c+a)*(d+e+a)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
