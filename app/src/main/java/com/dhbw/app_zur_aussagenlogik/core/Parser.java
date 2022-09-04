@@ -20,7 +20,7 @@ public class Parser {
 
     private Formel resultFormula;
 
-    private List<Formel> rechenweg = new ArrayList<>();
+    private List<Formel> rechenweg;
 
     // Methode zum setzen
 
@@ -34,6 +34,8 @@ public class Parser {
 
         // Formel übernehmen
         this.formula = new Formel(formula);
+
+        rechenweg = new ArrayList<>();
 
         rechenweg.add(new Formel(formula));
 

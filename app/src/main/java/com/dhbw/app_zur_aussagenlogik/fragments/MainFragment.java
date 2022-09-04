@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -51,9 +52,9 @@ public class MainFragment extends Fragment {
     private Button buttonKlammerZu;
     private Button buttonRechenweg;
     private Button buttonOneBack;
-    private Button itemVerlauf;
-    private Button itemAnleitung;
-    private Button itemUeberUns;
+    private MenuItem itemVerlauf;
+    private MenuItem itemAnleitung;
+    private MenuItem itemUeberUns;
 
 
     private Modi modus = Modi.DNF;
@@ -300,9 +301,7 @@ public class MainFragment extends Fragment {
         buttonRechenweg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // if (solution not empty)
                 mainActivity.replaceFragment(new NormalformFragment(mainActivity));
-// Rechenweg erstellen
             }
         });
 
@@ -312,32 +311,10 @@ public class MainFragment extends Fragment {
                 // eine Formel zurück
             }
         });
-
-      /*  itemUeberUns.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.replaceFragment(new AboutUsFragment(mainActivity));
-            }
-        });
-
-        itemVerlauf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.replaceFragment(new HistoryFragment(mainActivity));
-            }
-        });
-
-        itemAnleitung.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //          mainActivity.replaceFragment(new AboutUsFragment(mainActivity));
-            }
-        });
-
-       */
-
+        
         return this.view;
     }
+
 
     private void launchParser(Modi modus){
         Parser parser = Parser.getInstance();
@@ -346,6 +323,7 @@ public class MainFragment extends Fragment {
             parser.setModus(modus);
             String resultFormel = parser.parseFormula(eingabeFormel);
             resultText.setText(resultFormel);
+            this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
 
         }
