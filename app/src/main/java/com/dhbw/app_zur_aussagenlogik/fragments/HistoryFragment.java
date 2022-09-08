@@ -7,9 +7,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
+import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,12 +25,14 @@ import com.dhbw.app_zur_aussagenlogik.R;
  */
 public class HistoryFragment extends Fragment {
 
+    private List<History> historyList;
 
     private MainActivity mainActivity;
 
     private View view;
 
     private Button homeButton;
+    private RecyclerView history_view;
 
     public HistoryFragment(MainActivity mainActivity) {
        super(R.layout.fragment_history);
@@ -58,11 +67,30 @@ public class HistoryFragment extends Fragment {
         view =  inflater.inflate(R.layout.fragment_history, container, false);
 
         homeButton = view.findViewById(R.id.buttonHome);
-
+        history_view = view.findViewById(R.id.List_History);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mainActivity.replaceFragment(new MainFragment(mainActivity));
+            }
+        });
+
+        // Liste Laden
+        HistoryDataSource dataSource = new HistoryDataSource(getContext());
+        List<History> historyList = dataSource.getAllHistoryEntries();
+
+        historyList.add(0, new History(-1, "Orginalformel", "Ergebnisformel/Zweitformel"));
+
+        // Liste darstellen
+        history_view.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView.Adapter adapter = new Adapter_for_HistroyView(historyList);
+        history_view.setAdapter(adapter);
+
+        // onClick listener
+        ((Adapter_for_HistroyView) adapter).setOnItemClickListener(new Adapter_for_HistroyView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+
             }
         });
 

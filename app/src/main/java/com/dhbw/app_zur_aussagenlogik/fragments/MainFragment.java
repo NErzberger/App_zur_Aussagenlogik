@@ -21,6 +21,8 @@ import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
 import com.dhbw.app_zur_aussagenlogik.core.ParserException;
+import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
+import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
@@ -63,7 +65,9 @@ public class MainFragment extends Fragment {
 
     private View view;
 
+    private HistoryDataSource dataSource;
 
+    public int formulaHistoryPosition;
 
     public MainFragment(AppCompatActivity mainActivity) {
         this.mainActivity = (MainActivity) mainActivity;
@@ -98,7 +102,7 @@ public class MainFragment extends Fragment {
 
         layout = view.findViewById(R.id.tabLayout);
 
-
+        dataSource = new HistoryDataSource(getContext());
 
 
 
@@ -311,7 +315,7 @@ public class MainFragment extends Fragment {
                 // eine Formel zurück
             }
         });
-        
+
         return this.view;
     }
 
@@ -323,9 +327,12 @@ public class MainFragment extends Fragment {
             parser.setModus(modus);
             String resultFormel = parser.parseFormula(eingabeFormel);
             resultText.setText(resultFormel);
+            History h = new History(0, eingabeFormel, resultFormel);
+            dataSource.addHistoryEntry(h);
             this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
 
         }
+
     }
 }

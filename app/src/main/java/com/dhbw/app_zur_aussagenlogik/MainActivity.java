@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.dhbw.app_zur_aussagenlogik.fragments.AboutUsFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.HistoryFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.MainFragment;
+import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        HistoryDataSource dataSource = new HistoryDataSource(this);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, new MainFragment(this))
