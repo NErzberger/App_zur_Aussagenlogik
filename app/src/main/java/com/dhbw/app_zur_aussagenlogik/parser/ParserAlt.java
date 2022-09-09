@@ -1,17 +1,18 @@
 package com.dhbw.app_zur_aussagenlogik.parser;
 
 import com.dhbw.app_zur_aussagenlogik.Modi;
+import com.dhbw.app_zur_aussagenlogik.core.ParserException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Parser {
+public class ParserAlt {
 
-    private static Parser parser = new Parser();
+    private static ParserAlt parser = new ParserAlt();
 
-    public static Parser getInstance() {
-        return Parser.parser;
+    public static ParserAlt getInstance() {
+        return ParserAlt.parser;
     }
 
     private Modi modus;

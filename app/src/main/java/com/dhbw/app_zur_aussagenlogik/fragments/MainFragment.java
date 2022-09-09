@@ -1,21 +1,28 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
-import com.dhbw.app_zur_aussagenlogik.parser.Parser;
-import com.dhbw.app_zur_aussagenlogik.parser.ParserException;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.ParserException;
+import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
+import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
@@ -45,6 +52,11 @@ public class MainFragment extends Fragment {
     private Button buttonReturn;
     private Button buttonKlammerAuf;
     private Button buttonKlammerZu;
+    private Button buttonRechenweg;
+    private Button buttonOneBack;
+    private MenuItem itemVerlauf;
+    private MenuItem itemAnleitung;
+    private MenuItem itemUeberUns;
 
 
     private Modi modus = Modi.DNF;
@@ -53,7 +65,9 @@ public class MainFragment extends Fragment {
 
     private View view;
 
+    private HistoryDataSource dataSource;
 
+    public int formulaHistoryPosition;
 
     public MainFragment(AppCompatActivity mainActivity) {
         this.mainActivity = (MainActivity) mainActivity;
@@ -88,6 +102,10 @@ public class MainFragment extends Fragment {
 
         layout = view.findViewById(R.id.tabLayout);
 
+        dataSource = new HistoryDataSource(getContext());
+
+
+
         // Deklaration der Tastatur
         buttonA = view.findViewById(R.id.buttonA);
         buttonB = view.findViewById(R.id.buttonB);
@@ -104,6 +122,12 @@ public class MainFragment extends Fragment {
         buttonReturn = view.findViewById(R.id.buttonReturn);
         buttonKlammerAuf = view.findViewById(R.id.buttonKlammerAuf);
         buttonKlammerZu = view.findViewById(R.id.buttonKlammerZu);
+        buttonRechenweg = view.findViewById(R.id.buttonRechenweg);
+        buttonOneBack = view.findViewById(R.id.buttonOneBack);
+
+        itemVerlauf = view.findViewById(R.id.history);
+        itemAnleitung = view.findViewById(R.id.anleitung);
+        itemUeberUns = view.findViewById(R.id.UeberUns);
 
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
@@ -112,10 +136,11 @@ public class MainFragment extends Fragment {
         inputText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UIUtil.hideKeyboard(view.getContext(), view);
-            }});
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-        // OnClickListener für das TabLayout
+
+            }});
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -123,21 +148,26 @@ public class MainFragment extends Fragment {
                 String tabName = tab.getText().toString(); // Achtung Text nicht ändern oder über id?
                 switch (tabName) {
                     case "DNF":
+                        resultText.setEnabled(false);
                         modus = Modi.DNF;
                         break;
                     case "KNF":
+                        resultText.setEnabled(false);
                         modus = Modi.KNF;
                         break;
                     case "Resolu-tion":
+                        resultText.setEnabled(false);
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
-                        //resultText.setEnabled(true);
+
+                        resultText.setEnabled(true);
                         modus = Modi.FORMELN;
                         //changeLayout(modus);
                         //mainActivity.replaceFragment(new Resolution(mainActivity));
                         break;
                     case "Tab-\nleaux":
+                        resultText.setEnabled(false);
                         modus = Modi.TABLEAUX;
                         break;
                 }
@@ -151,7 +181,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
-
         });
 
 
@@ -252,10 +281,10 @@ public class MainFragment extends Fragment {
                         launchParser(Modi.DNF);
                         break;
                     case RESOLUTION:
-                       mainActivity.replaceFragment(new Resolution(mainActivity));
+                       mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
                        break;
                     case TABLEAUX:
-                        mainActivity.replaceFragment(new Tableaux(mainActivity));
+                        mainActivity.replaceFragment(new TableauxFragment(mainActivity));
                         break;
                 }
 
@@ -277,9 +306,23 @@ public class MainFragment extends Fragment {
             }
         });
 
+        buttonRechenweg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(new NormalformFragment(mainActivity));
+            }
+        });
+
+        buttonOneBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // eine Formel zurück
+            }
+        });
 
         return this.view;
     }
+
 
     private void launchParser(Modi modus){
         Parser parser = Parser.getInstance();
@@ -288,9 +331,13 @@ public class MainFragment extends Fragment {
             parser.setModus(modus);
             String resultFormel = parser.parseFormula(eingabeFormel);
             resultText.setText(resultFormel);
+            History h = new History(0, eingabeFormel, resultFormel);
+            dataSource.addHistoryEntry(h);
+            this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
 
         }
+
     }
 
     private void changeLayout(Modi modus){

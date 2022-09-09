@@ -14,10 +14,10 @@ import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Resolution#newInstance} factory method to
+ * Use the {@link ResolutionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Resolution extends Fragment {
+public class ResolutionFragment extends Fragment {
 
 
     private MainActivity mainActivity;
@@ -26,7 +26,7 @@ public class Resolution extends Fragment {
 
     private Button homeButton;
 
-    public Resolution(MainActivity mainActivity) {
+    public ResolutionFragment(MainActivity mainActivity) {
        super(R.layout.fragment_resolution);
        this.mainActivity = mainActivity;
     }
@@ -38,8 +38,8 @@ public class Resolution extends Fragment {
 
      * @return A new instance of fragment Resolution.
      */
-    public static Resolution newInstance(MainActivity mainActivity) {
-        Resolution fragment = new Resolution(mainActivity);
+    public static ResolutionFragment newInstance(MainActivity mainActivity) {
+        ResolutionFragment fragment = new ResolutionFragment(mainActivity);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

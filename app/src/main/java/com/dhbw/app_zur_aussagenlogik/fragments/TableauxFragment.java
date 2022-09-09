@@ -14,10 +14,10 @@ import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Tableaux#newInstance} factory method to
+ * Use the {@link TableauxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tableaux extends Fragment {
+public class TableauxFragment extends Fragment {
 
     private MainActivity mainActivity;
 
@@ -25,7 +25,7 @@ public class Tableaux extends Fragment {
 
     private Button homeButton;
 
-    public Tableaux(MainActivity mainActivity) {
+    public TableauxFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
@@ -36,8 +36,8 @@ public class Tableaux extends Fragment {
      * @return A new instance of fragment Tableaux.
      */
     // TODO: Rename and change types and number of parameters
-    public static Tableaux newInstance(MainActivity mainActivity) {
-        Tableaux fragment = new Tableaux(mainActivity);
+    public static TableauxFragment newInstance(MainActivity mainActivity) {
+        TableauxFragment fragment = new TableauxFragment(mainActivity);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

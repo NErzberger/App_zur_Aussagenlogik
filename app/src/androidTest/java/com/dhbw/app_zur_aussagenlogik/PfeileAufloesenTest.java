@@ -4,10 +4,13 @@ import static org.junit.Assert.assertArrayEquals;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.dhbw.app_zur_aussagenlogik.parser.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.Formel;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.text.Normalizer;
 
 @RunWith(AndroidJUnit4.class)
 public class PfeileAufloesenTest {
@@ -15,98 +18,94 @@ public class PfeileAufloesenTest {
     @Test
     public void einfacherTest(){
         Parser p = new Parser();
-        char[] formel = {'(', 'a', '*', 'b', ')', '1', 'c'};
-        char[] expectedFormel = {'n', '(', 'a', '*', 'b', ')', '+', 'c'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("(a*b)1c");
+        Formel expectedFormel = new Formel("n(a*b)+c");
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void zweiPfeileTest(){
         Parser p = new Parser();
-        char[] formel = {'(','(', 'a', '*', 'b', ')', '1', 'c', ')', '1', 'd'};
-        char[] expectedFormel = {'n', '(','n', '(', 'a', '*', 'b', ')', '+', 'c', ')', '+', 'd'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("((a*b)1c)1d");
+        Formel expectedFormel = new Formel("n(n(a*b)+c)+d");
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void zweiKlammernTest(){
         Parser p = new Parser();
-        char[] formel = {'(', 'a', '*', 'b', ')', '1', '(', 'c', '*', 'd', ')'};
-        char[] expectedFormel = {'n', '(', 'a', '*', 'b', ')', '+', '(', 'c', '*', 'd', ')'};
-        char[] ergebnis = p.pfeileAufloesen(formel);
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("(a*b)1(c*d)");
+        Formel expectedFormel = new Formel("n(a*b)+(c*d)");
+        char[] ergebnis = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ergebnis);
     }
 
     @Test
     public void testVier(){
         Parser p = new Parser();
-        char[] formel = {'a', '1', 'b', '1', 'c', '1', 'd', '1', 'e'};
-        char[] expectedFormel = {'n', 'a', '+', 'n', 'b', '+', 'n', 'c', '+', 'n', 'd', '+', 'e'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("a1b1c1d1e");
+        Formel expectedFormel = new Formel("na+nb+nc+nd+e");
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void negativTest(){
         Parser p = new Parser();
-        char[] formel = {'n', 'a', '1', 'n', 'b', '1', 'n', 'c', '1', 'n', 'd', '1', 'n', 'e'};
-        char[] expectedFormel = {'n', 'n', 'a', '+', 'n', 'n', 'b', '+', 'n', 'n', 'c', '+', 'n', 'n', 'd', '+', 'n', 'e'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("na1nb1nc1nd1ne");
+        Formel expectedFormel = new Formel("nna+nnb+nnc+nnd+ne");
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void beidseitig(){
         Parser p = new Parser();
-        char[] formel = {'a', '2', 'b'};
-        char[] expectedFormel = {'(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("a2b");
+        Formel expectedFormel = new Formel("(na+b)*(nb+a)");
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void beidseitigZwei(){
         Parser p = new Parser();
-        char[] formel = {'(', 'a', '+', 'b', ')', '2', 'c'};
-        char[] expectedFormel = {'(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')'};
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("(a+b)2c");
+        Formel expectedFormel = new Formel("(n(a+b)+c)*(nc+a+b)");
+        assertArrayEquals(expectedFormel.getFormel(), p.pfeileAufloesen(formel).getFormel());
     }
 
     @Test
     public void beidseitigDrei(){
         Parser p = new Parser();
-        char[] formel = {'(', '(', 'a', '+', 'b', ')', '2', 'c', ')', '2', 'e'};
-        char[] expectedFormel = {'(', 'n', '(', '(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')', ')', '+', 'e', ')',
-                '*', '(', 'n', 'e', '+', '(', '(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', ')', '*', '(', 'n', 'c', '+', 'a', '+', 'b', ')', ')', ')'};
-        char[] aufgelöst = p.pfeileAufloesen(formel);
-        assertArrayEquals(expectedFormel, aufgelöst);
+        Formel formel = new Formel("((a+b)2c)2e");
+        Formel expectedFormel = new Formel("(n((n(a+b)+c)*(nc+a+b))+e)*(ne+((n(a+b)+c)*(nc+a+b)))");
+        char[] aufgelöst = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), aufgelöst);
     }
 
     @Test
     public void beidseitigVier(){
         Parser p = new Parser();
-        char[] formel = {'(', 'a', '2', '(', 'b', '+', 'c', ')', '2', 'd', ')', '2', 'e'};
-        char[] expectedFormel = {'(', 'n', '(', '(', 'n', 'a', '+', 'b', '+', 'c', ')', '*', '(', 'n', '(', 'n', '(', 'b', '+', 'c', ')', '+', 'a', ')', '+', 'd', ')',
-        '*', '(', 'n', 'd', '+', 'n', '(', 'b', '+', 'c', ')', '+','a', ')', ')', '+', 'e', ')', '*', '(', 'n', 'e', '+','(', '(', 'n', 'a', '+', 'b', '+', 'c', ')', '*',
-          '(', 'n', '(', 'n', '(', 'b', '+', 'c', ')','+', 'a', ')', '+', 'd', ')', '*', '(', 'n', 'd', '+', 'n', '(', 'b', '+', 'c', ')', '+', 'a', ')', ')', ')'};
-        char[] aufgelöst = p.pfeileAufloesen(formel);
-        assertArrayEquals(expectedFormel, aufgelöst);
+        Formel formel = new Formel("(a2(b+c)2d)2e");
+        Formel expectedFormel = new Formel("(n((na+b+c)*(n(n(b+c)+a)+d)*(nd+n(b+c)+a))+e)*" +
+                "(ne+((na+b+c)*(n(n(b+c)+a)+d)*(nd+n(b+c)+a)))");
+        char[] aufgelöst = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), aufgelöst);
     }
 
     @Test
     public void beidseitigZweiKlammern(){
         Parser p = new Parser();
-        char[] formel = {'(', 'a', '+', 'b', ')', '2', '(', 'c', '+', 'd', ')'};
-        char[] expectedFormel = {'(', 'n', '(', 'a', '+', 'b', ')', '+', 'c', '+', 'd', ')', '*', '(', 'n', '(', 'c', '+', 'd', ')', '+', 'a', '+', 'b', ')'};
-        char[] ergebnis = p.pfeileAufloesen(formel);
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("(a+b)2(c+d)");
+        Formel expectedFormel = new Formel("(n(a+b)+c+d)*(n(c+d)+a+b)");
+        char[] ergebnis = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ergebnis);
     }
 
     @Test
     public void beidseitigZweiKlammernZwei(){
         Parser p = new Parser();
-        char[] formel = {'(', 'a', '2', 'b', ')', '2', '(', 'c', '2', 'd', ')'};
-        char[] expectedFormel = {'(', 'n', '(', '(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')', ')', '+',
-        '(', '(', 'n', 'c', '+', 'd', ')', '*', '(', 'n', 'd', '+', 'c', ')', ')', ')', '*', '(', 'n', '(', '(', 'n', 'c', '+', 'd', ')',
-        '*', '(', 'n', 'd', '+', 'c', ')', ')', '+', '(', '(', 'n', 'a', '+', 'b', ')', '*', '(', 'n', 'b', '+', 'a', ')', ')', ')'};
-        char[] ergebnis = p.pfeileAufloesen(formel);
-        assertArrayEquals(expectedFormel, p.pfeileAufloesen(formel));
+        Formel formel = new Formel("(a2b)2(c2d)");
+        Formel expectedFormel = new Formel("(n((na+b)*(nb+a))+((nc+d)*(nd+c)))*(n((nc+d)*(nd+c))+((na+b)*(nb+a)))");
+        char[] ergebnis = p.pfeileAufloesen(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ergebnis);
     }
 }

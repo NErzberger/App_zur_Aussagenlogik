@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MainFragment"
-    android:id="@+id/fragment_main">
+    android:id="@+id/fragment_main"
+    android:background="#CCFFFF">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -49,34 +50,77 @@
     </com.google.android.material.tabs.TabLayout>
 
 
+    <Button
+        android:id="@+id/buttonRechenweg"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="180dp"
+        android:text="Rechenweg"
+        android:enabled="false"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintStart_toStartOf="@+id/textIhreFormelErgebnis"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.557" />
+
+    <TextView
+        android:id="@+id/textIhreFormel"
+        android:layout_width="202dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="20dp"
+        android:autoText="false"
+        android:text="Ihre Formel"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_constraintVertical_bias="1.0" />
+
     <EditText
         android:id="@+id/input"
-        android:layout_width="263dp"
+        android:layout_width="0dp"
         android:layout_height="101dp"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
         android:ems="10"
+        android:hint="@string/inputPlaceholder"
         android:inputType="text"
         android:text="@string/input"
-        android:hint="@string/inputPlaceholder"
-        android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintVertical_bias="0.314" />
+
+    <TextView
+        android:id="@+id/textIhreFormelErgebnis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:autoText="false"
+        android:text="Lösung"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/solution"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input" />
 
     <EditText
         android:id="@+id/solution"
-        android:layout_width="264dp"
+        android:layout_width="0dp"
         android:layout_height="79dp"
-        android:layout_marginStart="52dp"
         android:layout_marginTop="26dp"
         android:layout_marginBottom="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
+        android:enabled="false"
+        android:hint="@string/solutionPlaceholder"
         android:inputType="textPersonName"
         android:text="@string/solution"
-        android:hint="@string/solutionPlaceholder"
-        android:enabled="false"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input" />
 
@@ -100,6 +144,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/a" />
 
+            <!--   style="@style/ButtonFontSpecialChar" -->
+
             <Button
                 android:id="@+id/buttonB"
                 style="@style/ButtonFontStyle"
@@ -116,7 +162,7 @@
 
             <Button
                 android:id="@+id/buttonDelete"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delete" />
@@ -143,7 +189,7 @@
 
             <Button
                 android:id="@+id/buttonNegation"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/negative" />
@@ -177,14 +223,14 @@
 
             <Button
                 android:id="@+id/buttonImplikation"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/toArrow" />
 
             <Button
                 android:id="@+id/buttonReturn"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enter" />
@@ -211,10 +257,17 @@
 
             <Button
                 android:id="@+id/buttonImplikationBeidseitig"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/leftRightArrow" />
+
+            <Button
+                android:id="@+id/buttonOneBack"
+                style="@style/ButtonFontStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/oneBack" />
 
         </TableRow>
 
