@@ -1,4 +1,4 @@
-package com.dhbw.app_zur_aussagenlogik;
+package com.dhbw.app_zur_aussagenlogik.dnf;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -27,7 +27,7 @@ public class AusmultiplizierenTest {
     public void schonDNF2() {
         Parser p = new Parser();
         Formel formel = new Formel("a+(b*c)");
-        Formel expectedFormel = new Formel("a+(b*c)");
+        Formel expectedFormel = new Formel("(a)+(b*c)");
         char[] ausmultipliziert = Ausmultiplizieren.ausmultiplizieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausmultipliziert);
     }
@@ -45,7 +45,7 @@ public class AusmultiplizierenTest {
     public void zweiKlammernTest(){
         Parser p = new Parser();
         Formel formel = new Formel("(a+b)*(b+c)");
-        Formel expectedFormel = new Formel("(a*b)+(a*c)+(b*c)+(b*b)");
+        Formel expectedFormel = new Formel("(a*b)+(a*c)+(b*b)+(b*c)");
         char[] ausmultipliziert = Ausmultiplizieren.ausmultiplizieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausmultipliziert);
     }
@@ -63,7 +63,7 @@ public class AusmultiplizierenTest {
     public void zweiEinfacheUnd() {
         Parser p = new Parser();
         Formel formel = new Formel("d*a*(b+c)");
-        Formel expectedFormel = new Formel("(d*a*b)+(a*c*d)");
+        Formel expectedFormel = new Formel("(d*a*b)+(d*a*c)");
         char[] ausmultipliziert = Ausmultiplizieren.ausmultiplizieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausmultipliziert);
     }
