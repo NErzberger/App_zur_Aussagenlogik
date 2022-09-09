@@ -132,12 +132,16 @@ public class MainFragment extends Fragment {
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
+                        //resultText.setEnabled(true);
                         modus = Modi.FORMELN;
+                        //changeLayout(modus);
+                        //mainActivity.replaceFragment(new Resolution(mainActivity));
                         break;
                     case "Tab-\nleaux":
                         modus = Modi.TABLEAUX;
                         break;
                 }
+                changeLayout(modus);
             }
 
             @Override
@@ -287,5 +291,20 @@ public class MainFragment extends Fragment {
         }catch (ParserException pe){
 
         }
+    }
+
+    private void changeLayout(Modi modus){
+
+        if(modus == Modi.DNF || modus == Modi.KNF || modus == Modi.TABLEAUX || modus == Modi.RESOLUTION ){
+            resultText.setEnabled(false);
+            inputText.setFocusedByDefault(true);
+        }
+        else if(modus == Modi.FORMELN){
+            resultText.setEnabled(true);
+            inputText.setHint("Bitte geben Sie hier ihre erste Formel ein.");
+            resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
+            inputText.setFocusedByDefault(true);
+        }
+
     }
 }
