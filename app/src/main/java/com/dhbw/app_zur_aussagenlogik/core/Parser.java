@@ -222,58 +222,66 @@ public class Parser {
              * 2 = beidseitige Implikation
              */
             if(c == '1' || c == '2') {
+                String vordererBlock = "";
                 // vorderer Block bei Klammer
-                int laengeVordererBlock = 1;
-                if(bFormel.getChar(i-1)==')') {
-                    int counter = 1;
-                    for(int j = 2; counter>0; j++) {
-                        char zeichenDavor = bFormel.getChar(i-j);
-                        if(zeichenDavor == ')') {
-                            counter++;
-                        }else if(zeichenDavor=='(') {
-                            counter--;
+
+                int innereKlammerLinks = 0;
+                int counterLinks = 1;
+                while (true) {
+                    if(i-counterLinks>=0) {
+                        char formelChar = formel.getChar(i - counterLinks);
+                        if (formelChar == ')') {
+                            innereKlammerLinks++;
+                        } else if (formelChar == '(') {
+                            innereKlammerLinks--;
+                            if (innereKlammerLinks == 0) {
+                                vordererBlock = vordererBlock + formelChar;
+                                break;
+                            }
+                        } else if (formelChar == '+' && innereKlammerLinks == 0) {
+                            break;
                         }
-                        laengeVordererBlock++;
+                        vordererBlock = vordererBlock + formelChar;
+                        counterLinks++;
+                    }else{
+                        break;
                     }
                 }
-                // Per Regex
-                if(Character.toString(bFormel.getChar(i-1)).matches("[a-n]")) {
-                    laengeVordererBlock = 1;
-                }
-                char[] blockVorne = new char[laengeVordererBlock];
-                for (int j = 0; j < blockVorne.length; j++) {
-                    blockVorne[j] = bFormel.getChar(i-laengeVordererBlock+j);
-                }
+                vordererBlock = new StringBuilder(vordererBlock).reverse().toString();
                 // Block hinten
-                int laengeHintererBlock = 1;
-                if(bFormel.getChar(i+1)=='(') {
-                    int counter = 1;
-                    for(int j = 2; counter>0; j++) {
-                        char zeichenDanach = bFormel.getChar(i+j);
-                        if(zeichenDanach == '(') {
-                            counter++;
-                        }else if(zeichenDanach==')') {
-                            counter--;
+                String hintererBlock = "";
+                int counterRechts = 1;
+                int klammernRechts = 0;
+                while (true) {
+                    if(i+counterRechts<formel.length()) {
+                        char formelChar = formel.getChar(i + counterRechts);
+                        if (formelChar == '(') {
+                            klammernRechts++;
+                        } else if (formelChar == ')') {
+                            if (klammernRechts == 0) {
+                                break;
+                            }
+                            klammernRechts--;
+                        } else if ((formelChar == '+' || formelChar == '1' || formelChar == '2') && klammernRechts == 0) {
+                            break;
                         }
-                        laengeHintererBlock++;
+                        hintererBlock = hintererBlock + formelChar;
+                        counterRechts++;
+                    }else{
+                        break;
                     }
                 }
-                // Per Regex
-                if(Character.toString(bFormel.getChar(i+1)).matches("[a-n]")) {
-                    laengeHintererBlock = 1;
-                }
-                char[] blockHinten = new char[laengeHintererBlock];
-                for (int j = 0; j < blockHinten.length; j++) {
-                    blockHinten[j] = bFormel.getChar(i+j+1);
-                }
+
                 if(c=='1') {
-                    bFormel.blockEinsetzen(einseitigeImplikation(blockVorne, blockHinten), i-laengeVordererBlock, i+laengeHintererBlock);
+                    bFormel.blockEinsetzen(einseitigeImplikation(new Formel(vordererBlock).getFormel(), new Formel(hintererBlock).getFormel()), i-vordererBlock.length(), i+hintererBlock.length());
+                    return pfeileAufloesen(bFormel);
                 }else if(c=='2') {
-                    bFormel.blockEinsetzen(beidseitigeImplikation(blockVorne, blockHinten), i-laengeVordererBlock, i+laengeHintererBlock);
+                    bFormel.blockEinsetzen(beidseitigeImplikation(new Formel(vordererBlock).getFormel(), new Formel(hintererBlock).getFormel()), i-vordererBlock.length(), i+hintererBlock.length());
+                    return pfeileAufloesen(bFormel);
                 }
             }
         }
-        return bFormel.klammernPrüfen();
+        return bFormel;
     }
 
     public Formel deMorgan(Formel formel) {
@@ -361,6 +369,7 @@ public class Parser {
 
     private Formel einseitigeImplikation(char[] b1, char[] b2) {
         Formel result = new Formel();
+        result.zeichenHinzufügen('(');
         result.zeichenHinzufügen('n');
         for (int i = 0; i < b1.length; i++) {
             result.zeichenHinzufügen(b1[i]);
@@ -369,6 +378,7 @@ public class Parser {
         for (int i = 0; i < b2.length; i++) {
             result.zeichenHinzufügen(b2[i]);
         }
+        result.zeichenHinzufügen(')');
         return result;
     }
 
@@ -388,6 +398,15 @@ public class Parser {
         }
         result.zeichenHinzufügen(')');
         return result;
+    }
+
+    private char[] zeichenHinzufügen(char[] origin, char z) {
+        char[] newZeichenSatz = new char[origin.length + 1];
+        for (int i = 0; i < origin.length; i++) {
+            newZeichenSatz[i] = origin[i];
+        }
+        newZeichenSatz[origin.length] = z;
+        return newZeichenSatz;
     }
 
 
