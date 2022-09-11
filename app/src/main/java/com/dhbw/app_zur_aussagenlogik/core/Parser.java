@@ -237,10 +237,13 @@ public class Parser {
                             if (innereKlammerLinks == 0) {
                                 vordererBlock = vordererBlock + formelChar;
                                 break;
+                            }else if(innereKlammerLinks==-1){
+                                break;
                             }
-                        } else if (formelChar == '+' && innereKlammerLinks == 0) {
+
+                        } /*else if (formelChar == '+' && innereKlammerLinks == 0) {
                             break;
-                        }
+                        }*/
                         vordererBlock = vordererBlock + formelChar;
                         counterLinks++;
                     }else{
@@ -258,13 +261,16 @@ public class Parser {
                         if (formelChar == '(') {
                             klammernRechts++;
                         } else if (formelChar == ')') {
+                            klammernRechts--;
                             if (klammernRechts == 0) {
+                                hintererBlock = hintererBlock + formelChar;
+                                break;
+                            }else if(klammernRechts==-1){
                                 break;
                             }
-                            klammernRechts--;
-                        } else if ((formelChar == '+' || formelChar == '1' || formelChar == '2') && klammernRechts == 0) {
+                        } /*else if ((formelChar == '+' || formelChar == '1' || formelChar == '2') && klammernRechts == 0) {
                             break;
-                        }
+                        }*/
                         hintererBlock = hintererBlock + formelChar;
                         counterRechts++;
                     }else{
@@ -371,8 +377,16 @@ public class Parser {
         Formel result = new Formel();
         result.zeichenHinzufügen('(');
         result.zeichenHinzufügen('n');
+        boolean zusätzlicheKlammer = false;
+        if(b1[0]!='('&&b1.length>1){
+            zusätzlicheKlammer=true;
+            result.zeichenHinzufügen('(');
+        }
         for (int i = 0; i < b1.length; i++) {
             result.zeichenHinzufügen(b1[i]);
+        }
+        if(zusätzlicheKlammer){
+            result.zeichenHinzufügen(')');
         }
         result.zeichenHinzufügen('+');
         for (int i = 0; i < b2.length; i++) {
@@ -387,6 +401,7 @@ public class Parser {
         Formel r2 = einseitigeImplikation(b2, b1);
         Formel result = new Formel();
         result.zeichenHinzufügen('(');
+        result.zeichenHinzufügen('(');
         for (int i = 0; i < r1.length(); i++){
             result.zeichenHinzufügen(r1.getChar(i));
         }
@@ -396,6 +411,7 @@ public class Parser {
         for (int i = 0; i < r2.length(); i++) {
             result.zeichenHinzufügen(r2.getChar(i));
         }
+        result.zeichenHinzufügen(')');
         result.zeichenHinzufügen(')');
         return result;
     }
