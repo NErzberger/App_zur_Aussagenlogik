@@ -52,6 +52,23 @@ public class Formel {
         return new Formel(this.formel);
     }
 
+    public Formel negationPruefen(){
+
+        Formel newFormel = new Formel();
+
+        for(int i = 0; i<formel.length; i++){
+            if(i<formel.length-1){
+                if(getChar(i)=='n' && getChar(i+1) == 'n'){
+                    i = i + 2;
+                }
+            }
+
+            newFormel.zeichenHinzufügen(getChar(i));
+        }
+        return newFormel;
+    }
+
+
     public Formel klammernPrüfen(){
         for (int j = 0; j<formel.length; j++) {
             if (getChar(j) == '(') {
@@ -83,7 +100,7 @@ public class Formel {
     public boolean klammerNotwendig(int indexÖffnedeKlammer){
         if(indexÖffnedeKlammer>=0 && indexÖffnedeKlammer+1 <= formel.length) {
             boolean endklammerNichtGefunden = true;
-            int indexEndklammer = indexÖffnedeKlammer+1;
+            int indexEndklammer = indexÖffnedeKlammer + 1;
             int anzahlKlammern = 1;
             boolean malInKlammer = false;
             boolean plusInKlammer = false;
@@ -92,9 +109,9 @@ public class Formel {
                     anzahlKlammern++;
                 } else if (getChar(indexEndklammer) == ')') {
                     anzahlKlammern--;
-                }else if(getChar(indexEndklammer)=='*' && anzahlKlammern==1){
+                } else if (getChar(indexEndklammer) == '*' && anzahlKlammern == 1) {
                     malInKlammer = true;
-                } else if(getChar(indexEndklammer)=='+'&& anzahlKlammern==1){
+                } else if (getChar(indexEndklammer) == '+' && anzahlKlammern == 1) {
                     plusInKlammer = true;
                 }
                 if (anzahlKlammern == 0) {
@@ -103,7 +120,13 @@ public class Formel {
                 }
                 indexEndklammer++;
             }
-            if(indexÖffnedeKlammer>0 && (indexEndklammer+1)==formel.length){
+
+            if((indexEndklammer == indexÖffnedeKlammer+2 && getChar(indexÖffnedeKlammer+1)!='n')
+                    || (indexEndklammer == indexÖffnedeKlammer+3 && getChar(indexÖffnedeKlammer+1)=='n')){
+                  return false;
+            }else if(indexÖffnedeKlammer==0 && (indexEndklammer)==formel.length){
+                  return false;
+            }else if(indexÖffnedeKlammer>0 && (indexEndklammer+1)==formel.length){
                 if ((getChar(indexÖffnedeKlammer - 1) == '*' && plusInKlammer )
                         ||(getChar(indexÖffnedeKlammer - 1) == '+' && malInKlammer)
                         || getChar(indexÖffnedeKlammer - 1) == '1'
@@ -124,7 +147,7 @@ public class Formel {
                                 || getChar(indexEndklammer + 1) == 'n')) {
                     return true;
                 }
-            }else if(indexÖffnedeKlammer==0){
+            }else if(indexÖffnedeKlammer==0 && (indexEndklammer+1)<formel.length){
                 if ((getChar(indexEndklammer + 1) == '*' && plusInKlammer)
                         || (getChar(indexEndklammer + 1) == '+' && malInKlammer)
                         || getChar(indexEndklammer + 1) == '1'

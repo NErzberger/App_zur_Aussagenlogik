@@ -236,6 +236,9 @@ public class Parser {
                             innereKlammerLinks--;
                             if (innereKlammerLinks == 0) {
                                 vordererBlock = vordererBlock + formelChar;
+                                if(i-counterLinks>=1&&formel.getChar(i-counterLinks-1)=='n'){
+                                    vordererBlock = vordererBlock + 'n';
+                                }
                                 break;
                             }else if(innereKlammerLinks==-1){
                                 break;
@@ -287,56 +290,56 @@ public class Parser {
                 }
             }
         }
+        bFormel.klammernPrüfen();
+        bFormel.negationPruefen();
         return bFormel;
     }
 
     public Formel deMorgan(Formel formel) {
+
         Formel bFormel = formel;
+        Formel fDeMorgan = new Formel();
+        boolean deMorganGefunden = false;
+
         for (int i = 0; i < bFormel.length(); i++) {
             char c = bFormel.getChar(i);
-            Formel fDeMorgan = new Formel();
+
             // Zeichen umdrehen und Buchstaben negieren
             if(c=='n' && bFormel.getChar(i+1)=='('){
-                boolean weiterMachen = true;
-                int count = i+2;
-                int klammern = 1;
-                boolean eineKlammerÜberspringen = false;
+                deMorganGefunden = true;
+                //int count = i+2;
+                int klammern = 0;
+                //boolean eineKlammerÜberspringen = false;
                 fDeMorgan.zeichenHinzufügen('(');
-                while(weiterMachen){
-                    if(Character.toString(bFormel.getChar(count)).matches("[a-e]")&&bFormel.getChar(count-1)=='n'){
-                        fDeMorgan.zeichenHinzufügen(bFormel.getChar(count));
-                    }else if(Character.toString(bFormel.getChar(count)).matches("[a-e]")&&bFormel.getChar(count-1)!='n'){
+                i=i+2;
+                while(i<formel.length()){
+                    if(klammern != 0){
+                        fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                    }else if(Character.toString(bFormel.getChar(i)).matches("[a-e]")&&bFormel.getChar(i-1)=='n'){
+                        fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                    }else if(Character.toString(bFormel.getChar(i)).matches("[a-e]")&&bFormel.getChar(i-1)!='n'){
                         fDeMorgan.zeichenHinzufügen('n');
-                        fDeMorgan.zeichenHinzufügen(bFormel.getChar(count));
-                    }else if(bFormel.getChar(count)=='+'){
+                        fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                    }else if(bFormel.getChar(i)=='+'){
                         fDeMorgan.zeichenHinzufügen('*');
-                    }else if(bFormel.getChar(count)=='*'){
+                    }else if(bFormel.getChar(i)=='*'){
                         fDeMorgan.zeichenHinzufügen('+');
-                    }else if(bFormel.getChar(count)=='('){
-                        if(bFormel.klammerNotwendig(count)) {
-                            fDeMorgan.zeichenHinzufügen('(');
-                            klammern++;
-                        }else{
-                            eineKlammerÜberspringen=true;
-                        }
-                    }else if(bFormel.getChar(count)=='n'&&bFormel.getChar(count+1)=='('){
-                        count++;
-                        continue;
-                    }else if(bFormel.getChar(count)==')'){
-                        if(!eineKlammerÜberspringen) {
-                            fDeMorgan.zeichenHinzufügen(')');
-                            klammern--;
-                        }else{
-                            eineKlammerÜberspringen=false;
-                        }
+                    }else if(bFormel.getChar(i)=='(' && bFormel.getChar(i-1)!='n'){
+                        fDeMorgan.zeichenHinzufügen('n');
+                        fDeMorgan.zeichenHinzufügen('(');
+                        klammern++;
+                    }else if(bFormel.getChar(i)=='n'&&bFormel.getChar(i+1)=='('){
+                        fDeMorgan.zeichenHinzufügen('(');
+                        i++;
+                        klammern++;
+                    }else if(bFormel.getChar(i)==')'){
+                        fDeMorgan.zeichenHinzufügen(')');
+                        klammern--;
                     }
-                    if(klammern==0){
-                        break;
-                    }
-                    count++;
+                    i++;
                 }
 
-                if(i-1>0 && count+1 <= bFormel.length()){
+                /*if(i-1>0 && count+1 <= bFormel.length()){
                     if((bFormel.getChar(i-1)=='1'||bFormel.getChar(i-1)=='2'||bFormel.getChar(i-1)=='*')||
                             (bFormel.getChar(count+1)=='1'||bFormel.getChar(count+1)=='2'||bFormel.getChar(count+1)=='*')){
                         // Klammer muss bestehen bleiben
@@ -362,10 +365,17 @@ public class Parser {
                         neueDeMorgan.zeichenHinzufügen(fDeMorgan.getChar(j));
                     }
                     bFormel.blockEinsetzen(neueDeMorgan, i, count);
-                }
+                }*/
+            } else {
+                fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                continue;
+            }
+            if(deMorganGefunden){
+                deMorgan(fDeMorgan);
             }
         }
-        return bFormel.klammernPrüfen();
+        fDeMorgan.klammernPrüfen();
+        return fDeMorgan;
     }
 
 
@@ -375,24 +385,24 @@ public class Parser {
 
     private Formel einseitigeImplikation(char[] b1, char[] b2) {
         Formel result = new Formel();
-        result.zeichenHinzufügen('(');
+        //result.zeichenHinzufügen('(');
         result.zeichenHinzufügen('n');
-        boolean zusätzlicheKlammer = false;
-        if(b1[0]!='('&&b1.length>1){
-            zusätzlicheKlammer=true;
+        //boolean zusätzlicheKlammer = false;
+        //if(b1[0]!='('&&b1.length>1){
+        //    zusätzlicheKlammer=true;
             result.zeichenHinzufügen('(');
-        }
+        //}
         for (int i = 0; i < b1.length; i++) {
             result.zeichenHinzufügen(b1[i]);
         }
-        if(zusätzlicheKlammer){
+        //if(zusätzlicheKlammer){
             result.zeichenHinzufügen(')');
-        }
+        //}
         result.zeichenHinzufügen('+');
         for (int i = 0; i < b2.length; i++) {
             result.zeichenHinzufügen(b2[i]);
         }
-        result.zeichenHinzufügen(')');
+        //result.zeichenHinzufügen(')');
         return result;
     }
 
@@ -400,7 +410,7 @@ public class Parser {
         Formel r1 = einseitigeImplikation(b1, b2);
         Formel r2 = einseitigeImplikation(b2, b1);
         Formel result = new Formel();
-        result.zeichenHinzufügen('(');
+        //result.zeichenHinzufügen('(');
         result.zeichenHinzufügen('(');
         for (int i = 0; i < r1.length(); i++){
             result.zeichenHinzufügen(r1.getChar(i));
@@ -412,7 +422,7 @@ public class Parser {
             result.zeichenHinzufügen(r2.getChar(i));
         }
         result.zeichenHinzufügen(')');
-        result.zeichenHinzufügen(')');
+        //result.zeichenHinzufügen(')');
         return result;
     }
 
