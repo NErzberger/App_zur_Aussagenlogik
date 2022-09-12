@@ -706,11 +706,11 @@ public class Parser {
         //Die Negationszeichen fallen ein paar Zeilen weiter unten raus.
         for(int i=0; i<formel.length; i++) {
 
-            if(formel[i] == '-' && formel[i+1] == '1') {
+            if(formel[i] == 'n' && formel[i+1] == '1') {
 
                 formel[i+1] = '0';
 
-            } else if(formel[i] == '-' && formel[i+1] == '0') {
+            } else if(formel[i] == 'n' && formel[i+1] == '0') {
 
                 formel[i+1] = '1';
 
@@ -723,7 +723,7 @@ public class Parser {
 
         //Hier werden alle Zeichen, ausser Negationszeichen, in die neue Liste kopiert
         for(char c : formel) {
-            if(c != '-') {
+            if(c != 'n') {
                 changedFormel.add(c);
             }
         }
