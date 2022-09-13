@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
@@ -57,6 +58,8 @@ public class MainFragment extends Fragment {
     private MenuItem itemVerlauf;
     private MenuItem itemAnleitung;
     private MenuItem itemUeberUns;
+
+    private TextView textIhreFormelErgebnis;
 
 
     private Modi modus = Modi.DNF;
@@ -132,6 +135,8 @@ public class MainFragment extends Fragment {
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
 
+        textIhreFormelErgebnis = view.findViewById(R.id.textIhreFormelErgebnis);
+
         //normale Tastatur wird direkt wieder geschlossen
         inputText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,26 +153,40 @@ public class MainFragment extends Fragment {
                 String tabName = tab.getText().toString(); // Achtung Text nicht ändern oder über id?
                 switch (tabName) {
                     case "DNF":
+                        buttonRechenweg.setVisibility(view.VISIBLE);
+                        textIhreFormelErgebnis.setText("Lösung");
                         resultText.setEnabled(false);
+                        resultText.setHint("Lösung");
                         modus = Modi.DNF;
                         break;
                     case "KNF":
+                        buttonRechenweg.setVisibility(view.VISIBLE);
+                        textIhreFormelErgebnis.setText("Lösung");
                         resultText.setEnabled(false);
+                        resultText.setHint("Lösung");
                         modus = Modi.KNF;
                         break;
                     case "Resolu-tion":
+                        buttonRechenweg.setVisibility(view.VISIBLE);
+                        textIhreFormelErgebnis.setText("Lösung");
                         resultText.setEnabled(false);
+                        resultText.setHint("Lösung");
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
-
+                        buttonRechenweg.setVisibility(view.INVISIBLE);
+                        textIhreFormelErgebnis.setText("2. Formel");
                         resultText.setEnabled(true);
+                        resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
                         modus = Modi.FORMELN;
                         //changeLayout(modus);
                         //mainActivity.replaceFragment(new Resolution(mainActivity));
                         break;
                     case "Tab-\nleaux":
+                        buttonRechenweg.setVisibility(view.VISIBLE);
+                        textIhreFormelErgebnis.setText("Lösung");
                         resultText.setEnabled(false);
+                        resultText.setHint("Lösung");
                         modus = Modi.TABLEAUX;
                         break;
                 }
@@ -280,6 +299,9 @@ public class MainFragment extends Fragment {
                     case DNF:
                         launchParser(Modi.DNF);
                         break;
+                    case FORMELN:
+                        launchParser(Modi.FORMELN);
+                        break;
                     case RESOLUTION:
                        mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
                        break;
@@ -328,14 +350,39 @@ public class MainFragment extends Fragment {
         Parser parser = Parser.getInstance();
         String eingabeFormel = inputText.getText().toString();
         try {
-            parser.setModus(modus);
-            String resultFormel = parser.parseFormula(eingabeFormel);
-            resultText.setText(resultFormel);
-            History h = new History(0, eingabeFormel, resultFormel);
-            dataSource.addHistoryEntry(h);
+            if(modus==Modi.FORMELN){
+                String zweiteFormel = resultText.getText().toString();
+                try {
+                    int[][] truthTable = parser.parseTwoFormula(eingabeFormel, zweiteFormel);
+                    History h = new History(0, eingabeFormel, zweiteFormel);
+                    dataSource.addHistoryEntry(h);
+                    mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable));
+                }catch (ParserException pe){
+                    // Formeln stimmen nicht über ein
+                    if(pe.getFehlercode()==-20){
+                        int[][] truthTable = pe.getTruthTable();
+                        History h = new History(0, eingabeFormel, zweiteFormel);
+                        dataSource.addHistoryEntry(h);
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, -20));
+                        // Falsche Eingabe
+                    }else if(pe.getFehlercode()==-10){
+
+                    }
+                }
+            }else {
+
+                parser.setModus(modus);
+                String resultFormel = parser.parseFormula(eingabeFormel);
+                resultText.setText(resultFormel);
+                History h = new History(0, eingabeFormel, resultFormel);
+                dataSource.addHistoryEntry(h);
+            }
             this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
+            // Falsche Eingabe
+            if(pe.getFehlercode()==-10){
 
+            }
         }
 
     }
