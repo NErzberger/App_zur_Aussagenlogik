@@ -79,6 +79,11 @@ public class MainFragment extends Fragment {
 
     private History newHistoryElement;
 
+    private int textFieldFocus;
+
+    private final static int FIRST_FORMULA_FOCUS = 0, SECOND_FORMULA_FOCUS = 1;
+
+
     public MainFragment(AppCompatActivity mainActivity) {
         this.mainActivity = (MainActivity) mainActivity;
     }
@@ -147,8 +152,6 @@ public class MainFragment extends Fragment {
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
 
-
-
         textIhreFormelErgebnis = view.findViewById(R.id.textIhreFormelErgebnis);
 
         //normale Tastatur wird direkt wieder geschlossen
@@ -157,9 +160,18 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                textFieldFocus=FIRST_FORMULA_FOCUS;
+            }
+        });
 
-
-            }});
+        resultText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                textFieldFocus = SECOND_FORMULA_FOCUS;
+            }
+        });
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -200,42 +212,42 @@ public class MainFragment extends Fragment {
         buttonA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "a");
+                writeToTextField("a");
             }
         });
 
         buttonB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "b");
+                writeToTextField("b");
             }
         });
 
         buttonC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "c");
+                writeToTextField("c");
             }
         });
 
         buttonD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "d");
+                writeToTextField("d");
             }
         });
 
         buttonE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "e");
+                writeToTextField("e");
             }
         });
 
         buttonNegation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u00AC");
+                writeToTextField("\u00AC");
             }
         });
         buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -243,7 +255,11 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 String formular = inputText.getText().toString();
                 if(!formular.isEmpty()) {
-                    inputText.setText(formular.substring(0, formular.length() - 1));
+                    if(textFieldFocus==FIRST_FORMULA_FOCUS) {
+                        inputText.setText(formular.substring(0, formular.length() - 1));
+                    }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+                        resultText.setText(formular.substring(0, formular.length() - 1));
+                    }
                 }
             }
         });
@@ -259,28 +275,28 @@ public class MainFragment extends Fragment {
         buttonAnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u2227");
+                writeToTextField("\u2227");
             }
         });
 
         buttonOr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u22C1");
+                writeToTextField("\u22C1");
             }
         });
 
         buttonImplikation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u2192");
+                writeToTextField("\u2192");
             }
         });
 
         buttonImplikationBeidseitig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u2194");
+                writeToTextField("\u2194");
             }
         });
 
@@ -310,14 +326,14 @@ public class MainFragment extends Fragment {
         buttonKlammerAuf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "(");
+                writeToTextField("(");
             }
         });
 
         buttonKlammerZu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + ")");
+                writeToTextField(")");
             }
         });
 
@@ -494,6 +510,22 @@ public class MainFragment extends Fragment {
                 return Modi.TABLEAUX;
         }
         return null;
+    }
+
+    private void writeToTextField(String s){
+        if(textFieldFocus==FIRST_FORMULA_FOCUS){
+            /*
+            inputText.getSelectionStart();
+
+            inputText.setText(inputText.getText().toString().substring(0, inputText.getSelectionStart())+s+
+                            inputText.getText().toString().substring(inputText.getSelectionEnd(), inputText.getText().toString().length()));
+            inputText.setSelection(inputText.getSelectionStart()+1);
+            */
+            this.inputText.setText(this.inputText.getText()+s);
+
+        }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+            this.resultText.setText(this.resultText.getText()+s);
+        }
     }
 
     public History getNewHistoryElement(){
