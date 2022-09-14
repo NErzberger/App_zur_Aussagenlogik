@@ -119,6 +119,7 @@
         android:hint="@string/solutionPlaceholder"
         android:inputType="textPersonName"
         android:text="@string/solution"
+
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

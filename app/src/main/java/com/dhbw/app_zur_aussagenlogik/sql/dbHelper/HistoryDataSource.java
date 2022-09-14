@@ -24,9 +24,10 @@ public class HistoryDataSource {
         database = this.dbHelper.getDB();
     }
 
-    public long addHistoryEntry(History history){
+    public History addHistoryEntry(History history){
 
         ContentValues values = new ContentValues();
+        values.put(HistoryDbHelper.COLUMN_MODI, history.getModi());
         values.put(HistoryDbHelper.COLUMN_FORMULA, history.getFormula());
         values.put(HistoryDbHelper.COLUMN_SECOND_FORMULA, history.getSecondFormula());
 
@@ -38,9 +39,13 @@ public class HistoryDataSource {
 
 
         if(newId == -1){
-            return -1;
+            return new History(-1, null, null, null);
         }else{
-            return newId;
+            Cursor cursor = database.query(HistoryDbHelper.TABLE_HISTORY, HistoryDbHelper.columns, "_id="+newId, null, null, null, HistoryDbHelper.COLUMN_ID);
+            cursor.moveToFirst();
+            History h = cursorToHistory(cursor);
+            cursor.close();
+            return h;
         }
     }
 
@@ -59,16 +64,26 @@ public class HistoryDataSource {
         return historyEntries;
     }
 
+    public History getOneBeforeHistory(int id){
+        Cursor cursor = database.query(HistoryDbHelper.TABLE_HISTORY, HistoryDbHelper.columns, "_id="+id+"-1", null, null, null, HistoryDbHelper.COLUMN_ID);
+        cursor.moveToFirst();
+        History h = cursorToHistory(cursor);
+        cursor.close();
+        return h;
+    }
+
     private History cursorToHistory(Cursor cursor){
         int idIndex = cursor.getColumnIndex(HistoryDbHelper.COLUMN_ID);
+        int idModi = cursor.getColumnIndex(HistoryDbHelper.COLUMN_MODI);
         int idFormula = cursor.getColumnIndex(HistoryDbHelper.COLUMN_FORMULA);
         int idSecondFormula = cursor.getColumnIndex(HistoryDbHelper.COLUMN_SECOND_FORMULA);
 
+        String modi = cursor.getString(idModi);
         String formula = cursor.getString(idFormula);
         String secondFormula = cursor.getString(idSecondFormula);
         int id = cursor.getInt(idIndex);
 
-        History h = new History(id, formula, secondFormula);
+        History h = new History(id, modi, formula, secondFormula);
         return h;
     }
 

@@ -9,16 +9,34 @@
     android:layout_marginRight="25dp">
 
     <TextView
+        android:id="@+id/formulaId"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:text="Id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/formulaModi"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:text="Modi"
+        app:layout_constraintStart_toEndOf="@+id/formulaId"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/firstFormula"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="firstFormula"
-        app:layout_constraintStart_toStartOf="parent"
+        android:maxLines="5"
+        app:layout_constraintStart_toEndOf="@+id/formulaModi"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/secondFormula"
-        android:layout_width="250dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="secondFormula"
         android:maxLines="5"
