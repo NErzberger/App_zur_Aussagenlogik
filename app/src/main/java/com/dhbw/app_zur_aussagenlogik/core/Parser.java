@@ -29,6 +29,13 @@ public class Parser {
         parseFormula(formula);
     }
 
+    public ArrayList<Character> getVariables(String formulaOne){
+        ZweiFormeln zweiFormelnParser = new ZweiFormeln();
+        this.formula = new Formel(formulaOne);
+
+        return zweiFormelnParser.checkVariables(formula.getFormel());
+    }
+
     public int[][] parseTwoFormula(String formulaOne, String formulaTwo) throws ParserException{
         int fehlercode = 0;
         try {

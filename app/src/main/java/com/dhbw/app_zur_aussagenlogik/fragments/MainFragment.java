@@ -22,11 +22,14 @@ import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
 import com.dhbw.app_zur_aussagenlogik.core.ParserException;
+import com.dhbw.app_zur_aussagenlogik.core.ZweiFormeln;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -417,9 +420,12 @@ public class MainFragment extends Fragment {
                 String zweiteFormel = resultText.getText().toString();
                 try {
                     int[][] truthTable = parser.parseTwoFormula(eingabeFormel, zweiteFormel);
+                    ArrayList<Character> variables = parser.getVariables(eingabeFormel);
                     this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
                     this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
-                    mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable));
+                    mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables));
+
+
                 }catch (ParserException pe){
                     // Formeln stimmen nicht über ein
                     if(pe.getFehlercode()==-20){
@@ -463,8 +469,11 @@ public class MainFragment extends Fragment {
             buttonRechenweg.setVisibility(view.INVISIBLE);
             textIhreFormelErgebnis.setText("2. Formel");
             resultText.setEnabled(true);
+
+
             resultText.setText("");
             resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
+
             inputText.setFocusedByDefault(true);
         }
         buttonRechenweg.setEnabled(false);

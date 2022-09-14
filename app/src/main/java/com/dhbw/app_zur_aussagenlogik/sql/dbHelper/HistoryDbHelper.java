@@ -39,6 +39,7 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
 
     public HistoryDbHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);
+        //context.deleteDatabase(getDatabaseName());
         onCreate(this.getWritableDatabase());
         Log.d(LOG_TAG, "DbHelper hat die Datenbank: " +getDatabaseName() + " erzeugt.");
     }

@@ -8,11 +8,6 @@ public class ZweiFormeln {
 
     private int[][] truthTable;
 
-        /*
-    #############################################################
-    Anfang: 2 Formeln vergleichen
-    #############################################################
-     */
 
     //Wertetabelle erstellen ohne Ergebnisspalte
     private int[][] createTruthTable(int n) {
@@ -30,6 +25,24 @@ public class ZweiFormeln {
 
         return truthTable;
 
+    }
+
+    public Boolean compareVariables(char[] formel1, char[] formel2){
+
+        ArrayList<Character> variablesFormula1 = checkVariables(formel1);
+        ArrayList<Character> variablesFormula2 = checkVariables(formel2);
+
+        if(variablesFormula1.size() != variablesFormula2.size()){
+            return false;
+        }else{
+            for(int i = 0;i<variablesFormula2.size(); i++){
+                if(variablesFormula1.get(i)!=variablesFormula2.get(i)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     //Checken, welche Variablen verwendet werden
@@ -304,11 +317,6 @@ public class ZweiFormeln {
     }
 
 
-    /*
-    #############################################################
-    Ende: 2 Formeln vergleichen
-    #############################################################
-     */
 
     public int[][] getTruthTable() {
         return truthTable;
