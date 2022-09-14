@@ -8,11 +8,6 @@ public class ZweiFormeln {
 
     private int[][] truthTable;
 
-        /*
-    #############################################################
-    Anfang: 2 Formeln vergleichen
-    #############################################################
-     */
 
     //Wertetabelle erstellen ohne Ergebnisspalte
     private int[][] createTruthTable(int n) {
@@ -304,11 +299,6 @@ public class ZweiFormeln {
     }
 
 
-    /*
-    #############################################################
-    Ende: 2 Formeln vergleichen
-    #############################################################
-     */
 
     public int[][] getTruthTable() {
         return truthTable;
