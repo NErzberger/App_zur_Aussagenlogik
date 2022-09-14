@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     public FragmentManager fragmentManager;
 
+    private MainFragment mainFragment = new MainFragment(this);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         HistoryDataSource dataSource = new HistoryDataSource(this);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, new MainFragment(this))
+                .add(R.id.fragmentContainer, mainFragment)
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -62,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public MainFragment getMainFragment(){
+        return this.mainFragment;
     }
 
 }

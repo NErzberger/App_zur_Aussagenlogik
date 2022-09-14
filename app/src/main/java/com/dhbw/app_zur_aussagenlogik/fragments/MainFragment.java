@@ -72,8 +72,20 @@ public class MainFragment extends Fragment {
 
     public int formulaHistoryPosition;
 
+    private String firstFormula;
+    private String secondFormula;
+
+    private History historyElement;
+
+    private History newHistoryElement;
+
     public MainFragment(AppCompatActivity mainActivity) {
         this.mainActivity = (MainActivity) mainActivity;
+    }
+
+    public MainFragment(AppCompatActivity mainActivity, History historyElement) {
+        this.mainActivity = (MainActivity) mainActivity;
+        this.historyElement = historyElement;
     }
 
     /**
@@ -135,6 +147,8 @@ public class MainFragment extends Fragment {
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
 
+
+
         textIhreFormelErgebnis = view.findViewById(R.id.textIhreFormelErgebnis);
 
         //normale Tastatur wird direkt wieder geschlossen
@@ -153,40 +167,20 @@ public class MainFragment extends Fragment {
                 String tabName = tab.getText().toString(); // Achtung Text nicht ändern oder über id?
                 switch (tabName) {
                     case "DNF":
-                        buttonRechenweg.setVisibility(view.VISIBLE);
-                        textIhreFormelErgebnis.setText("Lösung");
-                        resultText.setEnabled(false);
-                        resultText.setHint("Lösung");
                         modus = Modi.DNF;
                         break;
                     case "KNF":
-                        buttonRechenweg.setVisibility(view.VISIBLE);
-                        textIhreFormelErgebnis.setText("Lösung");
-                        resultText.setEnabled(false);
-                        resultText.setHint("Lösung");
                         modus = Modi.KNF;
                         break;
                     case "Resolu-tion":
-                        buttonRechenweg.setVisibility(view.VISIBLE);
-                        textIhreFormelErgebnis.setText("Lösung");
-                        resultText.setEnabled(false);
-                        resultText.setHint("Lösung");
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
-                        buttonRechenweg.setVisibility(view.INVISIBLE);
-                        textIhreFormelErgebnis.setText("2. Formel");
-                        resultText.setEnabled(true);
-                        resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
                         modus = Modi.FORMELN;
                         //changeLayout(modus);
                         //mainActivity.replaceFragment(new Resolution(mainActivity));
                         break;
                     case "Tab-\nleaux":
-                        buttonRechenweg.setVisibility(view.VISIBLE);
-                        textIhreFormelErgebnis.setText("Lösung");
-                        resultText.setEnabled(false);
-                        resultText.setHint("Lösung");
                         modus = Modi.TABLEAUX;
                         break;
                 }
@@ -258,6 +252,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 inputText.setText("");
+                resultText.setText("");
             }
         });
 
@@ -309,8 +304,6 @@ public class MainFragment extends Fragment {
                         mainActivity.replaceFragment(new TableauxFragment(mainActivity));
                         break;
                 }
-
-
             }
         });
 
@@ -331,19 +324,73 @@ public class MainFragment extends Fragment {
         buttonRechenweg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new NormalformFragment(mainActivity));
+                mainActivity.replaceFragment(new NormalformFragment(mainActivity, historyElement));
             }
         });
 
         buttonOneBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // eine Formel zurück
+                if(historyElement!=null) {
+                    try {
+                        HistoryDataSource dataSource = new HistoryDataSource(getContext());
+                        History h = dataSource.getOneBeforeHistory(historyElement.getId());
+                        historyElement = h;
+                        switchModi();
+                        setFormulas();
+                    }catch(Exception e){
+
+                    }
+                }
             }
         });
 
+        switchModi();
+
+        setFormulas();
+
         return this.view;
     }
+
+    private void switchModi(){
+        /*
+         * Selected Tab wählen
+         */
+
+        if(historyElement != null){
+            modus = getModusByString(historyElement.getModi());
+        }
+        switch (modus){
+            case DNF:
+                TabLayout.Tab tab = layout.getTabAt(0);
+                tab.select();
+                break;
+            case KNF:
+                TabLayout.Tab tab1 = layout.getTabAt(1);
+                tab1.select();
+                break;
+            case RESOLUTION:
+                TabLayout.Tab tab2 = layout.getTabAt(2);
+                tab2.select();
+                break;
+            case FORMELN:
+                TabLayout.Tab tab3 = layout.getTabAt(3);
+                tab3.select();
+                break;
+            case TABLEAUX:
+                TabLayout.Tab tab4 = layout.getTabAt(4);
+                tab4.select();
+                break;
+        }
+    }
+
+    private void setFormulas(){
+        if(historyElement != null){
+            inputText.setText(historyElement.getFormula());
+            resultText.setText(historyElement.getSecondFormula());
+        }
+    }
+
 
 
     private void launchParser(Modi modus){
@@ -354,15 +401,15 @@ public class MainFragment extends Fragment {
                 String zweiteFormel = resultText.getText().toString();
                 try {
                     int[][] truthTable = parser.parseTwoFormula(eingabeFormel, zweiteFormel);
-                    History h = new History(0, eingabeFormel, zweiteFormel);
-                    dataSource.addHistoryEntry(h);
+                    this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                    this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                     mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable));
                 }catch (ParserException pe){
                     // Formeln stimmen nicht über ein
                     if(pe.getFehlercode()==-20){
                         int[][] truthTable = pe.getTruthTable();
-                        History h = new History(0, eingabeFormel, zweiteFormel);
-                        dataSource.addHistoryEntry(h);
+                        this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
                         mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, -20));
                         // Falsche Eingabe
                     }else if(pe.getFehlercode()==-10){
@@ -374,8 +421,8 @@ public class MainFragment extends Fragment {
                 parser.setModus(modus);
                 String resultFormel = parser.parseFormula(eingabeFormel);
                 resultText.setText(resultFormel);
-                History h = new History(0, eingabeFormel, resultFormel);
-                dataSource.addHistoryEntry(h);
+                this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, resultFormel);
+                this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
             }
             this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
@@ -384,21 +431,72 @@ public class MainFragment extends Fragment {
 
             }
         }
-
     }
 
     private void changeLayout(Modi modus){
 
         if(modus == Modi.DNF || modus == Modi.KNF || modus == Modi.TABLEAUX || modus == Modi.RESOLUTION ){
+            buttonRechenweg.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setText("Lösung");
             resultText.setEnabled(false);
+            resultText.setText("");
+            resultText.setHint("Lösung");
             inputText.setFocusedByDefault(true);
         }
         else if(modus == Modi.FORMELN){
+            buttonRechenweg.setVisibility(view.INVISIBLE);
+            textIhreFormelErgebnis.setText("2. Formel");
             resultText.setEnabled(true);
-            inputText.setHint("Bitte geben Sie hier ihre erste Formel ein.");
+            resultText.setText("");
             resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
             inputText.setFocusedByDefault(true);
         }
+        buttonRechenweg.setEnabled(false);
 
+    }
+
+    public void setInputFormula(String inputFormula){
+        this.firstFormula = inputFormula;
+    }
+
+    public void setResultFormula(String resultFormula){
+        this.secondFormula = resultFormula;
+    }
+
+
+    private String getModiText(Modi modus){
+        switch (modus){
+            case DNF:
+                return "DNF";
+            case KNF:
+                return "KNF";
+            case RESOLUTION:
+                return "R";
+            case FORMELN:
+                return "2 F";
+            case TABLEAUX:
+                return "T";
+        }
+        return "";
+    }
+
+    private Modi getModusByString(String modus){
+        switch (modus){
+            case "KNF":
+                return Modi.KNF;
+            case "DNF":
+                return Modi.DNF;
+            case "2 F":
+                return Modi.FORMELN;
+            case "R":
+                return Modi.RESOLUTION;
+            case "T":
+                return Modi.TABLEAUX;
+        }
+        return null;
+    }
+
+    public History getNewHistoryElement(){
+        return this.newHistoryElement;
     }
 }

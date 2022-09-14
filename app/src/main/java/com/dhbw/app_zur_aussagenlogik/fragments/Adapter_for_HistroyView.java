@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class Adapter_for_HistroyView extends RecyclerView.Adapter<Adapter_for_HistroyView.MyViewHolder> {
@@ -50,6 +52,14 @@ public class Adapter_for_HistroyView extends RecyclerView.Adapter<Adapter_for_Hi
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         History history = historyList.get(position);
 
+        TextView formulaId = holder.formulaId;
+        if(history.getId()!=-1) {
+            formulaId.setText(Integer.toString(history.getId()));
+        }else{
+            formulaId.setText("ID");
+        }
+        TextView formulaModi = holder.formulaModi;
+        formulaModi.setText(history.getModi());
         TextView inputText = holder.formulaText;
         inputText.setText(history.getFormula());
         TextView solutionText = holder.resultFormulaText;
@@ -63,12 +73,16 @@ public class Adapter_for_HistroyView extends RecyclerView.Adapter<Adapter_for_Hi
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        public TextView formulaId;
+        public TextView formulaModi;
         public TextView formulaText;
         public TextView resultFormulaText;
 
         public MyViewHolder(final View itemView) {
             super(itemView);
 
+            this.formulaId=itemView.findViewById(R.id.formulaId);
+            this.formulaModi=itemView.findViewById(R.id.formulaModi);
             this.formulaText=itemView.findViewById(R.id.firstFormula);
             this.resultFormulaText=itemView.findViewById(R.id.secondFormula);
 

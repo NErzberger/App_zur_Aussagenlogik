@@ -15,6 +15,7 @@ import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +42,19 @@ public class NormalformFragment extends Fragment {
     private Modi modi;
     private List<Formel> rechenweg;
 
+    private History historyElement;
+
     public NormalformFragment(MainActivity mainActivity) {
         super(R.layout.fragment_normalform);
         this.mainActivity = mainActivity;
     }
 
+
+    public NormalformFragment(MainActivity mainActivity, History historyElement) {
+        super(R.layout.fragment_normalform);
+        this.mainActivity = mainActivity;
+        this.historyElement = historyElement;
+    }
 
     // TODO: Rename and change types and number of parameters
     public static NormalformFragment newInstance(MainActivity mainActivity) {
@@ -75,7 +84,7 @@ public class NormalformFragment extends Fragment {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity));
+                mainActivity.replaceFragment(new MainFragment(mainActivity, historyElement));
             }
         });
 

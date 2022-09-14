@@ -23,15 +23,17 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
     public static final String TABLE_HISTORY = "history";
 
     public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_MODI = "modi";
     public static final String COLUMN_FORMULA = "formula";
     public static final String COLUMN_SECOND_FORMULA = "secondFormula";
 
 
-    public static final String[] columns = {COLUMN_ID, COLUMN_FORMULA, COLUMN_SECOND_FORMULA};
+    public static final String[] columns = {COLUMN_ID, COLUMN_MODI, COLUMN_FORMULA, COLUMN_SECOND_FORMULA};
 
     public static final String SQL_CREATE =
             "CREATE TABLE IF NOT EXISTS "+ TABLE_HISTORY +
                     "("+COLUMN_ID + " InTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    COLUMN_MODI + " TEXT, "+
                     COLUMN_FORMULA + " TEXT NOT NULL, " +
                     COLUMN_SECOND_FORMULA + " TEXT);";
 
