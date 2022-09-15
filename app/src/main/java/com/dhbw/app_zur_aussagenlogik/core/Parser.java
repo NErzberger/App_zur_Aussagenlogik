@@ -68,16 +68,20 @@ public class Parser {
                 fehlercode = -20;
                 ParserException pe = new ParserException(fehlercode);
                 pe.setTruthTable(zweiFormelnParser.getTruthTable());
+                pe.setVariables(zweiFormelnParser.checkVariables(f1KNF.getFormel()));
                 throw pe;
             }
 
-        }catch (Exception e){
+        }catch (ParserException pe){
             // Bei 2 Formeln ist etwas schief gelaufen -> checkUserInput
             if(fehlercode==0){
                 // nicht durch checkUserInput
                 fehlercode = -10;
+                throw new ParserException(fehlercode);
+            }else{
+                throw pe;
             }
-            throw new ParserException(fehlercode);
+
         }
     }
 

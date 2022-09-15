@@ -416,15 +416,21 @@ public class MainFragment extends Fragment {
                     // Formeln stimmen nicht über ein
                     if(pe.getFehlercode()==-20){
                         int[][] truthTable = pe.getTruthTable();
-                        ArrayList<Character> variables = parser.getVariables(eingabeFormel);
+                        ArrayList<Character> variables = pe.getVariables();
                         this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
                         this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
-                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, -20, this.historyElement));
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables, -20, this.historyElement));
                         // Falsche Eingabe
                     }else if(pe.getFehlercode()==-10){
-
+                        this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -10, this.historyElement));
+                        // Falsche Eingabe
                     }else if(pe.getFehlercode()==-30){
-
+                        this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -30, this.historyElement));
+                        // Falsche Eingabe
                     }
                 }
             }else {

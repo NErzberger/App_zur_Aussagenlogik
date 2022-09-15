@@ -35,27 +35,29 @@ public class ZweiFormelFragment extends Fragment {
     private TextView textResult;
 
     private int[][] truthTableByInt;
-    private int fehlercode;
+    private int fehlercode = 0;
     private ArrayList<Character> variables;
 
     private History history;
 
-    public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, ArrayList<Character> variables) {
+    public ZweiFormelFragment(MainActivity mainActivity, int fehlercode, History history) {
         this.mainActivity = mainActivity;
-        this.truthTableByInt = truthTableByInt;
-        this.variables = variables;
-    }
-
-    public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, int fehlercode) {
-        this.mainActivity = mainActivity;
-        this.truthTableByInt = truthTableByInt;
         this.fehlercode = fehlercode;
+        this.history = history;
     }
 
     public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, ArrayList<Character> variables, History history) {
         this.mainActivity = mainActivity;
         this.truthTableByInt = truthTableByInt;
         this.variables = variables;
+        this.history = history;
+    }
+
+    public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, ArrayList<Character> variables, int fehlercode, History history) {
+        this.mainActivity = mainActivity;
+        this.truthTableByInt = truthTableByInt;
+        this.variables = variables;
+        this.fehlercode = fehlercode;
         this.history = history;
     }
 
@@ -88,58 +90,62 @@ public class ZweiFormelFragment extends Fragment {
             }
         });
 
-        this.truthTable = view.findViewById(R.id.truthTable);
+        if(fehlercode == 0 || fehlercode == -20){
+            this.truthTable = view.findViewById(R.id.truthTable);
+        }
         this.textResult = view.findViewById(R.id.textResult);
 
         if(fehlercode==-20){
-            this.textResult.setText("Die Formeln stimmen "+String.format("<b>%s</b>","nicht")+ " überein.");
+            this.textResult.setText("Die Formeln stimmen nicht überein.");
             this.textResult.setTextSize(20);
         }else if(fehlercode==-10){
             this.textResult.setText("Golden bug!");
             this.textResult.setTextSize(20);
         }else if(fehlercode==-30){
-            this.textResult.setText("Die Variablen der Formeln stimmen "+String.format("<b>%s</b>","nicht")+ " überein.");
+            this.textResult.setText("Die Variablen der Formeln stimmen nicht überein.");
             this.textResult.setTextSize(20);
         }else{
             this.textResult.setText("Die Formeln stimmen überein.");
             this.textResult.setTextSize(20);
         }
 
-        TableRow header = new TableRow(truthTable.getContext());
-        for(int i = 0; i< variables.size()+2; i++){
-            TextView textView = new TextView(header.getContext());
+        if(fehlercode == 0 || fehlercode == -20) {
+            TableRow header = new TableRow(truthTable.getContext());
+            for (int i = 0; i < variables.size() + 2; i++) {
+                TextView textView = new TextView(header.getContext());
 
-            if(i<variables.size()){
-                textView.setText(" " + Character.toString(variables.get(i)) + " ");
-            } else if(i==variables.size()){
-                textView.setText("F1");
-            } else if(i== variables.size()+1){
-                textView.setText("F2");
-            }
+                if (i < variables.size()) {
+                    textView.setText(" " + Character.toString(variables.get(i)) + " ");
+                } else if (i == variables.size()) {
+                    textView.setText("F1");
+                } else if (i == variables.size() + 1) {
+                    textView.setText("F2");
+                }
 
-            textView.setTextSize(25);
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            //textView.setPadding(10, 5, 10, 5);
-            textView.setBackground(ContextCompat.getDrawable(truthTable.getContext(), R.drawable.table_border));
-            header.addView(textView);
-        }
-        truthTable.addView(header, 0);
-
-        for(int i = 0; i < truthTableByInt[0].length; i++){
-            TableRow tableRow = new TableRow(truthTable.getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            tableRow.setLayoutParams(layoutParams);
-
-            for(int j = 0; j < truthTableByInt.length; j++){
-                TextView textView = new TextView(tableRow.getContext());
-                textView.setText(Integer.toString(truthTableByInt[j][i]));
                 textView.setTextSize(25);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 //textView.setPadding(10, 5, 10, 5);
                 textView.setBackground(ContextCompat.getDrawable(truthTable.getContext(), R.drawable.table_border));
-                tableRow.addView(textView);
+                header.addView(textView);
             }
-            truthTable.addView(tableRow, i+1);
+            truthTable.addView(header, 0);
+
+            for (int i = 0; i < truthTableByInt[0].length; i++) {
+                TableRow tableRow = new TableRow(truthTable.getContext());
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                tableRow.setLayoutParams(layoutParams);
+
+                for (int j = 0; j < truthTableByInt.length; j++) {
+                    TextView textView = new TextView(tableRow.getContext());
+                    textView.setText(Integer.toString(truthTableByInt[j][i]));
+                    textView.setTextSize(25);
+                    textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    //textView.setPadding(10, 5, 10, 5);
+                    textView.setBackground(ContextCompat.getDrawable(truthTable.getContext(), R.drawable.table_border));
+                    tableRow.addView(textView);
+                }
+                truthTable.addView(tableRow, i + 1);
+            }
         }
         return view;
     }
