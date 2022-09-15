@@ -65,13 +65,17 @@
 
     <EditText
         android:id="@+id/input"
-        android:layout_width="371dp"
-        android:layout_height="101dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
         android:ems="10"
         android:hint="@string/inputPlaceholder"
         android:inputType="textMultiLine"
         android:maxLines="5"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
         android:text="@string/input"
         app:layout_constraintBottom_toTopOf="@+id/buttonRechenweg"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,29 +91,37 @@
         android:autoText="false"
         android:text="Lösung"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/solution"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input" />
 
-    <EditText
-        android:id="@+id/solution"
-        android:layout_width="0dp"
-        android:layout_height="79dp"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:fillViewport="true"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:ems="10"
-        android:enabled="false"
-        android:hint="@string/solutionPlaceholder"
-        android:inputType="textMultiLine"
-        android:maxLines="15"
-        android:text="@string/solution"
-
         app:layout_constraintBottom_toTopOf="@+id/buttonDelete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textIhreFormelErgebnis" />
+        app:layout_constraintTop_toBottomOf="@+id/textIhreFormelErgebnis">
 
+        <EditText
+            android:id="@+id/solution"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:ems="10"
+            android:enabled="false"
+            android:hint="@string/solutionPlaceholder"
+            android:inputType="textMultiLine"
+            android:maxLines="15"
+            android:text="@string/solution"
+
+             />
+    </androidx.core.widget.NestedScrollView>
     <Button
         android:id="@+id/buttonRechenweg"
         style="@style/ButtonFontStyle"
@@ -118,7 +130,7 @@
         android:layout_marginStart="100dp"
         android:enabled="false"
         android:text="Rechenweg"
-        app:layout_constraintBottom_toTopOf="@+id/solution"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
         app:layout_constraintStart_toEndOf="@+id/textIhreFormelErgebnis"
         app:layout_constraintTop_toBottomOf="@+id/input"/>
 

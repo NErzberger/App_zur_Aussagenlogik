@@ -39,8 +39,8 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="secondFormula"
-        android:maxLines="5"
-        android:layout_marginRight="40dp"
+        android:maxLines="10"
+        android:layout_marginLeft="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/firstFormula"
         app:layout_constraintTop_toTopOf="parent" />
