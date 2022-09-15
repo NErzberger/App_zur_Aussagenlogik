@@ -21,34 +21,34 @@ public class Ausaddieren extends Normalformen{
                 block = zeichenHinzufügen(block, c);
 
 // C ist ein Mal und die Zeichen davor und danach sind Buchstaben
-            } else if (c == '*' && Character.toString(formel.getChar(i - 1)).matches("[a-z]")
+            } else if (c == '+' && Character.toString(formel.getChar(i - 1)).matches("[a-z]")
                     && Character.toString(formel.getChar(i + 1)).matches("[a-z]")) {
                 continue;
 
 // C ist ein Plus oder C ist ein Mal und entweder das Zeichen davor oder danach ist kein Buchstabe
-            } else if (c == '+' && block.length > 0) {
+            } else if (c == '*' && block.length > 0) {
                 innererBlock.add(block);
                 block = new char[0];
                 if (klammer == 0) {
                     blockList.add(innererBlock);
-                    blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { '+' })));
+                    blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { '*' })));
                     innererBlock = new ArrayList<>();
                 }
-            } else if (block.length > 0 && klammer == 0 && c == '*'
+            } else if (block.length > 0 && klammer == 0 && c == '+'
                     && (!Character.toString(formel.getChar(i - 1)).matches("[a-z]")
                     || !Character.toString(formel.getChar(i + 1)).matches("[a-z]"))) {
                 innererBlock.add(block);
                 block = new char[0];
 
                 blockList.add(innererBlock);
-                blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { '*' })));
+                blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { '+' })));
                 innererBlock = new ArrayList<>();
 
                 /*
                  * Rekursion Rechts
                  *
                  */
-            } else if (klammer > 0 && c == '*' && !Character.toString(formel.getChar(i + 1)).matches("[a-z]")) {
+            } else if (klammer > 0 && c == '+' && !Character.toString(formel.getChar(i + 1)).matches("[a-z]")) {
 // Neue Formel bilden
                 String formelString = "";
 
@@ -68,7 +68,7 @@ public class Ausaddieren extends Normalformen{
                     else if(formelChar==')') {
                         klammernLinks++;
                     }
-                    else if (formelChar == '+' && klammernLinks==0) {
+                    else if (formelChar == '*' && klammernLinks==0) {
                         break;
                     }
                     formelString = formelString + formelChar;
@@ -102,7 +102,7 @@ public class Ausaddieren extends Normalformen{
                  * Linke Rekursion
                  *
                  */
-            } else if (klammer > 0 && c == '*' && !Character.toString(formel.getChar(i - 1)).matches("[a-z]")) {
+            } else if (klammer > 0 && c == '+' && !Character.toString(formel.getChar(i - 1)).matches("[a-z]")) {
                 // Neue Formel bilden
                 String formelStringRechts = "";
                 String formelStringLinks = "";
@@ -120,7 +120,7 @@ public class Ausaddieren extends Normalformen{
                         }
                         klammernRechts--;
                     }
-                    else if (formelChar == '+'&&klammernRechts==0) {
+                    else if (formelChar == '*'&&klammernRechts==0) {
                         break;
                     }
                     formelStringRechts = formelStringRechts + formelChar;
@@ -164,7 +164,7 @@ public class Ausaddieren extends Normalformen{
                     blockList.add(innererBlock);
                     // for(i=i;i+2 <= formel.length()&&formel.getChar(i)==')';i++) {
                     // klammer--;
-                    if (i + 2 <= formel.length() && (formel.getChar(i + 1) == '+' || formel.getChar(i + 1) == '*')) {
+                    if (i + 2 <= formel.length() && (formel.getChar(i + 1) == '*' || formel.getChar(i + 1) == '+')) {
                         blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { formel.getChar(i + 1) })));
                     }
                     // }
@@ -184,11 +184,11 @@ public class Ausaddieren extends Normalformen{
 
         List<char[]> ergebnisBloecke = new ArrayList<>();
 
-        // nur wenn alles * ist
+        // nur wenn alles + ist
         boolean check = true;
         char[] sonderfall = new char[0];
         for (int k = 0; k < formel.length(); k++) {
-            if (formel.getChar(k) == '+') {
+            if (formel.getChar(k) == '*') {
                 // sonderfall = new char[0];
                 check = false;
                 break;
@@ -198,7 +198,7 @@ public class Ausaddieren extends Normalformen{
             for (int k = 0; k < blockList.size(); k++) {
                 for (int h = 0; h < blockList.get(k).size(); h++) {
                     for (int u = 0; u < blockList.get(k).get(h).length; u++) {
-                        if (blockList.get(k).get(h)[u] != '*') {
+                        if (blockList.get(k).get(h)[u] != '+') {
                             sonderfall = zeichenHinzufügen(sonderfall, blockList.get(k).get(h)[u]);
                         }
 
@@ -250,7 +250,7 @@ public class Ausaddieren extends Normalformen{
                             counter2 = 0;
                         }
 
-                        if (blockList.get(b).get(0)[0] == '*') {
+                        if (blockList.get(b).get(0)[0] == '+') {
                             if (b + 1 < blockList.size()
                                     && (1 < blockList.get(b + 1).size() || 1 < innererBlock.size())) {
                                 for (int m = 0; m < (counter1 * blockList.get(b + 1).size() - counter2) / innererBlock.size(); m++) {
@@ -273,12 +273,12 @@ public class Ausaddieren extends Normalformen{
                              * vor mir und nach mir kommt ein Plus
                              */
                         } else if (// blockList.get(b).size()==1 &&
-                                ((b + 1 == blockList.size() && blockList.get(b - 1).get(0)[0] == '+')
-                                        || (b == 1 && blockList.get(b).get(0)[0] == '+')
-                                        || (b > 0 && b < blockList.size() && blockList.get(b - 1).get(0)[0] == '+'
-                                        && blockList.get(b + 1).get(0)[0] == '+'))) {
+                                ((b + 1 == blockList.size() && blockList.get(b - 1).get(0)[0] == '*')
+                                        || (b == 1 && blockList.get(b).get(0)[0] == '*')
+                                        || (b > 0 && b < blockList.size() && blockList.get(b - 1).get(0)[0] == '*'
+                                        && blockList.get(b + 1).get(0)[0] == '*'))) {
 
-                            if (blockList.get(b).get(0)[0] == '+') {
+                            if (blockList.get(b).get(0)[0] == '*') {
                                 for (int m = 0; m < blockList.get(b - 1).size(); m++) {
 
                                     // Clonen vom ersten Teil
@@ -286,7 +286,7 @@ public class Ausaddieren extends Normalformen{
                                     ergebnisBloecke.add(chars);
                                     einstieg++;
                                 }
-                            } else if (blockList.get(b).get(0)[0] != '+') {
+                            } else if (blockList.get(b).get(0)[0] != '*') {
 
                                 // Clonen vom ersten Teil
                                 char[] chars = innererBlock.get(l).clone();
@@ -299,17 +299,17 @@ public class Ausaddieren extends Normalformen{
 
                             // Wenn b ein Plus ist, soll es für die nachfolgende Logik um eins reduziert
                             // werden
-                            if (blockList.get(b).get(0)[0] == '+') {
+                            if (blockList.get(b).get(0)[0] == '*') {
                                 b--;
                             }
 
-                        } else if (blockList.get(b).get(0)[0] == '+') {
+                        } else if (blockList.get(b).get(0)[0] == '*') {
                             keepGoing = false;
                             b--;
                         }
 
                     }
-                    if (b + 1 < blockList.size() && blockList.get(b).get(0)[0] == '*') {
+                    if (b + 1 < blockList.size() && blockList.get(b).get(0)[0] == '+') {
                         if (counter2Alt == 0) {
                             counter2 = blockList.get(b + 1).size() * innererBlock.size();
                             counter2Alt = blockList.get(b + 1).size() * innererBlock.size();
@@ -346,7 +346,7 @@ public class Ausaddieren extends Normalformen{
                     int counter = 0;
 
                     innererBlock = blockList.get(n);
-                    if (innererBlock.get(0)[0] == '*' || innererBlock.get(0)[0] == '+') {
+                    if (innererBlock.get(0)[0] == '+' || innererBlock.get(0)[0] == '*') {
                         continue;
                     }
                     blockCounter++;
@@ -414,13 +414,13 @@ public class Ausaddieren extends Normalformen{
                 loesung = loesung + ergebnisBloecke.get(i)[j];
                 if(ergebnisBloecke.get(i)[j]!='n') {
                     if (j < ergebnisBloecke.get(i).length - 1) {
-                        loesung = loesung + "*";
+                        loesung = loesung + "+";
                     }
                 }
             }
             loesung = loesung + ")";
             if (i < ergebnisBloecke.size() - 1) {
-                loesung = loesung + "+";
+                loesung = loesung + "*";
             }
         }
         Formel loesungsFormel = new Formel(loesung);
