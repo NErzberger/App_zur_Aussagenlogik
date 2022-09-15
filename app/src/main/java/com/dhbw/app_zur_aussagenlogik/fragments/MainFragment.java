@@ -1,13 +1,11 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +20,9 @@ import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
 import com.dhbw.app_zur_aussagenlogik.core.ParserException;
-import com.dhbw.app_zur_aussagenlogik.core.ZweiFormeln;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
-
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
 
 import java.util.ArrayList;
 
@@ -256,14 +251,7 @@ public class MainFragment extends Fragment {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String formular = inputText.getText().toString();
-                if(!formular.isEmpty()) {
-                    if(textFieldFocus==FIRST_FORMULA_FOCUS) {
-                        inputText.setText(formular.substring(0, formular.length() - 1));
-                    }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
-                        resultText.setText(formular.substring(0, formular.length() - 1));
-                    }
-                }
+                deleteCharacter();
             }
         });
 
@@ -424,8 +412,6 @@ public class MainFragment extends Fragment {
                     this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
                     this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                     mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables));
-
-
                 }catch (ParserException pe){
                     // Formeln stimmen nicht über ein
                     if(pe.getFehlercode()==-20){
@@ -442,7 +428,6 @@ public class MainFragment extends Fragment {
                     }
                 }
             }else {
-
                 parser.setModus(modus);
                 String resultFormel = parser.parseFormula(eingabeFormel);
                 resultText.setText(resultFormel);
@@ -526,17 +511,33 @@ public class MainFragment extends Fragment {
 
     private void writeToTextField(String s){
         if(textFieldFocus==FIRST_FORMULA_FOCUS){
-            /*
-            inputText.getSelectionStart();
-
-            inputText.setText(inputText.getText().toString().substring(0, inputText.getSelectionStart())+s+
-                            inputText.getText().toString().substring(inputText.getSelectionEnd(), inputText.getText().toString().length()));
-            inputText.setSelection(inputText.getSelectionStart()+1);
-            */
-            this.inputText.setText(this.inputText.getText()+s);
-
+            int cursorPos = inputText.getSelectionEnd();
+            inputText.setText(inputText.getText().toString().substring(0, cursorPos)+s+
+                            inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
+            inputText.setSelection(cursorPos+1);
         }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
-            this.resultText.setText(this.resultText.getText()+s);
+            int cursorPos = resultText.getSelectionEnd();
+            resultText.setText(resultText.getText().toString().substring(0, cursorPos)+s+
+                    resultText.getText().toString().substring(cursorPos, resultText.getText().toString().length()));
+            resultText.setSelection(cursorPos+1);
+        }
+    }
+
+    private void deleteCharacter(){
+        if(textFieldFocus==FIRST_FORMULA_FOCUS){
+            int cursorPos = inputText.getSelectionEnd();
+            if(cursorPos>0) {
+                inputText.setText(inputText.getText().toString().substring(0, cursorPos - 1) +
+                        inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
+                inputText.setSelection(cursorPos - 1);
+            }
+        }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+            int cursorPos = resultText.getSelectionEnd();
+            if(cursorPos>0) {
+                resultText.setText(resultText.getText().toString().substring(0, cursorPos - 1) +
+                        resultText.getText().toString().substring(cursorPos, resultText.getText().toString().length()));
+                resultText.setSelection(cursorPos - 1);
+            }
         }
     }
 
