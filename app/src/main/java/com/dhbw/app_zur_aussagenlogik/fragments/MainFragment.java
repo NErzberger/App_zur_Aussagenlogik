@@ -411,7 +411,7 @@ public class MainFragment extends Fragment {
                     ArrayList<Character> variables = parser.getVariables(eingabeFormel);
                     this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
                     this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
-                    mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables));
+                    mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables, this.historyElement));
                 }catch (ParserException pe){
                     // Formeln stimmen nicht über ein
                     if(pe.getFehlercode()==-20){
@@ -419,7 +419,7 @@ public class MainFragment extends Fragment {
                         ArrayList<Character> variables = parser.getVariables(eingabeFormel);
                         this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
                         this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
-                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, -20));
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, -20, this.historyElement));
                         // Falsche Eingabe
                     }else if(pe.getFehlercode()==-10){
 
