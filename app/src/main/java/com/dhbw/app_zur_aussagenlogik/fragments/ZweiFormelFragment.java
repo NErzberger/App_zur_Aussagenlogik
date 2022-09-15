@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class ZweiFormelFragment extends Fragment {
     private int fehlercode;
     private ArrayList<Character> variables;
 
+    private History history;
+
     public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, ArrayList<Character> variables) {
         this.mainActivity = mainActivity;
         this.truthTableByInt = truthTableByInt;
@@ -47,6 +50,20 @@ public class ZweiFormelFragment extends Fragment {
         this.mainActivity = mainActivity;
         this.truthTableByInt = truthTableByInt;
         this.fehlercode = fehlercode;
+    }
+
+    public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, ArrayList<Character> variables, History history) {
+        this.mainActivity = mainActivity;
+        this.truthTableByInt = truthTableByInt;
+        this.variables = variables;
+        this.history = history;
+    }
+
+    public ZweiFormelFragment(MainActivity mainActivity, int[][] truthTableByInt, int fehlercode, History history) {
+        this.mainActivity = mainActivity;
+        this.truthTableByInt = truthTableByInt;
+        this.fehlercode = fehlercode;
+        this.history = history;
     }
 
 
@@ -67,7 +84,7 @@ public class ZweiFormelFragment extends Fragment {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity));
+                mainActivity.replaceFragment(new MainFragment(mainActivity, history));
             }
         });
 
