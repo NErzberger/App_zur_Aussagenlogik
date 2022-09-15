@@ -20,6 +20,7 @@ import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
 import com.dhbw.app_zur_aussagenlogik.core.ParserException;
+import com.dhbw.app_zur_aussagenlogik.core.Wertetabelle;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
@@ -193,6 +194,9 @@ public class MainFragment extends Fragment {
                     case "Tab-\nleaux":
                         modus = Modi.TABLEAUX;
                         break;
+                    case "Tabelle":
+                        modus = Modi.WERTETABELLE;
+                        break;
                 }
                 changeLayout(modus);
             }
@@ -310,6 +314,8 @@ public class MainFragment extends Fragment {
                     case TABLEAUX:
                         mainActivity.replaceFragment(new TableauxFragment(mainActivity));
                         break;
+                    case WERTETABELLE:
+                        launchParser(Modi.WERTETABELLE);
                 }
             }
         });
@@ -388,6 +394,10 @@ public class MainFragment extends Fragment {
                 TabLayout.Tab tab4 = layout.getTabAt(4);
                 tab4.select();
                 break;
+            case WERTETABELLE:
+                TabLayout.Tab tab5 = layout.getTabAt(5);
+                tab5.select();
+                break;
         }
     }
 
@@ -433,7 +443,14 @@ public class MainFragment extends Fragment {
                         // Falsche Eingabe
                     }
                 }
-            }else {
+            }else if(modus==Modi.WERTETABELLE){
+                int[][] truthTable = parser.buildTruthTable(eingabeFormel);
+                ArrayList<Character> variables = parser.getVariables(eingabeFormel);
+                this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, null);
+                this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                mainActivity.replaceFragment(new TruthTableFragment(mainActivity, truthTable, variables, this.historyElement));
+            }
+            else {
                 parser.setModus(modus);
                 String resultFormel = parser.parseFormula(eingabeFormel);
                 resultText.setText(resultFormel);
@@ -443,9 +460,22 @@ public class MainFragment extends Fragment {
             this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
             // Falsche Eingabe
-            if(pe.getFehlercode()==-10){
-
-            }
+            int fehlercode = pe.getFehlercode();
+            /*switch (fehlercode){
+                case -1:
+                    break;
+                case -2:
+                    // mehrere Buchstaben hintereinander
+                    break;
+                case -3:
+                    break;
+                case -4:
+                    break;
+                case -5:
+                    break;
+                case -6:
+                    break;
+            }*/
         }
     }
 
@@ -495,6 +525,8 @@ public class MainFragment extends Fragment {
                 return "2 F";
             case TABLEAUX:
                 return "T";
+            case WERTETABELLE:
+                return "W";
         }
         return "";
     }
@@ -511,6 +543,8 @@ public class MainFragment extends Fragment {
                 return Modi.RESOLUTION;
             case "T":
                 return Modi.TABLEAUX;
+            case "W":
+                return Modi.WERTETABELLE;
         }
         return null;
     }

@@ -46,6 +46,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tab-\nleaux" />
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tabelle" />
 
     </com.google.android.material.tabs.TabLayout>
 

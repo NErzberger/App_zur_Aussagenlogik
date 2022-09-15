@@ -85,6 +85,31 @@ public class Parser {
         }
     }
 
+    public int[][] buildTruthTable(String formula) throws ParserException{
+        this.formula = new Formel(formula);
+
+        rechenweg = new ArrayList<>();
+
+        try {
+            checkUserInput();
+        }catch (ParserException e){
+            throw e;
+        }
+
+        //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
+        Formel pfeileAufgeloest = pfeileAufloesen(this.formula);
+        Formel rPA = pfeileAufgeloest.copy();
+
+        Formel deMorgan = deMorgan(pfeileAufgeloest);
+        Formel rDM = deMorgan.copy();
+
+        Formel knf = Ausaddieren.ausaddieren(rDM);
+
+        Wertetabelle wertetabelle = new Wertetabelle();
+        int[][] truthTable = wertetabelle.createFinishedTruthTable(knf.getFormel(), wertetabelle.checkVariables(knf.getFormel()));
+        return truthTable;
+    }
+
 
     public String parseFormula(String formula) throws ParserException{
 
@@ -102,11 +127,11 @@ public class Parser {
         -1 = Ungerade Anzahl der Klammern
         42 = alles in Ordnung
          */
-        int fehlercode = 0;
+
         try {
-            fehlercode = checkUserInput();
-        }catch (Exception e){
-            throw new ParserException(fehlercode);
+            checkUserInput();
+        }catch (ParserException e){
+            throw e;
         }
 
         //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
@@ -126,8 +151,9 @@ public class Parser {
                 break;
             case RESOLUTION:
                 break;
-            case FORMELN:
-                break;
+            case WERTETABELLE:
+
+
         }
         resultFormula = zeichenersetzungZurueck(resultFormula);
         rechenweg.add(zeichenersetzungZurueck(rPA));
@@ -140,7 +166,7 @@ public class Parser {
         return resultString;
     }
 
-    private int checkUserInput(){
+    private int checkUserInput() throws ParserException{
         // Zähler für Klamern
         int countOpen = 0;
         int countClose = 0;
@@ -170,27 +196,28 @@ public class Parser {
                 if(Character.toString(c).matches("[a-n]")){
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[a-e(\\u00AC]")){
                         // Fehler: Nach Buchstabe muss ein Operator kommen
-                        return -2;
+                        throw new ParserException(-2);
                     }
                 }
                 else if(Character.compare(c, '(')==0){
                     if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2194\\u2194]")){
-                        return -3;
+                        throw new ParserException(-3);
                     }
                 }
                 else if(Character.compare(c, ')')==0){
                     if(Character.toString(this.formula.getChar(i + 1)).matches("[a-e\\u00AC(]")){
-                        return -4;
+                        throw new ParserException(-4);
                     }
                 }
+                // Es darf kein Operator auf eine negation folgen
                 else if(Character.toString(c).matches("[\\u00AC]")){
                     if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2192\\u2194)\\u00AC]")){
-                        return -5;
+                        throw new ParserException(-5);
                     }
                 }
                 else if(Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")){
                     if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u2192\\u2194\\u22C1\\u2227)]")){
-                        return -6;
+                        throw new ParserException(-6);
                     }
                 }
             }
@@ -198,7 +225,7 @@ public class Parser {
         }
         if(countOpen != countClose){
             // Fehlermeldung
-            return -1;
+            throw new ParserException(-1);
         }
 
         /*

@@ -74,7 +74,7 @@ public class Wertetabelle {
      * @param formel1 erste Formel
      * @param variables Liste mit den Variablen aus den beiden Formeln
      */
-    public boolean compareFormulas(char[] formel1, ArrayList<Character> variables) {
+    public int[][] createFinishedTruthTable(char[] formel1, ArrayList<Character> variables) {
 
         boolean result = true;
 
@@ -126,7 +126,7 @@ public class Wertetabelle {
 
         }
 
-        return result;
+        return truthTable;
 
     }
 
