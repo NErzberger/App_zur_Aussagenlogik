@@ -94,6 +94,12 @@ public class ZweiFormelFragment extends Fragment {
         if(fehlercode==-20){
             this.textResult.setText("Die Formeln stimmen "+String.format("<b>%s</b>","nicht")+ " überein.");
             this.textResult.setTextSize(20);
+        }else if(fehlercode==-10){
+            this.textResult.setText("Golden bug!");
+            this.textResult.setTextSize(20);
+        }else if(fehlercode==-30){
+            this.textResult.setText("Die Variablen der Formeln stimmen "+String.format("<b>%s</b>","nicht")+ " überein.");
+            this.textResult.setTextSize(20);
         }else{
             this.textResult.setText("Die Formeln stimmen überein.");
             this.textResult.setTextSize(20);
