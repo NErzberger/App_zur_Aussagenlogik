@@ -37,7 +37,7 @@ public class AusaddierenTest {
     @Test
     public void zweiKlammern(){
         Formel formel = new Formel("(a*b)+(c*d)");
-        Formel expectedFormel = new Formel("(b+c)*(b+d)*(a+c)*(a+d)");
+        Formel expectedFormel = new Formel("(a+c)*(a+d)*(b+c)*(b+d)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -45,7 +45,15 @@ public class AusaddierenTest {
     @Test
     public void testDrei(){
         Formel formel = new Formel("d+((a+b)*(a+c))");
-        Formel expectedFormel = new Formel("(a+b+d)*(a+c+d)");
+        Formel expectedFormel = new Formel("(d+a+b)*(d+a+c)");
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
+    }
+
+    @Test
+    public void testDreiAnders(){
+        Formel formel = new Formel("d+((a*b)+(a*c))");
+        Formel expectedFormel = new Formel("(d+a+a)*(d+a+c)*(d+b+a)*(d+b+c)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -53,7 +61,7 @@ public class AusaddierenTest {
     @Test
     public void testVier(){
         Formel formel = new Formel("((a+b)*(a+c))+d");
-        Formel expectedFormel = new Formel("(c+a+d)*(b+a+d)");
+        Formel expectedFormel = new Formel("(a+b+d)*(a+c+d)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -61,7 +69,7 @@ public class AusaddierenTest {
     @Test
     public void zweiEinfacheOder() {
         Formel formel = new Formel("d+a+(b*c)");
-        Formel expectedFormel = new Formel("(a+b+d)*(a+c+d)");
+        Formel expectedFormel = new Formel("(d+a+b)*(d+a+c)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -69,7 +77,7 @@ public class AusaddierenTest {
     @Test
     public void einfacheRekursion() {
         Formel formel = new Formel("a+((b*e)+(c*d))");
-        Formel expectedFormel = new Formel("(e+c+a)*(e+d+a)*(b+c+a)*(b+d+a)");
+        Formel expectedFormel = new Formel("(a+b+c)*(a+b+d)*(a+e+c)*(a+e+d)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -77,7 +85,7 @@ public class AusaddierenTest {
     @Test
     public void einfacheRekursionZwei() {
         Formel formel = new Formel("a+((b*c)*(d+e))");
-        Formel expectedFormel = new Formel("(b+a)*(c+a)*(d+e+a)");
+        Formel expectedFormel = new Formel("(a+b)*(a+c)*(a+d+e)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -85,7 +93,7 @@ public class AusaddierenTest {
     @Test
     public void mehrfacheRekursion() {
         Formel formel = new Formel("a+((b*c*e)+((d*a)+(d*e)+(f*a)+(f*e)))");
-        Formel expectedFormel = new Formel("(a*b*d)+(a*b*d*e)+(a*b*f)+(a*b*f*e)+(a*c*d)+(a*c*d*e)+(a*f)+(a*c*f*e)+(a*e*d)+(a*e*d)+(a*e*f)+(a*e*f)");
+        Formel expectedFormel = new Formel("(a+b+d+d+f+f)*(a+b+d+d+f+e)*(a+b+a+d+f+f)*(a+b+a+d+f+e)*(a+b+d+d+a+f)*(a+b+d+d+a+e)*(a+b+a+d+a+f)*(a+b+a+d+a+e)*(a+b+d+e+f+f)*(a+b+d+e+f+e)*(a+b+d+e+f+f)*(a+b+d+e+f+e)*(a+b+a+e+a+f)*(a+b+a+e+a+e)*(a+b+a+e+a+f)*(a+b+a+e+a+e)*(a+c+d+d+f+f)*(a+c+d+d+f+e)*(a+c+a+d+f+f)*(a+c+a+d+f+e)*(a+c+d+d+a+f)*(a+c+d+d+a+e)*(a+c+a+d+a+f)*(a+c+a+d+a+e)*(a+c+d+e+f+f)*(a+c+d+e+f+e)*(a+c+d+e+f+f)*(a+c+d+e+f+e)*(a+c+a+e+a+f)*(a+c+a+e+a+e)*(a+c+a+e+a+f)*(a+c+a+e+a+e)*(a+e+d+d+f+f)*(a+e+d+d+f+e)*(a+e+a+d+f+f)*(a+e+a+d+f+e)*(a+e+d+d+a+f)*(a+e+d+d+a+e)*(a+e+a+d+a+f)*(a+e+a+d+a+e)*(a+e+d+e+f+f)*(a+e+d+e+f+e)*(a+e+d+e+f+f)*(a+e+d+e+f+e)*(a+e+a+e+a+f)*(a+e+a+e+a+e)*(a+e+a+e+a+f)*(a+e+a+e+a+e)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }
@@ -93,7 +101,7 @@ public class AusaddierenTest {
     @Test
     public void asdf(){
         Formel formel = new Formel("(a*(b+c))+((b*a)+c)");
-        Formel expectedFormel = new Formel("(a+c)*(b+c)");
+        Formel expectedFormel = new Formel("(a+b+c)*(a+a+c)*(b+c+b+c)*(b+c+a+c)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }

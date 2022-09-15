@@ -58,7 +58,7 @@ public class TruthTableFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_truth_table, container, false);
 
-        homeButton = view.findViewById(R.id.buttonHome);
+        homeButton = view.findViewById(R.id.buttonHome2);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,9 +76,7 @@ public class TruthTableFragment extends Fragment {
             if (i < variables.size()) {
                 textView.setText(" " + Character.toString(variables.get(i)) + " ");
             } else if (i == variables.size()) {
-                textView.setText("F1");
-            } else if (i == variables.size() + 1) {
-                textView.setText("F2");
+                textView.setText(" " + "F" + " ");
             }
 
             textView.setTextSize(25);

@@ -13,8 +13,8 @@ public class Wertetabelle {
     private int[][] createTruthTable(int n) {
 
         int rows = (int) Math.pow(2,n);
-        //n+2 weil wir 2 weitere Ergebnisspalten für 2 Formeln brauchen
-        int[][] truthTable = new int[n+2][rows];
+        //n+1 weil wir 1 weitere Ergebnisspalte für 1 Formel brauchen
+        int[][] truthTable = new int[n+1][rows];
 
 
         for (int i=0; i<rows; i++) {
