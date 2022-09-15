@@ -1,9 +1,12 @@
 package com.dhbw.app_zur_aussagenlogik.core;
 
+import java.util.ArrayList;
+
 public class ParserException extends Exception{
 
     private int fehlercode;
     private int[][] truthTable;
+    private ArrayList<Character> variables;
 
 
     public ParserException(int fehlercode){
@@ -25,4 +28,8 @@ public class ParserException extends Exception{
     public void setTruthTable(int[][] truthTable) {
         this.truthTable = truthTable;
     }
+
+    public ArrayList<Character> getVariables() { return variables; }
+
+    public void setVariables(ArrayList<Character> variables) { this.variables = variables; }
 }
