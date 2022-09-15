@@ -55,7 +55,13 @@ public class Parser {
             Formel f2KNF = Ausmultiplizieren.ausmultiplizieren(f2DeMorgan);
 
             ZweiFormeln zweiFormelnParser = new ZweiFormeln();
-            if(zweiFormelnParser.compareFormulas(f1KNF.getFormel(), f2KNF.getFormel(), zweiFormelnParser.checkVariables(f1KNF.getFormel()))){
+            //Die zwei Formeln haben unterschiedliche Variablen
+            if (zweiFormelnParser.compareVariables(f1KNF.getFormel(), f2KNF.getFormel())==false){
+                fehlercode = -30;
+                ParserException pe = new ParserException(fehlercode);
+                throw pe;
+            } else if(zweiFormelnParser.compareFormulas(f1KNF.getFormel(), f2KNF.getFormel(), zweiFormelnParser.checkVariables(f1KNF.getFormel()))){
+                //Die zwei Formeln stimmen überein
                 return zweiFormelnParser.getTruthTable();
             }else{
                 // Zwei Formel stimmen nicht über ein
