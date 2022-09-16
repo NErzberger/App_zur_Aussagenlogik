@@ -260,7 +260,6 @@ public class Parser {
 
 
 
-
     private Formel zeichenersetzungZurueck(Formel formel){
         /*
         Zeichenersetzung

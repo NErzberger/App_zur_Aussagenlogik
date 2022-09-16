@@ -42,7 +42,7 @@ public class AboutUsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_history, container, false);
+        view = inflater.inflate(R.layout.fragment_aboutus, container, false);
 
         this.buttonHome = view.findViewById(R.id.buttonHome);
         buttonHome.setOnClickListener(new View.OnClickListener() {

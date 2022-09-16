@@ -390,12 +390,12 @@ public class MainFragment extends Fragment {
                 TabLayout.Tab tab3 = layout.getTabAt(3);
                 tab3.select();
                 break;
-            case TABLEAUX:
+          /*  case TABLEAUX:
                 TabLayout.Tab tab4 = layout.getTabAt(4);
                 tab4.select();
-                break;
+                break;*/
             case WERTETABELLE:
-                TabLayout.Tab tab5 = layout.getTabAt(5);
+                TabLayout.Tab tab5 = layout.getTabAt(4);
                 tab5.select();
                 break;
         }
