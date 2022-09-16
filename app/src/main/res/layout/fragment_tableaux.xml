@@ -15,7 +15,8 @@
         android:layout_marginStart="2dp"
         android:layout_marginEnd="323dp"
         android:layout_marginBottom="218dp"
-        android:text="Home"
+        android:text="@string/homeSymbol"
+        android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
