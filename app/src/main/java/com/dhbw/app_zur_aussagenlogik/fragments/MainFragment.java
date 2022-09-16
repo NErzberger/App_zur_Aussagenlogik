@@ -111,6 +111,7 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+
     }
 
 
@@ -151,6 +152,9 @@ public class MainFragment extends Fragment {
 
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
+
+        inputText.setShowSoftInputOnFocus(false);
+        resultText.setShowSoftInputOnFocus(false);
 
         textIhreFormelErgebnis = view.findViewById(R.id.textIhreFormelErgebnis);
 
