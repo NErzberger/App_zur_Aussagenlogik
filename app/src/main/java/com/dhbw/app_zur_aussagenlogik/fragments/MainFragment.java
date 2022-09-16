@@ -111,8 +111,8 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
-
     }
+
 
 
     @Override
@@ -124,8 +124,6 @@ public class MainFragment extends Fragment {
         layout = view.findViewById(R.id.tabLayout);
 
         dataSource = new HistoryDataSource(getContext());
-
-
 
         // Deklaration der Tastatur
         buttonA = view.findViewById(R.id.buttonA);
@@ -158,6 +156,26 @@ public class MainFragment extends Fragment {
 
         textIhreFormelErgebnis = view.findViewById(R.id.textIhreFormelErgebnis);
 
+        /*
+        OnFocusChangeListener wird gebraucht, damit der Fokus direkt in dem EditText liegt, in
+        welches geklickt wurde. Ansonsten benötigt man zwei Klicks in das EditText, wenn man von
+        einem EditText in das andere wechselt.
+         */
+        resultText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textFieldFocus=FIRST_FORMULA_FOCUS;
+            }
+        });
+
+        resultText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textFieldFocus = SECOND_FORMULA_FOCUS;
+            }
+        });
+
+
         //normale Tastatur wird direkt wieder geschlossen
         inputText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +194,7 @@ public class MainFragment extends Fragment {
                 textFieldFocus = SECOND_FORMULA_FOCUS;
             }
         });
+
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
