@@ -111,6 +111,11 @@ public class Parser {
     }
 
 
+    public boolean isTautologie(String formula){
+        return false;
+    }
+
+
     public String parseFormula(String formula) throws ParserException{
 
 
@@ -149,11 +154,6 @@ public class Parser {
             case DNF:
                 resultFormula = Ausmultiplizieren.ausmultiplizieren(deMorgan);
                 break;
-            case RESOLUTION:
-                break;
-            case WERTETABELLE:
-
-
         }
         resultFormula = zeichenersetzungZurueck(resultFormula);
         rechenweg.add(zeichenersetzungZurueck(rPA));

@@ -1,4 +1,4 @@
-package com.dhbw.app_zur_aussagenlogik;
+package com.dhbw.app_zur_aussagenlogik.fragments;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
  * A simple {@link Fragment} subclass.
