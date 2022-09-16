@@ -437,5 +437,5 @@ public class Ausaddieren extends Normalformen{
         newZeichenSatz[origin.length] = z;
         return newZeichenSatz;
     }
-    
+
 }
