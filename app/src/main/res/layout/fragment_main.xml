@@ -33,7 +33,7 @@
             android:id="@+id/tabItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resolu-tion" />
+            android:text="Resolution" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem4"
@@ -41,11 +41,11 @@
             android:layout_height="wrap_content"
             android:text="2 For-\nmeln" />
 
-        <com.google.android.material.tabs.TabItem
+       <!-- <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tab-\nleaux" />
+            android:text="Tab-\nleaux" />-->
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem6"
             android:layout_width="wrap_content"

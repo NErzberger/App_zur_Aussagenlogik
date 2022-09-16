@@ -183,7 +183,7 @@ public class MainFragment extends Fragment {
                     case "KNF":
                         modus = Modi.KNF;
                         break;
-                    case "Resolu-tion":
+                    case "Resolution":
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
@@ -390,12 +390,12 @@ public class MainFragment extends Fragment {
                 TabLayout.Tab tab3 = layout.getTabAt(3);
                 tab3.select();
                 break;
-            case TABLEAUX:
+          /*  case TABLEAUX:
                 TabLayout.Tab tab4 = layout.getTabAt(4);
                 tab4.select();
-                break;
+                break;*/
             case WERTETABELLE:
-                TabLayout.Tab tab5 = layout.getTabAt(5);
+                TabLayout.Tab tab5 = layout.getTabAt(4);
                 tab5.select();
                 break;
         }
@@ -450,12 +450,16 @@ public class MainFragment extends Fragment {
                 this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
                 mainActivity.replaceFragment(new TruthTableFragment(mainActivity, truthTable, variables, this.historyElement));
             }
-            else {
+            else if(modus==Modi.KNF || modus==Modi.DNF) {
                 parser.setModus(modus);
                 String resultFormel = parser.parseFormula(eingabeFormel);
                 resultText.setText(resultFormel);
                 this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, resultFormel);
                 this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+            }
+            else if(modus== Modi.RESOLUTION){
+                // Hier würde die Resolution gestartet werden
+                mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
             }
             this.buttonRechenweg.setEnabled(true);
         }catch (ParserException pe){
