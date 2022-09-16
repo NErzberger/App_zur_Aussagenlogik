@@ -4,13 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import com.dhbw.app_zur_aussagenlogik.fragments.AboutUsFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.HistoryFragment;
@@ -69,5 +65,6 @@ public class MainActivity extends AppCompatActivity {
     public MainFragment getMainFragment(){
         return this.mainFragment;
     }
+
 
 }
