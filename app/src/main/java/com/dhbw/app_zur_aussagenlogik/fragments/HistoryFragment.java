@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
-import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ import java.util.List;
  * Use the {@link HistoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements IOnBackPressed {
 
     private List<History> historyList;
 
@@ -68,13 +66,13 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_history, container, false);
-
+        mainActivity.setActiveFragment(this);
         homeButton = view.findViewById(R.id.buttonHome);
         history_view = view.findViewById(R.id.List_History);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity));
+                goBackToMainFragment();
             }
         });
 
@@ -115,4 +113,8 @@ public class HistoryFragment extends Fragment {
     }
 
 
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity));
+    }
 }

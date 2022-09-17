@@ -1,6 +1,5 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -19,13 +18,12 @@ import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class ZweiFormelFragment extends Fragment {
+public class ZweiFormelFragment extends Fragment implements IOnBackPressed {
 
     private MainActivity mainActivity;
 
@@ -80,13 +78,13 @@ public class ZweiFormelFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_zwei_formel, container, false);
-
+        mainActivity.setActiveFragment(this);
         homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity, history));
+                goBackToMainFragment();
             }
         });
 
@@ -148,5 +146,10 @@ public class ZweiFormelFragment extends Fragment {
             }
         }
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity, history));
     }
 }

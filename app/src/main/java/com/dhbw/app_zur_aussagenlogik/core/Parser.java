@@ -73,14 +73,14 @@ public class Parser {
             }
 
         }catch (ParserException pe){
-            // Bei 2 Formeln ist etwas schief gelaufen -> checkUserInput
+          /*  // Bei 2 Formeln ist etwas schief gelaufen -> checkUserInput
             if(fehlercode==0){
                 // nicht durch checkUserInput
                 fehlercode = -10;
                 throw new ParserException(fehlercode);
-            }else{
+            }else{*/
                 throw pe;
-            }
+            //}
 
         }
     }
@@ -199,26 +199,45 @@ public class Parser {
                         throw new ParserException(-2);
                     }
                 }
-                else if(Character.compare(c, '(')==0){
-                    if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2194\\u2194]")){
+                else if(c=='('){
+                    if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2194\\u2192]")){
                         throw new ParserException(-3);
+                    }else if(i+1==formula.length()){
+                        throw new ParserException(-8);
                     }
                 }
-                else if(Character.compare(c, ')')==0){
+                else if(c==')'){
                     if(Character.toString(this.formula.getChar(i + 1)).matches("[a-e\\u00AC(]")){
                         throw new ParserException(-4);
+                    }else if(i==0){
+                        throw new ParserException(-9);
                     }
                 }
                 // Es darf kein Operator auf eine negation folgen
                 else if(Character.toString(c).matches("[\\u00AC]")){
-                    if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2192\\u2194)\\u00AC]")){
+                    if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2192\\u2194)]")){
                         throw new ParserException(-5);
                     }
                 }
                 else if(Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")){
                     if(Character.toString(this.formula.getChar(i + 1)).matches("[\\u2192\\u2194\\u22C1\\u2227)]")){
                         throw new ParserException(-6);
+                    }else if(i==0){
+                        throw new ParserException(-7);
                     }
+                }
+            }else if(i+1== formula.length()){
+                // keine öffnende Klammer an letzter Stelle
+                if(c=='('){
+                    throw new ParserException(-8);
+                }
+                // keine Negation an letzter Stelle
+                else if(Character.toString(c).matches("[\\u00AC]")){
+                    throw new ParserException(-11);
+                }
+                // Kein Operator an letzter Stelle
+                else if(Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")){
+                    throw new ParserException(-12);
                 }
             }
 

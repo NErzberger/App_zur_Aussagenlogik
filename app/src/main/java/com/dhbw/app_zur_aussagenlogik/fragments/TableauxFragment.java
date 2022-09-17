@@ -17,7 +17,7 @@ import com.dhbw.app_zur_aussagenlogik.R;
  * Use the {@link TableauxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TableauxFragment extends Fragment {
+public class TableauxFragment extends Fragment implements IOnBackPressed{
 
     private MainActivity mainActivity;
 
@@ -55,16 +55,21 @@ public class TableauxFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tableaux, container, false);
-
+        mainActivity.setActiveFragment(this);
         homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity));
+                goBackToMainFragment();
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity));
     }
 }

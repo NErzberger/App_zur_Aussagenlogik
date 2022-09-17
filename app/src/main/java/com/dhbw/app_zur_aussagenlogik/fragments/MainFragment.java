@@ -1,8 +1,10 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
-import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -10,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,9 +19,9 @@ import android.widget.TextView;
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.core.ErrorHandler;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
 import com.dhbw.app_zur_aussagenlogik.core.ParserException;
-import com.dhbw.app_zur_aussagenlogik.core.Wertetabelle;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements IOnBackPressed {
 
     private TabLayout layout;
     private EditText inputText;
@@ -120,7 +121,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
-
+        mainActivity.setActiveFragment(this);
         layout = view.findViewById(R.id.tabLayout);
 
         dataSource = new HistoryDataSource(getContext());
@@ -161,7 +162,7 @@ public class MainFragment extends Fragment {
         welches geklickt wurde. Ansonsten benötigt man zwei Klicks in das EditText, wenn man von
         einem EditText in das andere wechselt.
          */
-        resultText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        inputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 textFieldFocus=FIRST_FORMULA_FOCUS;
@@ -175,7 +176,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-
+/*
         //normale Tastatur wird direkt wieder geschlossen
         inputText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +195,7 @@ public class MainFragment extends Fragment {
                 textFieldFocus = SECOND_FORMULA_FOCUS;
             }
         });
-
+*/
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -437,6 +438,7 @@ public class MainFragment extends Fragment {
     private void launchParser(Modi modus){
         Parser parser = Parser.getInstance();
         String eingabeFormel = inputText.getText().toString();
+        resultText.setTextColor(Color.BLACK);
         try {
             if(modus==Modi.FORMELN){
                 String zweiteFormel = resultText.getText().toString();
@@ -465,14 +467,41 @@ public class MainFragment extends Fragment {
                         this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
                         mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -30, this.historyElement));
                         // Falsche Eingabe
+                    }else{
+                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getContext());
+                        dlgAlert.setMessage(ErrorHandler.getErrorMessage(pe.getFehlercode()));
+                        dlgAlert.setTitle("Fehleingabe");
+                        dlgAlert.setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //dismiss the dialog
+                                    }
+                                });
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+
                     }
                 }
             }else if(modus==Modi.WERTETABELLE){
-                int[][] truthTable = parser.buildTruthTable(eingabeFormel);
-                ArrayList<Character> variables = parser.getVariables(eingabeFormel);
-                this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, null);
-                this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
-                mainActivity.replaceFragment(new TruthTableFragment(mainActivity, truthTable, variables, this.historyElement));
+                try {
+                    int[][] truthTable = parser.buildTruthTable(eingabeFormel);
+                    ArrayList<Character> variables = parser.getVariables(eingabeFormel);
+                    this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, null);
+                    this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
+                    mainActivity.replaceFragment(new TruthTableFragment(mainActivity, truthTable, variables, this.historyElement));
+                }catch (ParserException pe){
+                    AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getContext());
+                    dlgAlert.setMessage(ErrorHandler.getErrorMessage(pe.getFehlercode()));
+                    dlgAlert.setTitle("Fehleingabe");
+                    dlgAlert.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //dismiss the dialog
+                                }
+                            });
+                    dlgAlert.setCancelable(true);
+                    dlgAlert.create().show();
+                }
             }
             else if(modus==Modi.KNF || modus==Modi.DNF) {
                 parser.setModus(modus);
@@ -489,21 +518,8 @@ public class MainFragment extends Fragment {
         }catch (ParserException pe){
             // Falsche Eingabe
             int fehlercode = pe.getFehlercode();
-            /*switch (fehlercode){
-                case -1:
-                    break;
-                case -2:
-                    // mehrere Buchstaben hintereinander
-                    break;
-                case -3:
-                    break;
-                case -4:
-                    break;
-                case -5:
-                    break;
-                case -6:
-                    break;
-            }*/
+            resultText.setText(ErrorHandler.getErrorMessage(fehlercode));
+            resultText.setTextColor(Color.RED);
         }
     }
 
@@ -511,6 +527,8 @@ public class MainFragment extends Fragment {
 
         if(modus == Modi.DNF || modus == Modi.KNF || modus == Modi.TABLEAUX || modus == Modi.RESOLUTION ){
             buttonRechenweg.setVisibility(view.VISIBLE);
+            resultText.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setVisibility(view.VISIBLE);
             textIhreFormelErgebnis.setText("Lösung");
             resultText.setEnabled(false);
             resultText.setText("");
@@ -519,14 +537,19 @@ public class MainFragment extends Fragment {
         }
         else if(modus == Modi.FORMELN){
             buttonRechenweg.setVisibility(view.INVISIBLE);
+            resultText.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setVisibility(view.VISIBLE);
             textIhreFormelErgebnis.setText("2. Formel");
             resultText.setEnabled(true);
-
-
             resultText.setText("");
             resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
-
             inputText.setFocusedByDefault(true);
+        }
+        else if(modus == Modi.WERTETABELLE){
+            buttonRechenweg.setVisibility(view.INVISIBLE);
+            resultText.setVisibility(view.INVISIBLE);
+            textIhreFormelErgebnis.setVisibility(view.INVISIBLE);
+
         }
         buttonRechenweg.setEnabled(false);
 
@@ -613,4 +636,8 @@ public class MainFragment extends Fragment {
         return this.newHistoryElement;
     }
 
+    @Override
+    public void goBackToMainFragment() {
+// do nothing
+    }
 }

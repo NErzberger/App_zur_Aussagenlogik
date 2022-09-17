@@ -5,12 +5,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.dhbw.app_zur_aussagenlogik.core.ErrorHandler;
 import com.dhbw.app_zur_aussagenlogik.fragments.AboutUsFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.HistoryFragment;
+import com.dhbw.app_zur_aussagenlogik.fragments.InstructionFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.MainFragment;
+import com.dhbw.app_zur_aussagenlogik.fragments.IOnBackPressed;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,11 +23,14 @@ public class MainActivity extends AppCompatActivity {
 
     private MainFragment mainFragment = new MainFragment(this);
 
+    private IOnBackPressed activeFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ErrorHandler.newInstance();
         HistoryDataSource dataSource = new HistoryDataSource(this);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -55,10 +62,20 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new HistoryFragment(this));
                 return true;
             case R.id.anleitung:
-                //mainActivity.replaceFragment(new AboutUsFragment(mainActivity));
+                replaceFragment(new InstructionFragment(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        Log.d(MainActivity.class.getSimpleName(), "Es wurde die Zurücktaste gedrückt");
+        if(activeFragment instanceof MainFragment){
+            System.exit(0);
+        }else {
+            activeFragment.goBackToMainFragment();
         }
     }
 
@@ -66,5 +83,11 @@ public class MainActivity extends AppCompatActivity {
         return this.mainFragment;
     }
 
+    public IOnBackPressed getActiveFragment() {
+        return activeFragment;
+    }
 
+    public void setActiveFragment(IOnBackPressed activeFragment) {
+        this.activeFragment = activeFragment;
+    }
 }

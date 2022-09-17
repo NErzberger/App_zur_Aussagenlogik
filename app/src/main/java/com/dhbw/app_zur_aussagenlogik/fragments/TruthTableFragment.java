@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class TruthTableFragment extends Fragment {
+public class TruthTableFragment extends Fragment implements IOnBackPressed {
 
     private MainActivity mainActivity;
 
@@ -57,13 +57,13 @@ public class TruthTableFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_truth_table, container, false);
-
+        mainActivity.setActiveFragment(this);
         homeButton = view.findViewById(R.id.buttonHome2);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity, history));
+                goBackToMainFragment();
             }
         });
 
@@ -104,5 +104,10 @@ public class TruthTableFragment extends Fragment {
             truthTable.addView(tableRow, i + 1);
         }
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity, history));
     }
 }

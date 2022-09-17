@@ -25,7 +25,7 @@ import java.util.List;
  * Use the {@link NormalformFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NormalformFragment extends Fragment {
+public class NormalformFragment extends Fragment implements IOnBackPressed {
 
 
     private MainActivity mainActivity;
@@ -78,13 +78,13 @@ public class NormalformFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_normalform, container, false);
-
+        mainActivity.setActiveFragment(this);
         homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity, historyElement));
+                goBackToMainFragment();
             }
         });
 
@@ -112,5 +112,10 @@ public class NormalformFragment extends Fragment {
         normalformErgebnis.setText(rechenweg.get(3).toString());
 
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity, historyElement));
     }
 }

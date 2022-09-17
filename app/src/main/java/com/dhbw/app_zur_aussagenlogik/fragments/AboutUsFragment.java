@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
 
-public class AboutUsFragment extends Fragment {
+public class AboutUsFragment extends Fragment implements IOnBackPressed {
 
     private MainActivity mainActivity;
 
@@ -43,16 +43,21 @@ public class AboutUsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_aboutus, container, false);
-
+        mainActivity.setActiveFragment(this);
         this.buttonHome = view.findViewById(R.id.buttonHome);
         buttonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity));
+               goBackToMainFragment();
             }
         });
 
 
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity));
     }
 }

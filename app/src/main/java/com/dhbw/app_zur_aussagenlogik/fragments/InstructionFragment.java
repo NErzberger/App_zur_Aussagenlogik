@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
@@ -15,10 +17,17 @@ import com.dhbw.app_zur_aussagenlogik.R;
  *
  * create an instance of this fragment.
  */
-public class InstructionFragment extends Fragment {
+public class InstructionFragment extends Fragment implements IOnBackPressed{
 
-    public InstructionFragment() {
-        // Required empty public constructor
+    private MainActivity mainActivity;
+
+    private Button buttonHome;
+
+    private View view;
+
+
+    public InstructionFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
 
@@ -33,9 +42,20 @@ public class InstructionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_instruction, container, false);
-
-
+        this.view = inflater.inflate(R.layout.fragment_instruction, container, false);
+        mainActivity.setActiveFragment(this);
+        this.buttonHome = view.findViewById(R.id.buttonHome);
+        buttonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBackToMainFragment();
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity));
     }
 }
