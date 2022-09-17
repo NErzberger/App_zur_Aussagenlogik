@@ -3,32 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#CCFFFF"
+    >
 
     <Button
         android:id="@+id/buttonHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="320dp"
-        android:layout_marginBottom="218dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
         android:text="@string/homeSymbol"
         android:textSize="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="202dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="122dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:autoText="false"
         android:text="Über uns"
         android:textSize="20dp"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
     <TextView
@@ -41,6 +42,7 @@
         android:autoText="false"
         android:text="Wir sind eine Gruppe von Studenten an der DHBW, die im Zuge eines Projekts diese App entwickelt hat."
         android:textSize="20dp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.NormalformFragment">
+    tools:context=".fragments.NormalformFragment"
+    android:background="#CCFFFF">
 
     <TableLayout
         android:id="@+id/tableLayout"
@@ -111,19 +112,17 @@
         android:id="@+id/buttonHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="320dp"
-        android:layout_marginBottom="218dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
         android:text="@string/homeSymbol"
         android:textSize="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:textAlignment="center"
         android:autoText="false"
