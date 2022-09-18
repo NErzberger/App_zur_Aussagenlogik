@@ -128,7 +128,6 @@
             android:enabled="false"
             android:hint="@string/solutionPlaceholder"
             android:inputType="textMultiLine"
-            android:maxLines="15"
             android:text="@string/solution"
 
              />

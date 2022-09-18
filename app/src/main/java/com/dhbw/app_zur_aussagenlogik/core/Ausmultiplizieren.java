@@ -406,6 +406,8 @@ public class Ausmultiplizieren{
                 }
             }
         }
+        //ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
+
         // }
         String loesung = "";
         for (int i = 0; i < ergebnisBloecke.size(); i++) {
