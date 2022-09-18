@@ -1,30 +1,43 @@
 package com.dhbw.app_zur_aussagenlogik.fragments;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.core.ErrorHandler;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.ParserException;
+import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
+import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements IOnBackPressed {
 
     private TabLayout layout;
     private EditText inputText;
+    private EditText resultText;
     private Button buttonA;
     private Button buttonB;
     private Button buttonC;
@@ -40,6 +53,13 @@ public class MainFragment extends Fragment {
     private Button buttonReturn;
     private Button buttonKlammerAuf;
     private Button buttonKlammerZu;
+    private Button buttonRechenweg;
+    private Button buttonOneBack;
+    private MenuItem itemVerlauf;
+    private MenuItem itemAnleitung;
+    private MenuItem itemUeberUns;
+
+    private TextView textIhreFormelErgebnis;
 
 
     private Modi modus = Modi.DNF;
@@ -48,10 +68,29 @@ public class MainFragment extends Fragment {
 
     private View view;
 
+    private HistoryDataSource dataSource;
+
+    public int formulaHistoryPosition;
+
+    private String firstFormula;
+    private String secondFormula;
+
+    private History historyElement;
+
+    private History newHistoryElement;
+
+    private int textFieldFocus;
+
+    private final static int FIRST_FORMULA_FOCUS = 0, SECOND_FORMULA_FOCUS = 1;
 
 
     public MainFragment(AppCompatActivity mainActivity) {
         this.mainActivity = (MainActivity) mainActivity;
+    }
+
+    public MainFragment(AppCompatActivity mainActivity, History historyElement) {
+        this.mainActivity = (MainActivity) mainActivity;
+        this.historyElement = historyElement;
     }
 
     /**
@@ -75,13 +114,17 @@ public class MainFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
-
+        mainActivity.setActiveFragment(this);
         layout = view.findViewById(R.id.tabLayout);
+
+        dataSource = new HistoryDataSource(getContext());
 
         // Deklaration der Tastatur
         buttonA = view.findViewById(R.id.buttonA);
@@ -99,11 +142,60 @@ public class MainFragment extends Fragment {
         buttonReturn = view.findViewById(R.id.buttonReturn);
         buttonKlammerAuf = view.findViewById(R.id.buttonKlammerAuf);
         buttonKlammerZu = view.findViewById(R.id.buttonKlammerZu);
+        buttonRechenweg = view.findViewById(R.id.buttonRechenweg);
+        buttonOneBack = view.findViewById(R.id.buttonOneBack);
+
+        itemVerlauf = view.findViewById(R.id.history);
+        itemAnleitung = view.findViewById(R.id.anleitung);
+        itemUeberUns = view.findViewById(R.id.UeberUns);
 
         inputText = view.findViewById(R.id.input);
+        resultText = view.findViewById(R.id.solution);
 
+        inputText.setShowSoftInputOnFocus(false);
+        resultText.setShowSoftInputOnFocus(false);
 
-        // OnClickListener für das TabLayout
+        textIhreFormelErgebnis = view.findViewById(R.id.textIhreFormelErgebnis);
+
+        /*
+        OnFocusChangeListener wird gebraucht, damit der Fokus direkt in dem EditText liegt, in
+        welches geklickt wurde. Ansonsten benötigt man zwei Klicks in das EditText, wenn man von
+        einem EditText in das andere wechselt.
+         */
+        inputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textFieldFocus=FIRST_FORMULA_FOCUS;
+            }
+        });
+
+        resultText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textFieldFocus = SECOND_FORMULA_FOCUS;
+            }
+        });
+
+/*
+        //normale Tastatur wird direkt wieder geschlossen
+        inputText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                textFieldFocus=FIRST_FORMULA_FOCUS;
+            }
+        });
+
+        resultText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                textFieldFocus = SECOND_FORMULA_FOCUS;
+            }
+        });
+*/
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -116,16 +208,22 @@ public class MainFragment extends Fragment {
                     case "KNF":
                         modus = Modi.KNF;
                         break;
-                    case "Resolu-tion":
+                    case "Resolution":
                         modus = Modi.RESOLUTION;
                         break;
                     case "2 For-\nmeln":
                         modus = Modi.FORMELN;
+                        //changeLayout(modus);
+                        //mainActivity.replaceFragment(new Resolution(mainActivity));
                         break;
                     case "Tab-\nleaux":
                         modus = Modi.TABLEAUX;
                         break;
+                    case "Tabelle":
+                        modus = Modi.WERTETABELLE;
+                        break;
                 }
+                changeLayout(modus);
             }
 
             @Override
@@ -135,58 +233,54 @@ public class MainFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
-
         });
 
 
         buttonA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "a");
+                writeToTextField("a");
             }
         });
 
         buttonB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "b");
+                writeToTextField("b");
             }
         });
 
         buttonC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "c");
+                writeToTextField("c");
             }
         });
 
         buttonD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "d");
+                writeToTextField("d");
             }
         });
 
         buttonE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "e");
+                writeToTextField("e");
             }
         });
 
         buttonNegation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u00AC");
+                writeToTextField("\u00AC");
             }
         });
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String formular = inputText.getText().toString();
-                if(!formular.isEmpty()) {
-                    inputText.setText(formular.substring(0, formular.length() - 1));
-                }
+                deleteCharacter();
             }
         });
 
@@ -194,34 +288,35 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 inputText.setText("");
+                resultText.setText("");
             }
         });
 
         buttonAnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u2227");
+                writeToTextField("\u2227");
             }
         });
 
         buttonOr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u22C1");
+                writeToTextField("\u22C1");
             }
         });
 
         buttonImplikation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u2192");
+                writeToTextField("\u2192");
             }
         });
 
         buttonImplikationBeidseitig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "\u2194");
+                writeToTextField("\u2194");
             }
         });
 
@@ -229,33 +324,320 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 switch (modus) {
-                    case RESOLUTION:
-                       mainActivity.replaceFragment(new Resolution(mainActivity));
-                       break;
-
-                    case TABLEAUX:
-                        mainActivity.replaceFragment(new Tableaux(mainActivity));
+                    case KNF:
+                        launchParser(Modi.KNF);
                         break;
+                    case DNF:
+                        launchParser(Modi.DNF);
+                        break;
+                    case FORMELN:
+                        launchParser(Modi.FORMELN);
+                        break;
+                    case RESOLUTION:
+                       mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
+                       break;
+                    case TABLEAUX:
+                        mainActivity.replaceFragment(new TableauxFragment(mainActivity));
+                        break;
+                    case WERTETABELLE:
+                        launchParser(Modi.WERTETABELLE);
                 }
-                //launchParser();
             }
         });
 
         buttonKlammerAuf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + "(");
+                writeToTextField("(");
             }
         });
 
         buttonKlammerZu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputText.setText(inputText.getText() + ")");
+                writeToTextField(")");
             }
         });
 
+        buttonRechenweg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.replaceFragment(new NormalformFragment(mainActivity, historyElement));
+            }
+        });
+
+        buttonOneBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(historyElement!=null) {
+                    try {
+                        HistoryDataSource dataSource = new HistoryDataSource(getContext());
+                        History h = dataSource.getOneBeforeHistory(historyElement.getId());
+                        historyElement = h;
+                        switchModi();
+                        setFormulas();
+                    }catch(Exception e){
+
+                    }
+                }
+            }
+        });
+
+        switchModi();
+
+        setFormulas();
 
         return this.view;
+    }
+
+    private void switchModi(){
+        /*
+         * Selected Tab wählen
+         */
+
+        if(historyElement != null){
+            modus = getModusByString(historyElement.getModi());
+        }
+        switch (modus){
+            case DNF:
+                TabLayout.Tab tab = layout.getTabAt(0);
+                tab.select();
+                break;
+            case KNF:
+                TabLayout.Tab tab1 = layout.getTabAt(1);
+                tab1.select();
+                break;
+            case RESOLUTION:
+                TabLayout.Tab tab2 = layout.getTabAt(2);
+                tab2.select();
+                break;
+            case FORMELN:
+                TabLayout.Tab tab3 = layout.getTabAt(3);
+                tab3.select();
+                break;
+          /*  case TABLEAUX:
+                TabLayout.Tab tab4 = layout.getTabAt(4);
+                tab4.select();
+                break;*/
+            case WERTETABELLE:
+                TabLayout.Tab tab5 = layout.getTabAt(4);
+                tab5.select();
+                break;
+        }
+    }
+
+    private void setFormulas(){
+        if(historyElement != null){
+            inputText.setText(historyElement.getFormula());
+            resultText.setText(historyElement.getSecondFormula());
+        }
+    }
+
+
+
+    private void launchParser(Modi modus){
+        Parser parser = Parser.getInstance();
+        String eingabeFormel = inputText.getText().toString();
+        resultText.setTextColor(Color.BLACK);
+        try {
+            if(modus==Modi.FORMELN){
+                String zweiteFormel = resultText.getText().toString();
+                try {
+                    int[][] truthTable = parser.parseTwoFormula(eingabeFormel, zweiteFormel);
+                    ArrayList<Character> variables = parser.getVariables(eingabeFormel);
+                    this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                    this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
+                    mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables, this.historyElement));
+                }catch (ParserException pe){
+                    // Formeln stimmen nicht über ein
+                    if(pe.getFehlercode()==-20){
+                        int[][] truthTable = pe.getTruthTable();
+                        ArrayList<Character> variables = pe.getVariables();
+                        this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables, -20, this.historyElement));
+                        // Falsche Eingabe
+                    }else if(pe.getFehlercode()==-10){
+                        this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -10, this.historyElement));
+                        // Falsche Eingabe
+                    }else if(pe.getFehlercode()==-30){
+                        this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
+                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -30, this.historyElement));
+                        // Falsche Eingabe
+                    }else{
+                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getContext());
+                        dlgAlert.setMessage(ErrorHandler.getErrorMessage(pe.getFehlercode()));
+                        dlgAlert.setTitle("Fehleingabe");
+                        dlgAlert.setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //dismiss the dialog
+                                    }
+                                });
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
+
+                    }
+                }
+            }else if(modus==Modi.WERTETABELLE){
+                try {
+                    int[][] truthTable = parser.buildTruthTable(eingabeFormel);
+                    ArrayList<Character> variables = parser.getVariables(eingabeFormel);
+                    this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, null);
+                    this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
+                    mainActivity.replaceFragment(new TruthTableFragment(mainActivity, truthTable, variables, this.historyElement));
+                }catch (ParserException pe){
+                    AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getContext());
+                    dlgAlert.setMessage(ErrorHandler.getErrorMessage(pe.getFehlercode()));
+                    dlgAlert.setTitle("Fehleingabe");
+                    dlgAlert.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //dismiss the dialog
+                                }
+                            });
+                    dlgAlert.setCancelable(true);
+                    dlgAlert.create().show();
+                }
+            }
+            else if(modus==Modi.KNF || modus==Modi.DNF) {
+                parser.setModus(modus);
+                String resultFormel = parser.parseFormula(eingabeFormel);
+                resultText.setText(resultFormel);
+                this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, resultFormel);
+                this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+            }
+            else if(modus== Modi.RESOLUTION){
+                // Hier würde die Resolution gestartet werden
+                mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
+            }
+            this.buttonRechenweg.setEnabled(true);
+        }catch (ParserException pe){
+            // Falsche Eingabe
+            int fehlercode = pe.getFehlercode();
+            resultText.setText(ErrorHandler.getErrorMessage(fehlercode));
+            resultText.setTextColor(Color.RED);
+        }
+    }
+
+    private void changeLayout(Modi modus){
+
+        if(modus == Modi.DNF || modus == Modi.KNF || modus == Modi.TABLEAUX || modus == Modi.RESOLUTION ){
+            buttonRechenweg.setVisibility(view.VISIBLE);
+            resultText.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setText("Lösung");
+            resultText.setEnabled(false);
+            resultText.setText("");
+            resultText.setHint("Lösung");
+            inputText.setFocusedByDefault(true);
+        }
+        else if(modus == Modi.FORMELN){
+            buttonRechenweg.setVisibility(view.INVISIBLE);
+            resultText.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setVisibility(view.VISIBLE);
+            textIhreFormelErgebnis.setText("2. Formel");
+            resultText.setEnabled(true);
+            resultText.setText("");
+            resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
+            inputText.setFocusedByDefault(true);
+        }
+        else if(modus == Modi.WERTETABELLE){
+            buttonRechenweg.setVisibility(view.INVISIBLE);
+            resultText.setVisibility(view.INVISIBLE);
+            textIhreFormelErgebnis.setVisibility(view.INVISIBLE);
+
+        }
+        buttonRechenweg.setEnabled(false);
+
+    }
+
+    public void setInputFormula(String inputFormula){
+        this.firstFormula = inputFormula;
+    }
+
+    public void setResultFormula(String resultFormula){
+        this.secondFormula = resultFormula;
+    }
+
+
+    private String getModiText(Modi modus){
+        switch (modus){
+            case DNF:
+                return "DNF";
+            case KNF:
+                return "KNF";
+            case RESOLUTION:
+                return "R";
+            case FORMELN:
+                return "2 F";
+            case TABLEAUX:
+                return "T";
+            case WERTETABELLE:
+                return "W";
+        }
+        return "";
+    }
+
+    private Modi getModusByString(String modus){
+        switch (modus){
+            case "KNF":
+                return Modi.KNF;
+            case "DNF":
+                return Modi.DNF;
+            case "2 F":
+                return Modi.FORMELN;
+            case "R":
+                return Modi.RESOLUTION;
+            case "T":
+                return Modi.TABLEAUX;
+            case "W":
+                return Modi.WERTETABELLE;
+        }
+        return null;
+    }
+
+    private void writeToTextField(String s){
+        if(textFieldFocus==FIRST_FORMULA_FOCUS){
+            int cursorPos = inputText.getSelectionEnd();
+            inputText.setText(inputText.getText().toString().substring(0, cursorPos)+s+
+                            inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
+            inputText.setSelection(cursorPos+1);
+        }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+            int cursorPos = resultText.getSelectionEnd();
+            resultText.setText(resultText.getText().toString().substring(0, cursorPos)+s+
+                    resultText.getText().toString().substring(cursorPos, resultText.getText().toString().length()));
+            resultText.setSelection(cursorPos+1);
+        }
+    }
+
+    private void deleteCharacter(){
+        if(textFieldFocus==FIRST_FORMULA_FOCUS){
+            int cursorPos = inputText.getSelectionEnd();
+            if(cursorPos>0) {
+                inputText.setText(inputText.getText().toString().substring(0, cursorPos - 1) +
+                        inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
+                inputText.setSelection(cursorPos - 1);
+            }
+        }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+            int cursorPos = resultText.getSelectionEnd();
+            if(cursorPos>0) {
+                resultText.setText(resultText.getText().toString().substring(0, cursorPos - 1) +
+                        resultText.getText().toString().substring(cursorPos, resultText.getText().toString().length()));
+                resultText.setSelection(cursorPos - 1);
+            }
+        }
+    }
+
+    public History getNewHistoryElement(){
+        return this.newHistoryElement;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+// do nothing
     }
 }

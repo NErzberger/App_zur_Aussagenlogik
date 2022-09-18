@@ -14,11 +14,10 @@ import com.dhbw.app_zur_aussagenlogik.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Resolution#newInstance} factory method to
+ * Use the {@link TableauxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Resolution extends Fragment {
-
+public class TableauxFragment extends Fragment implements IOnBackPressed{
 
     private MainActivity mainActivity;
 
@@ -26,20 +25,19 @@ public class Resolution extends Fragment {
 
     private Button homeButton;
 
-    public Resolution(MainActivity mainActivity) {
-       super(R.layout.fragment_resolution);
-       this.mainActivity = mainActivity;
+    public TableauxFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-
-     * @return A new instance of fragment Resolution.
+     * @return A new instance of fragment Tableaux.
      */
-    public static Resolution newInstance(MainActivity mainActivity) {
-        Resolution fragment = new Resolution(mainActivity);
+    // TODO: Rename and change types and number of parameters
+    public static TableauxFragment newInstance(MainActivity mainActivity) {
+        TableauxFragment fragment = new TableauxFragment(mainActivity);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -56,17 +54,22 @@ public class Resolution extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_resolution, container, false);
-
+        view = inflater.inflate(R.layout.fragment_tableaux, container, false);
+        mainActivity.setActiveFragment(this);
         homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(new MainFragment(mainActivity));
+                goBackToMainFragment();
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void goBackToMainFragment() {
+        mainActivity.replaceFragment(new MainFragment(mainActivity));
     }
 }

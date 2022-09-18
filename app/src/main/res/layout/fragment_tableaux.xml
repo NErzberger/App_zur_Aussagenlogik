@@ -4,19 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.Tableaux"
-    android:id="@+id/fragment_tableaux">
+    tools:context=".fragments.TableauxFragment"
+    android:id="@+id/fragment_tableaux"
+    android:background="#CCFFFF">
 
     <Button
         android:id="@+id/buttonHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="323dp"
-        android:layout_marginBottom="218dp"
-        android:text="Home"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+
+        android:text="@string/homeSymbol"
+        android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

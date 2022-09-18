@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.MainFragment"
-    android:id="@+id/fragment_main">
+    android:background="#CCFFFF"
+    tools:context=".fragments.MainFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
@@ -32,7 +33,7 @@
             android:id="@+id/tabItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resolu-tion" />
+            android:text="Resolution" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem4"
@@ -40,55 +41,121 @@
             android:layout_height="wrap_content"
             android:text="2 For-\nmeln" />
 
-        <com.google.android.material.tabs.TabItem
+       <!-- <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tab-\nleaux" />
+            android:text="Tab-\nleaux" />-->
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tabelle" />
 
     </com.google.android.material.tabs.TabLayout>
 
 
+
+    <TextView
+        android:id="@+id/textIhreFormel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:autoText="false"
+        android:text="Ihre Formel"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
     <EditText
         android:id="@+id/input"
-        android:layout_width="263dp"
-        android:layout_height="101dp"
-        android:layout_marginStart="52dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="@string/input"
-        android:hint="@string/inputPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:digits="abcde\u00AC\u22C1\u2227\u2192\u2194\u232B\u23CE"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-
-    <EditText
-        android:id="@+id/solution"
-        android:layout_width="264dp"
-        android:layout_height="79dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginBottom="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/solution"
-        android:hint="@string/solutionPlaceholder"
-        android:enabled="false"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        android:hint="@string/inputPlaceholder"
+        android:inputType="textFilter|textMultiLine"
+        android:maxLines="5"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        android:text="@string/input"
+        android:textColor="@color/black"
+        android:textColorHint="#888888"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRechenweg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textIhreFormel" />
+
+    <TextView
+        android:id="@+id/textIhreFormelErgebnis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:autoText="false"
+        android:text="Lösung"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input" />
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:fillViewport="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textIhreFormelErgebnis">
+
+        <EditText
+            android:id="@+id/solution"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/black"
+            android:textColorHint="#888888"
+            android:ems="10"
+            android:enabled="false"
+            android:hint="@string/solutionPlaceholder"
+            android:inputType="textMultiLine"
+            android:maxLines="15"
+            android:text="@string/solution"
+
+             />
+    </androidx.core.widget.NestedScrollView>
+    <Button
+        android:id="@+id/buttonRechenweg"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Rechenweg"
+
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
+        app:layout_constraintStart_toEndOf="@+id/textIhreFormelErgebnis"
+        app:layout_constraintTop_toBottomOf="@+id/input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        />
+
+<!--
     <TableLayout
         android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TableRow
             android:layout_width="match_parent"
@@ -100,6 +167,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/a" />
+
+
 
             <Button
                 android:id="@+id/buttonB"
@@ -117,7 +186,7 @@
 
             <Button
                 android:id="@+id/buttonDelete"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delete" />
@@ -144,7 +213,7 @@
 
             <Button
                 android:id="@+id/buttonNegation"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/negative" />
@@ -178,14 +247,14 @@
 
             <Button
                 android:id="@+id/buttonImplikation"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/toArrow" />
 
             <Button
                 android:id="@+id/buttonReturn"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enter" />
@@ -212,14 +281,209 @@
 
             <Button
                 android:id="@+id/buttonImplikationBeidseitig"
-                style="@style/ButtonFontSpecialChar"
+                style="@style/ButtonFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/leftRightArrow" />
 
+            <Button
+                android:id="@+id/buttonOneBack"
+                style="@style/ButtonFontStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/oneBack" />
+
         </TableRow>
 
     </TableLayout>
+-->
+
+    <!-- Tastatur -->
+
+    <Button
+        android:id="@+id/buttonA"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonD"
+        app:layout_constraintEnd_toStartOf="@+id/buttonB"
+        android:text="@string/a"/>
+
+    <!--   style="@style/ButtonFontSpecialChar" -->
+
+    <Button
+        android:id="@+id/buttonB"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toEndOf="@+id/buttonA"
+        app:layout_constraintBottom_toTopOf="@+id/buttonE"
+        app:layout_constraintEnd_toStartOf="@+id/buttonC"
+        android:text="@string/b" />
+
+    <Button
+        android:id="@+id/buttonC"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toEndOf="@+id/buttonB"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNegation"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+        android:text="@string/c" />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        style="@style/ButtonFontStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        app:layout_constraintStart_toEndOf="@+id/buttonC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCE"
+        android:text="@string/delete" />
+
+
+
+
+<Button
+    android:id="@+id/buttonD"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/buttonAnd"
+    app:layout_constraintEnd_toStartOf="@+id/buttonE"
+    android:text="@string/d" />
+
+<Button
+    android:id="@+id/buttonE"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    app:layout_constraintStart_toEndOf="@+id/buttonD"
+    app:layout_constraintBottom_toTopOf="@+id/buttonOr"
+    app:layout_constraintEnd_toStartOf="@+id/buttonNegation"
+    android:text="@string/e" />
+
+<Button
+    android:id="@+id/buttonNegation"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    app:layout_constraintStart_toEndOf="@+id/buttonE"
+    app:layout_constraintBottom_toTopOf="@+id/buttonImplikation"
+    app:layout_constraintEnd_toStartOf="@+id/buttonCE"
+    android:text="@string/negative" />
+
+<Button
+    android:id="@+id/buttonCE"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="20dp"
+    app:layout_constraintStart_toEndOf="@+id/buttonNegation"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/buttonReturn"
+    android:text="@string/ca" />
+
+
+
+<Button
+    android:id="@+id/buttonAnd"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/buttonKlammerAuf"
+    app:layout_constraintEnd_toStartOf="@+id/buttonOr"
+    android:text="@string/and" />
+
+<Button
+    android:id="@+id/buttonOr"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    app:layout_constraintStart_toEndOf="@+id/buttonAnd"
+    app:layout_constraintBottom_toTopOf="@+id/buttonKlammerZu"
+    app:layout_constraintEnd_toStartOf="@+id/buttonImplikation"
+    android:text="@string/or" />
+
+<Button
+    android:id="@+id/buttonImplikation"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toEndOf="@+id/buttonOr"
+    app:layout_constraintBottom_toTopOf="@+id/buttonImplikationBeidseitig"
+    app:layout_constraintEnd_toStartOf="@+id/buttonReturn"
+    android:text="@string/toArrow" />
+
+<Button
+    android:id="@+id/buttonReturn"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="20dp"
+    app:layout_constraintStart_toEndOf="@+id/buttonImplikation"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/buttonOneBack"
+    android:text="@string/enter" />
+
+
+<Button
+    android:id="@+id/buttonKlammerAuf"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginBottom="20dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/buttonKlammerZu"
+    android:text="(" />
+
+<Button
+    android:id="@+id/buttonKlammerZu"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    app:layout_constraintStart_toEndOf="@+id/buttonKlammerAuf"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/buttonImplikationBeidseitig"
+    android:text=")" />
+
+<Button
+    android:id="@+id/buttonImplikationBeidseitig"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    app:layout_constraintStart_toEndOf="@+id/buttonKlammerZu"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/buttonOneBack"
+    android:text="@string/leftRightArrow" />
+
+<Button
+    android:id="@+id/buttonOneBack"
+    style="@style/ButtonFontStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginRight="20dp"
+    app:layout_constraintStart_toEndOf="@+id/buttonImplikationBeidseitig"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:text="@string/oneBack" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

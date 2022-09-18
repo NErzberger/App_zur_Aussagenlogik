@@ -5,18 +5,19 @@
     android:id="@+id/resolutionFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.Resolution">
+    tools:context=".fragments.ResolutionFragment"
+    android:background="#CCFFFF">
 
     <Button
         android:id="@+id/buttonHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="323dp"
-        android:layout_marginBottom="218dp"
-        android:text="Home"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:text="@string/homeSymbol"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/orginalformel"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -33,17 +34,18 @@
         app:layout_constraintTop_toBottomOf="@+id/buttonHome" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/orginalformel"
         android:layout_width="226dp"
         android:layout_height="56dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="88dp"
         android:autoText="false"
-        android:text="(A->B)v(B->A)"
-        android:textSize="25dp"
+        android:text="In Development"
+        android:textColor="@color/blue"
+        android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHome"/>
+        app:layout_constraintTop_toBottomOf="@+id/buttonHome" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -56,7 +58,7 @@
         android:text="Hier sehen Sie, ob es eine oder keine Tautologie ist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/orginalformel" />
 
 
     <TableLayout
@@ -130,7 +132,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/orginalformel">
 
     </ExpandableListView>
 </androidx.constraintlayout.widget.ConstraintLayout>

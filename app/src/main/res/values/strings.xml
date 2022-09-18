@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App_zur_Aussagenlogik</string>
+    <string name="app_name">App zur Aussagenlogik</string>
     <string name="a">a</string>
     <string name="b">b</string>
     <string name="c">c</string>
@@ -12,9 +12,17 @@
     <string name="leftRightArrow">\u2194</string>
     <string name="delete">\u232B</string>
     <string name="enter">\u23CE</string>
+    <string name="oneBack">\u21E4</string>
+    <string name="history">\u27F3</string>
     <string name="solution"></string>
     <string name="input"></string>
     <string name="inputPlaceholder">Bitte geben Sie eine Formel ein.</string>
     <string name="solutionPlaceholder">Lösung</string>
     <string name="ca">ce</string>
+    <string name="anleitung">Anleitung</string>
+    <string name="aboutUs">Über uns</string>
+    <string name="historyMenu">Verlauf</string>
+    <string name="homeSymbol">\u2302</string>
+
+
 </resources>
