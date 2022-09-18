@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Ausaddieren extends Normalformen{
+public class Ausaddieren{
 
     public static Formel ausaddieren(Formel formel) {
         List<List<char[]>> blockList = new ArrayList<>();
@@ -407,6 +407,9 @@ public class Ausaddieren extends Normalformen{
             }
         }
         // }
+
+        ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
+
         String loesung = "";
         for (int i = 0; i < ergebnisBloecke.size(); i++) {
             loesung = loesung + "(";

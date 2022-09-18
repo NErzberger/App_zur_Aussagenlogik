@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Ausmultiplizieren extends Normalformen{
+public class Ausmultiplizieren{
 
     public static Formel ausmultiplizieren(Formel formel) {
         List<List<char[]>> blockList = new ArrayList<>();

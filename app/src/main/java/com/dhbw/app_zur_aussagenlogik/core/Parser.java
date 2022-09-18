@@ -3,6 +3,7 @@ package com.dhbw.app_zur_aussagenlogik.core;
 import com.dhbw.app_zur_aussagenlogik.Modi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -155,6 +156,7 @@ public class Parser {
                 resultFormula = Ausmultiplizieren.ausmultiplizieren(deMorgan);
                 break;
         }
+        resultFormula = negationenStreichen(resultFormula);
         resultFormula = zeichenersetzungZurueck(resultFormula);
         rechenweg.add(zeichenersetzungZurueck(rPA));
         rechenweg.add(zeichenersetzungZurueck(rDM));
@@ -274,6 +276,9 @@ public class Parser {
                 this.formula.setChar(i, '2');
             }
         }
+
+        this.formula = negationenStreichen(this.formula);
+
         return 42;
     }
 
@@ -393,7 +398,7 @@ public class Parser {
             }
         }
         bFormel.klammernPrüfen();
-        bFormel.negationPruefen();
+        bFormel = negationenStreichen(bFormel);
         return bFormel;
     }
 
@@ -527,6 +532,229 @@ public class Parser {
         //result.zeichenHinzufügen(')');
         return result;
     }
+
+
+    /**
+     * Diese Mehtode streicht unnötige Negationen aus der Formel. Z.B. zwei Negationen hintereinander
+     * gleichen sich aus (gerade Anzahl) und bei drei Neagationen hintereinander braucht man nur
+     * eine Negation (ungerade Anzahl)
+     * @param formel
+     * @return Neue überprüfte Formel ohne unnötige Negationen
+     */
+    public Formel negationenStreichen(Formel formel){
+
+        //Neue überprüfte Formel ohne unnötige Negationen
+        Formel provedFormula = new Formel();
+
+        //Wir gehen durch unsere Formel durch und streichen unnötige Negationen
+        for(int i = 0; i<formel.length(); i++){
+
+            /*
+            Wenn wir eine Negation finden, prüfen wir das nächste Zeichen. Wenn dieses auch eine
+            Negation ist, überspringen wir einen Index und schreiben nichts in unsere provedFormula.
+            Wenn das nächste Zeichen keine Negation mehr ist, ist die Negation notwendig und wir
+             schreiben die Negation in unsere proved Formula.
+            */
+            if(i < formel.length()-1){
+                if(formel.getChar(i)=='n'&&formel.getChar(i+1)=='n'){
+                    i++;
+                }else{
+                    provedFormula.zeichenHinzufügen(formel.getChar(i));
+                }
+            }else{
+                provedFormula.zeichenHinzufügen(formel.getChar(i));
+            }
+
+
+        }
+
+        return provedFormula;
+    }
+
+    /**
+     * In dieser Methode sollen doppelte Variablen und gegensätzliche Variablen in der Lösungsmenge
+     * gestrichen werden (z.b. nicht a und a; nicht a oder a).
+     * @param formel
+     * @return
+     */
+    public List<char[]> zeichenErsetzen(Formel formel) {
+    }
+        public List<char[]> zeichenErsetzen(Formel formel){
+        // Es wird eine Gesamtmenge gebildet mit allen Teilmengen drin
+        List<Formel> gesamtmenge = new ArrayList<>();
+        // neue Teilmenge
+        Formel teilmenge = new Formel();
+
+        //Unsere Ergebnismenge
+        List<Formel> endmenge = new ArrayList<>();
+
+        // Es wird die Formel ausgelesen und die Teilmengen gebildet und die Teilmengen in die Gesamtmenge hinzugefügt
+        for(int i = 0; i<formel.length(); i++) {
+            if(Character.toString(formel.getChar(i)).matches("[a-n]")) {
+                teilmenge.zeichenHinzufügen(formel.getChar(i));
+            }else if(formel.getChar(i)=='*') {
+                gesamtmenge.add(teilmenge);
+                teilmenge = new Formel();
+            }
+        }
+        gesamtmenge.add(teilmenge);
+
+        for(int i = 0; i < gesamtmenge.size(); i++){
+
+            //Hier holen wir unsere Teilmenge
+            Formel menge = gesamtmenge.get(i);
+            Formel newMenge = new Formel();
+
+            //Hier überprüfen wir die Teilmenge und schreiben nur die Variablen in newMenge (neue
+            //Teilmenge), welche nicht mehrfach vorkommen
+            for(int j = 0; j < menge.length(); j++){
+                if(menge.getChar(j) == 'n'){
+                    continue;
+                }
+                boolean match = false;
+
+                //j+1, damit wir nicht das Zeichen mit sich selbst vergleichen
+                for(int k = j+1; k < menge.length(); k++){
+
+                    // wenn j ungleich k (darf nicht mit sich selbst verglichen werden)
+                    // und der Buchstabe an der Stelle j dem Buchstabe an Stelle k entspricht und k kein n ist
+                    // dann ist der Buchstabe an der Stelle j doppelt
+                    if(j != k && menge.getChar(j) == menge.getChar(k) && menge.getChar(k) != 'n'){
+                        if(j>0) {
+                            if (menge.getChar(j - 1) == 'n' && menge.getChar(k - 1) == 'n' ||
+                                    menge.getChar(j - 1) != 'n' && menge.getChar(k - 1) != 'n') {
+                                match = true;
+                            }
+                        }else if(j==0){
+                            // j kann nur positiv sein, daher muss nur geprüft werden, ob das k positiv ist
+                            if(menge.getChar(k-1)!='n') {
+                                match = true;
+                            }
+                        }
+                    }
+                }
+                if(!match){
+                    if(j>0&&menge.getChar(j-1)=='n'){
+                        newMenge.zeichenHinzufügen('n');
+                    }
+                    newMenge.zeichenHinzufügen(menge.getChar(j));
+                }
+            }
+
+            // Hier wird die neue Teilmenge sortiert für eine schönere Darstellung.
+            // Zur Sortierung konvertieren wir unsere möglichen Zeichen in die Zahlen 1 - 9.
+            String convertedFormel = "";
+            for(int j = 0; j < newMenge.length(); j++){
+                if(newMenge.getChar(j)=='a' ) {
+                    if (j > 0 && newMenge.getChar(j - 1) == 'n') {
+                        convertedFormel = convertedFormel+"1";
+                    } else {
+                        convertedFormel = convertedFormel+"0";
+                    }
+                }
+                if(newMenge.getChar(j)=='b' ) {
+                    if (j > 0 && newMenge.getChar(j - 1) == 'n') {
+                        convertedFormel = convertedFormel+"3";
+                    } else {
+                        convertedFormel = convertedFormel+"2";
+                    }
+                }
+                if(newMenge.getChar(j)=='c' ) {
+                    if (j > 0 && newMenge.getChar(j - 1) == 'n') {
+                        convertedFormel = convertedFormel+"5";
+                    } else {
+                        convertedFormel = convertedFormel+"4";
+                    }
+                }
+                if(newMenge.getChar(j)=='d' ) {
+                    if (j > 0 && newMenge.getChar(j - 1) == 'n') {
+                        convertedFormel = convertedFormel+"7";
+                    } else {
+                        convertedFormel = convertedFormel+"6";
+                    }
+                }
+                if(newMenge.getChar(j)=='e' ) {
+                    if (j > 0 && newMenge.getChar(j - 1) == 'n') {
+                        convertedFormel = convertedFormel+"9";
+                    } else {
+                        convertedFormel = convertedFormel+"8";
+                    }
+                }
+            }
+
+            // Die konvertierte Teilmenge sortieren
+            char[] c = convertedFormel.toCharArray();
+            Arrays.sort(c);
+            String sortedString = new String(c);
+
+            // Prüfen, ob die Teilmenge "unnötig" ist. Teilmenge ist unnötig, wenn z.B.
+            // nicht a und a drin steht
+            if(sortedString.contains("0")&&sortedString.contains("1")){
+                continue;
+            }else if(sortedString.contains("2")&&sortedString.contains("3")){
+                continue;
+            }else if(sortedString.contains("4")&&sortedString.contains("5")){
+                continue;
+            }else if(sortedString.contains("6")&&sortedString.contains("7")){
+                continue;
+            }else if(sortedString.contains("8")&&sortedString.contains("9")){
+                continue;
+            }
+
+
+
+            // Die konvertierte sortierte Teilmenge zurück in Buchstaben konvertieren
+            Formel sortedFormel = new Formel();
+            for(int j=0; j < sortedString.length(); j++){
+                int charValue = Integer.parseInt(String.valueOf(sortedString.charAt(j)));
+                switch (charValue){
+                    case 0:
+                        sortedFormel.zeichenHinzufügen('a');
+                        break;
+                    case 1:
+                        sortedFormel.zeichenHinzufügen('n');
+                        sortedFormel.zeichenHinzufügen('a');
+                        break;
+                    case 2:
+                        sortedFormel.zeichenHinzufügen('b');
+                        break;
+                    case 3:
+                        sortedFormel.zeichenHinzufügen('n');
+                        sortedFormel.zeichenHinzufügen('b');
+                        break;
+                    case 4:
+                        sortedFormel.zeichenHinzufügen('c');
+                        break;
+                    case 5:
+                        sortedFormel.zeichenHinzufügen('n');
+                        sortedFormel.zeichenHinzufügen('c');
+                        break;
+                    case 6:
+                        sortedFormel.zeichenHinzufügen('d');
+                        break;
+                    case 7:
+                        sortedFormel.zeichenHinzufügen('n');
+                        sortedFormel.zeichenHinzufügen('d');
+                        break;
+                    case 8:
+                        sortedFormel.zeichenHinzufügen('e');
+                        break;
+                    case 9:
+                        sortedFormel.zeichenHinzufügen('n');
+                        sortedFormel.zeichenHinzufügen('e');
+                        break;
+                }
+            }
+            endmenge.add(sortedFormel);
+        }
+
+        ArrayList<char[]> provedFormel = new ArrayList<>();
+        endmenge.stream().forEach(a->provedFormel.add(a.getFormel()));
+
+        return provedFormel;
+    }
+
+
 
     public List<Formel> getRechenweg() {
         return rechenweg;

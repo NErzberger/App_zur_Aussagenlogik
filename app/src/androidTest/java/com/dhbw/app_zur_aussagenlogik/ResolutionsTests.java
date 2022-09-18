@@ -18,7 +18,7 @@ public class ResolutionsTests {
         Resolution r = new Resolution();
         Formel formel = new Formel("(a+c+nb)*(e+na+a+a+na+na)");
         Formel expectedFormel = new Formel("{a,nb,c}");
-        Formel result = r.variablenEleminieren(formel);
+        Formel result = r.variablenEliminieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
@@ -27,7 +27,7 @@ public class ResolutionsTests {
         Resolution r = new Resolution();
         Formel formel = new Formel("(a+e+d+nc+na)*(na+a)*(b+e+nc)*(a+nc+nc+a+na)");
         Formel expectedFormel = new Formel("{b,nc,e}");
-        Formel result = r.variablenEleminieren(formel);
+        Formel result = r.variablenEliminieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 

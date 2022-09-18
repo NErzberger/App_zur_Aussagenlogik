@@ -16,7 +16,11 @@ public class Resolution {
     }
 
 
-    public Formel variablenEleminieren(Formel formel){
+    public Formel variablenEliminieren(Formel formel){
+
+        //Hier werden unnötige Negationen gestrichen
+        formel = Parser.getInstance().negationenStreichen(formel);
+
         // Es wird eine Gesamtmenge gebildet mit allen Teilmengen drin
         List<Formel> gesamtmenge = new ArrayList<>();
         // neue Teilmenge

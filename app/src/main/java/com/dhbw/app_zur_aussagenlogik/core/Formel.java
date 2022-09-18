@@ -52,6 +52,7 @@ public class Formel {
         return new Formel(this.formel);
     }
 
+    /*
     public Formel negationPruefen(){
 
         Formel newFormel = new Formel();
@@ -67,7 +68,7 @@ public class Formel {
         }
         return newFormel;
     }
-
+    */
 
     public Formel klammernPrüfen(){
         for (int j = 0; j<formel.length; j++) {
