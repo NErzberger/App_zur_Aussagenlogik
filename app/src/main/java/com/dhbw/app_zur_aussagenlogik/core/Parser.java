@@ -764,6 +764,58 @@ public class Parser {
         return provedFormel;
     }
 
+    public Formel parseListToFormel(List<char[]> list){
+
+        Formel formel = new Formel();
+
+        for (int i = 0; i < list.size(); i++) {
+            formel.zeichenHinzufügen('(');
+            for (int j = 0; j < list.get(i).length; j++) {
+                formel.zeichenHinzufügen(list.get(i)[j]);
+                if(list.get(i)[j]!='n') {
+                    if (j < list.get(i).length - 1) {
+                        if(modus==Modi.DNF){
+                            formel.zeichenHinzufügen('*');
+                        }else if(modus==Modi.KNF || modus==Modi.RESOLUTION){
+                            formel.zeichenHinzufügen('+');
+                        }
+                    }
+                }
+            }
+            formel.zeichenHinzufügen(')');
+            if (i < list.size() - 1) {
+                if(modus==Modi.DNF){
+                    formel.zeichenHinzufügen('+');
+                }else if(modus==Modi.KNF || modus==Modi.RESOLUTION){
+                    formel.zeichenHinzufügen('*');
+                }
+            }
+        }
+
+        return formel;
+    }
+
+    public List<char[]> parseFormelToList(Formel formel){
+
+        List<char[]> gesamtmenge = new ArrayList<>();
+        // neue Teilmenge
+        Formel teilmenge = new Formel();
+
+        // Es wird die Formel ausgelesen und die Teilmengen gebildet und die Teilmengen in die Gesamtmenge hinzugefügt
+        for (int i = 0; i < formel.length(); i++) {
+            if (Character.toString(formel.getChar(i)).matches("[a-n]")) {
+                teilmenge.zeichenHinzufügen(formel.getChar(i));
+                } else if (modus==Modi.KNF&&formel.getChar(i) == '*'
+                        ||modus==Modi.DNF&&formel.getChar(i)=='+'
+                        ||modus==Modi.RESOLUTION&&formel.getChar(i)=='*') {
+                gesamtmenge.add(teilmenge.getFormel());
+                teilmenge = new Formel();
+            }
+        }
+        gesamtmenge.add(teilmenge.getFormel());
+
+        return gesamtmenge;
+    }
 
     public List<Formel> getRechenweg() {
         return rechenweg;

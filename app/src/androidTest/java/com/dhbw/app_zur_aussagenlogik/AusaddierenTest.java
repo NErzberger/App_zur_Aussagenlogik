@@ -3,6 +3,7 @@ package com.dhbw.app_zur_aussagenlogik;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,6 +17,12 @@ import java.util.Arrays;
 
 @RunWith(AndroidJUnit4.class)
 public class AusaddierenTest {
+
+    @Before
+    public void setup(){
+        Parser.getInstance().setModus(Modi.KNF);
+    }
+
 
     @Test
     public void knfTest(){
@@ -101,7 +108,7 @@ public class AusaddierenTest {
     @Test
     public void asdf(){
         Formel formel = new Formel("(a*(b+c))+((b*a)+c)");
-        Formel expectedFormel = new Formel("(a+b+c)*(a+a+c)*(b+c+b+c)*(b+c+a+c)");
+        Formel expectedFormel = new Formel("(a+b+c)*(a+c)*(b+c)*(a+b+c)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
     }

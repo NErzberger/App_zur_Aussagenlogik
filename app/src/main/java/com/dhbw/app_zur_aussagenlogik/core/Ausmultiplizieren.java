@@ -406,7 +406,10 @@ public class Ausmultiplizieren{
                 }
             }
         }
-        //ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
+        Formel parseFormel = Parser.getInstance().parseListToFormel(ergebnisBloecke);
+        parseFormel = Parser.getInstance().negationenStreichen(parseFormel);
+        ergebnisBloecke = Parser.getInstance().parseFormelToList(parseFormel);
+        ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
 
         // }
         String loesung = "";
