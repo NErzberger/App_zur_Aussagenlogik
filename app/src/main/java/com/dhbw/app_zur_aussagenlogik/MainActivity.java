@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ErrorHandler.newInstance();
-        HistoryDataSource dataSource = new HistoryDataSource(this);
+
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, mainFragment)

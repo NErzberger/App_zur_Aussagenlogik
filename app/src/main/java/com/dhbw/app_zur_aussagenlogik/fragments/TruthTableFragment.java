@@ -47,10 +47,14 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
     }
 
 
+    /**
+     * Die Methode onCreate ruft lediglich die super Methode onCreate auf und gibt die
+     * Übergabeparameter direkt weiter.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

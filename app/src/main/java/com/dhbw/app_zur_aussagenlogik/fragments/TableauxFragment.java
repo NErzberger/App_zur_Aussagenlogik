@@ -44,11 +44,14 @@ public class TableauxFragment extends Fragment implements IOnBackPressed {
         return fragment;
     }
 
+    /**
+     * Die Methode onCreate ruft lediglich die super Methode onCreate auf und gibt die
+     * Übergabeparameter direkt weiter.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override

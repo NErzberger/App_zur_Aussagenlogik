@@ -57,13 +57,6 @@ public class NormalformFragment extends Fragment implements IOnBackPressed {
         this.historyElement = historyElement;
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static NormalformFragment newInstance(MainActivity mainActivity) {
-        NormalformFragment fragment = new NormalformFragment(mainActivity);
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
