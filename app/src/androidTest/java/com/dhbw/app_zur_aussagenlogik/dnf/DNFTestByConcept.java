@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.dhbw.app_zur_aussagenlogik.core.Ausmultiplizieren;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
-import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

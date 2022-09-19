@@ -1,14 +1,13 @@
 package com.dhbw.app_zur_aussagenlogik.dnf;
-        import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertArrayEquals;
 
-        import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-        import com.dhbw.app_zur_aussagenlogik.core.Ausmultiplizieren;
-        import com.dhbw.app_zur_aussagenlogik.core.Formel;
-        import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.Ausmultiplizieren;
+import com.dhbw.app_zur_aussagenlogik.core.Formel;
 
-        import org.junit.Test;
-        import org.junit.runner.RunWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class DNFTest {
