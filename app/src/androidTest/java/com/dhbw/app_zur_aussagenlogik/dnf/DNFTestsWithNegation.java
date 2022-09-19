@@ -3,17 +3,28 @@ package com.dhbw.app_zur_aussagenlogik.dnf;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.core.Ausmultiplizieren;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
 @RunWith(AndroidJUnit4.class)
 public class DNFTestsWithNegation {
+
+
+
+    @Before
+    public void setup(){
+        Parser.getInstance().setModus(Modi.DNF);
+    }
+
     @Test
     public void negation1() {
     	Formel formel = new Formel("na*(nb+c)");
@@ -88,8 +99,9 @@ public class DNFTestsWithNegation {
     
     @Test
     public void negationTest9() {
-        Formel formel = new Formel("(nb*e+na)*nc*h");
-        Formel expectedFormel = new Formel("(nb*e*nc*h)+(na*nc*h)");
+        //Parser.getInstance().setModus(Modi.DNF);
+        Formel formel = new Formel("(nb*e+na)*nc*d");
+        Formel expectedFormel = new Formel("(nb*nc*d*e)+(na*nc*d)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
