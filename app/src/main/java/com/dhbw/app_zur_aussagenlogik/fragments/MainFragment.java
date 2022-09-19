@@ -716,7 +716,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void goBackToMainFragment() {
