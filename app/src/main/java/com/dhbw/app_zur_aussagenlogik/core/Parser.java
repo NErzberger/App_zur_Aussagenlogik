@@ -764,6 +764,25 @@ public class Parser {
         return provedFormel;
     }
 
+    public Formel teilmengenErsetzten(Formel formel){
+
+        Formel provedFormula = new Formel();
+
+        for(int i = formel.length()-1; i>=0; i--){
+            for(int j = 0; j<formel.length(); j++){
+                if(i!=j){
+                    //if(formel.getChar()){
+
+                    //}
+                }
+            }
+        }
+
+
+        return provedFormula;
+    }
+
+
     public Formel parseListToFormel(List<char[]> list){
 
         Formel formel = new Formel();
