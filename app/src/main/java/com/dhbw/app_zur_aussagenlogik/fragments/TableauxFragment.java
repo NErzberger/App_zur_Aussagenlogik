@@ -11,13 +11,14 @@ import android.widget.Button;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TableauxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TableauxFragment extends Fragment implements IOnBackPressed{
+public class TableauxFragment extends Fragment implements IOnBackPressed {
 
     private MainActivity mainActivity;
 

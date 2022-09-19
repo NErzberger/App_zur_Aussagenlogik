@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 
 public class AboutUsFragment extends Fragment implements IOnBackPressed {
 

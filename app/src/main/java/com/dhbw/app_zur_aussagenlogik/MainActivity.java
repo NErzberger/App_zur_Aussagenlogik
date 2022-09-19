@@ -14,7 +14,7 @@ import com.dhbw.app_zur_aussagenlogik.fragments.AboutUsFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.HistoryFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.InstructionFragment;
 import com.dhbw.app_zur_aussagenlogik.fragments.MainFragment;
-import com.dhbw.app_zur_aussagenlogik.fragments.IOnBackPressed;
+import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 
 /**

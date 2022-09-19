@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.dhbw.app_zur_aussagenlogik.MainActivity;
 import com.dhbw.app_zur_aussagenlogik.R;
+import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 
 import java.util.ArrayList;

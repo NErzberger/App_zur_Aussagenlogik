@@ -15,6 +15,7 @@ import com.dhbw.app_zur_aussagenlogik.Modi;
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 
 import java.util.ArrayList;
