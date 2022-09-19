@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.dhbw.app_zur_aussagenlogik.core.Ausmultiplizieren;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
-import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +19,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test2() {
         Formel formel = new Formel("(a+b*e)*c");
@@ -28,7 +27,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public  void test3() {
         Formel formel = new Formel("(a+b)*c*e");
@@ -36,7 +35,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test4() {
         Formel formel = new Formel("c*e*(a+b)");
@@ -44,7 +43,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test5() {
         Formel formel = new Formel("c*h*(a+b*e)");
@@ -52,7 +51,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test6() {
         Formel formel = new Formel("(a+b*e)*c*h");
@@ -60,7 +59,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test7() {
         Formel formel = new Formel("h*(a+b*e)*c");
@@ -68,7 +67,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test8() {
         Formel formel = new Formel("c*h*(b*e+a)");
@@ -76,7 +75,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test9() {
         Formel formel = new Formel("(b*e+a)*c*h");
@@ -84,7 +83,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test10() {
         Formel formel = new Formel("c*(a+b*e)+f");
@@ -92,7 +91,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test11() {
         Formel formel = new Formel("(a+b*e)*c+f");
@@ -100,7 +99,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test12() {
         Formel formel = new Formel("(a+b)*c*e+f");
@@ -108,7 +107,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test13() {
         Formel formel = new Formel("c*e*(a+b)+f");
@@ -116,7 +115,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test14() {
         Formel formel = new Formel("f+c*(a+b*e)");
@@ -124,7 +123,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test15() {
         Formel formel = new Formel("f+(a+b*e)*c");
@@ -132,7 +131,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test16() {
         Formel formel = new Formel("f+(a+b)*c*e");
@@ -140,7 +139,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test17() {
         Formel formel = new Formel("f+c*e*(a+b)");
@@ -370,7 +369,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test46() {
         Formel formel = new Formel("x+(a*(b+c))+z");
@@ -458,7 +457,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test57() {
         Formel formel = new Formel("x+(a*e*(b+c))");
@@ -466,7 +465,7 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void test58() {
         Formel formel = new Formel("r*(a+b+h)*(c+d+e)*(g+j+k)");
@@ -474,11 +473,10 @@ public class DNFTestByConcept {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
 
 
 }
-
 
 
 

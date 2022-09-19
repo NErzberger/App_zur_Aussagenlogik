@@ -30,15 +30,110 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Das MainFragment erbt von der Klasse {@link Fragment} und implementiert das Interface {@link IOnBackPressed}.
+ * Das MainFragment dient als primäres Userinterface. Es ist eine eigene Tastatur implementiert, welche im MainFragment
+ * gehalten und gesteuert wird. Vom MainFragment aus wird der User in die Unterfragments
+ * <ul>
+ *     <li>{@link NormalformFragment}</li>
+ *     <li>{@link ResolutionFragment}</li>
+ *     <li>{@link TableauxFragment}</li>
+ *     <li>{@link TruthTableFragment}</li>
+ *     <li>{@link ZweiFormelFragment}</li>
+ * </ul>
+ * geleitet. Betätigt der User in einem aller anderer Fragments, einschließlich der aufgeführten, den Home Button, so
+ * wird er zurück in das MainFragment geleitet.
+ * Das MainFragment kann sich in mehreren Modis befinden, wofür das Enumeration {@link Modi} verwendet wird.
+ * Das MainFragment kann in die Modis
+ * <ul>
+ *     <li>DNF</li>
+ *     <li>KNF</li>
+ *     <li>Resolution</li>
+ *     <li>Zwei Formel</li>
+ *     <li>Tableaux</li>
+ *     <li>Wertetabelle</li>
+ * </ul>
+ * gehen. Dies ist für die jeweilige Funktionen wichtig, in welchen der {@link Parser} ausgeführt werden soll.
  */
 public class MainFragment extends Fragment implements IOnBackPressed {
 
+    /**
+     * Das Klassenattribut mainActivity der Klasse {@link MainActivity} ist notewendig,
+     * um auf den Kontext zugreifen zu können.
+     */
+    private MainActivity mainActivity;
+
+    /**
+     * Die view beinhaltet alle grafischen Komponenten.
+     */
+    private View view;
+
+    /**
+     * Das TabLayout ist für die Modus Auswahl für den User zuständig.
+     * Je nach Auswahl werden die Modis in das Klassenattribut geschrieben und im weiteren Verlauf verwendet.
+     */
     private TabLayout layout;
+
+    /**
+     * Das Textfeld textIhreFormelErgebnis wird im Modus 2 Formeln abgeändert,
+     * weshalb die Nutzung als Klassenattribut notwendig ist.
+     */
+    private TextView textIhreFormelErgebnis;
+
+    /**
+     * Die EditTexte inputText und resultText werden für die User Eingaben und Ausgaben verwendet.
+     */
     private EditText inputText;
     private EditText resultText;
+
+    /**
+     * Mittels dem Klassenattribut textFieldFocus wird festgestellt, welches Textfeld aktuell über den Fokus des Users
+     * verfügt und in welches Feld geschrieben werden soll. Dies wird mit den statischen Variablen FIRST_FORMULA_FOCUS
+     * und SECOND_FORMULA_FOCUS gesteuert.
+     */
+    private int textFieldFocus;
+    private final static int FIRST_FORMULA_FOCUS = 0, SECOND_FORMULA_FOCUS = 1;
+
+    /**
+     * Das Klassenattribut modus des Enumeration {@link Modi} ist elementar für die Steuerung des Parsers der Klasse {@link Parser}.
+     * Es können die Modis
+     * <ul>
+     *     <li>DNF</li>
+     *     <li>KNF</li>
+     *     <li>Resolution</li>
+     *     <li>Zwei Formel</li>
+     *     <li>Tableaux</li>
+     *     <li>Wertetabelle</li>
+     * </ul>
+     * gewählt werden. Die Einstellung des Modi wird dem Parser übergeben und dieser entsprechend ausgeführt.
+     * Per Default ist der Modus auf <b>DNF</b> eingestellt, da der dazugehörige Reiter ganz links ist und
+     * dementsprechend auch der Modus eingestellt sein muss.
+     */
+    private Modi modus = Modi.DNF;
+
+    /**
+     * Die App verfügt über eine eigene Tastatur, da eine Reihe von Sonderzeichen verwendet werden.
+     * Es werden die Buttons
+     * <ul>
+     *     <li>buttonA</li>
+     *     <li>buttonB</li>
+     *     <li>buttonC</li>
+     *     <li>buttonD</li>
+     *     <li>buttonE</li>
+     *     <li>buttonNegation</li>
+     *     <li>buttonDelete</li>
+     *     <li>buttonCE</li>
+     *     <li>buttonAnd</li>
+     *     <li>buttonOr</li>
+     *     <li>buttonImplikation</li>
+     *     <li>buttonImplikationBeidseitig</li>
+     *     <li>buttonReturn</li>
+     *     <li>buttonKlammerAuf</li>
+     *     <li>buttonKlammerZu</li>
+     *     <li>buttonRechenweg</li>
+     *     <li>buttonOneBack</li>
+     * </ul>
+     * Alle Buttons sind von der Klasse {@link Button}.
+     */
     private Button buttonA;
     private Button buttonB;
     private Button buttonC;
@@ -56,67 +151,62 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     private Button buttonKlammerZu;
     private Button buttonRechenweg;
     private Button buttonOneBack;
-    private MenuItem itemVerlauf;
-    private MenuItem itemAnleitung;
-    private MenuItem itemUeberUns;
 
-    private TextView textIhreFormelErgebnis;
-
-
-    private Modi modus = Modi.DNF;
-
-    private MainActivity mainActivity;
-
-    private View view;
-
+    /**
+     * Um einen Verlauf zu gewährleisten, wird eine DataSource der Klasse {@link HistoryDataSource} verwendet und
+     * die historyElemente der Klasse {@link History} genutzt. Auf eine Rückmeldung des Parsers wird
+     * das Element newHistoryElement erzeugt und in die Datenbank geschrieben. Dort wird das
+     * Element gespeichert und eine neue ID erzeugt, woraufhin das Element zurückgegeben wird und in das
+     * Element historyElement geschrieben wird. Dieses wird für die OneBack - Funktion benötigt, um das direkt
+     * vorgehende Element abzufragen.
+     */
     private HistoryDataSource dataSource;
-
-    public int formulaHistoryPosition;
-
-    private String firstFormula;
-    private String secondFormula;
-
     private History historyElement;
-
     private History newHistoryElement;
 
-    private int textFieldFocus;
 
-    private final static int FIRST_FORMULA_FOCUS = 0, SECOND_FORMULA_FOCUS = 1;
-
-
+    /**
+     * Dies ist der erste von zweie Konstruktoren. Er benötigt lediglich die mainActivity und erzeugt daraufhin
+     * ein Objekt des MainFragments. Dieser wird in der MainActivity benötigt oder in Fällen, wenn kein History Element
+     * verfügbar ist.
+     *
+     * @param mainActivity
+     */
     public MainFragment(AppCompatActivity mainActivity) {
         this.mainActivity = (MainActivity) mainActivity;
     }
 
+    /**
+     * Dies ist der zweite Konstruktor. Er benötigt die mainActivity und ein History Element. So wird er in den Fällen benötigt,
+     * wenn ein History Element verfügbar ist und das mainFragment direkt in einem bestimmten Modus gestartet werden soll.
+     *
+     * @param mainActivity   Übergabeparameter der Klasse {@link MainActivity}
+     * @param historyElement Übergabeparamenter der Klasse {@link History}
+     */
     public MainFragment(AppCompatActivity mainActivity, History historyElement) {
         this.mainActivity = (MainActivity) mainActivity;
         this.historyElement = historyElement;
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Die Methode onCreate ruft lediglich die super Methode onCreate auf und gibt die
+     * Übergabeparameter direkt weiter.
      *
-     * @return A new instance of fragment MainFragment.
+     * @param savedInstanceState
      */
-
-    public static MainFragment newInstance(AppCompatActivity mainActivity) {
-        MainFragment fragment = new MainFragment(mainActivity);
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
 
-
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -146,9 +236,6 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         buttonRechenweg = view.findViewById(R.id.buttonRechenweg);
         buttonOneBack = view.findViewById(R.id.buttonOneBack);
 
-        itemVerlauf = view.findViewById(R.id.history);
-        itemAnleitung = view.findViewById(R.id.anleitung);
-        itemUeberUns = view.findViewById(R.id.UeberUns);
 
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
@@ -166,7 +253,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         inputText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                textFieldFocus=FIRST_FORMULA_FOCUS;
+                textFieldFocus = FIRST_FORMULA_FOCUS;
             }
         });
 
@@ -176,27 +263,6 @@ public class MainFragment extends Fragment implements IOnBackPressed {
                 textFieldFocus = SECOND_FORMULA_FOCUS;
             }
         });
-
-/*
-        //normale Tastatur wird direkt wieder geschlossen
-        inputText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                textFieldFocus=FIRST_FORMULA_FOCUS;
-            }
-        });
-
-        resultText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                textFieldFocus = SECOND_FORMULA_FOCUS;
-            }
-        });
-*/
 
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -335,8 +401,8 @@ public class MainFragment extends Fragment implements IOnBackPressed {
                         launchParser(Modi.FORMELN);
                         break;
                     case RESOLUTION:
-                       mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
-                       break;
+                        mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
+                        break;
                     case TABLEAUX:
                         mainActivity.replaceFragment(new TableauxFragment(mainActivity));
                         break;
@@ -370,14 +436,14 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         buttonOneBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(historyElement!=null) {
+                if (historyElement != null) {
                     try {
                         HistoryDataSource dataSource = new HistoryDataSource(getContext());
                         History h = dataSource.getOneBeforeHistory(historyElement.getId());
                         historyElement = h;
                         switchModi();
                         setFormulas();
-                    }catch(Exception e){
+                    } catch (Exception e) {
 
                     }
                 }
@@ -391,15 +457,18 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         return this.view;
     }
 
-    private void switchModi(){
+    /**
+     *
+     */
+    private void switchModi() {
         /*
          * Selected Tab wählen
          */
 
-        if(historyElement != null){
+        if (historyElement != null) {
             modus = getModusByString(historyElement.getModi());
         }
-        switch (modus){
+        switch (modus) {
             case DNF:
                 TabLayout.Tab tab = layout.getTabAt(0);
                 tab.select();
@@ -427,21 +496,26 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         }
     }
 
-    private void setFormulas(){
-        if(historyElement != null){
+    /**
+     *
+     */
+    private void setFormulas() {
+        if (historyElement != null) {
             inputText.setText(historyElement.getFormula());
             resultText.setText(historyElement.getSecondFormula());
         }
     }
 
-
-
-    private void launchParser(Modi modus){
+    /**
+     *
+     * @param modus
+     */
+    private void launchParser(Modi modus) {
         Parser parser = Parser.getInstance();
         String eingabeFormel = inputText.getText().toString();
         resultText.setTextColor(Color.BLACK);
         try {
-            if(modus==Modi.FORMELN){
+            if (modus == Modi.FORMELN) {
                 String zweiteFormel = resultText.getText().toString();
                 try {
                     int[][] truthTable = parser.parseTwoFormula(eingabeFormel, zweiteFormel);
@@ -449,27 +523,27 @@ public class MainFragment extends Fragment implements IOnBackPressed {
                     this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
                     this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                     mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables, this.historyElement));
-                }catch (ParserException pe){
+                } catch (ParserException pe) {
                     // Formeln stimmen nicht über ein
-                    if(pe.getFehlercode()==-20){
+                    if (pe.getFehlercode() == -20) {
                         int[][] truthTable = pe.getTruthTable();
                         ArrayList<Character> variables = pe.getVariables();
                         this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
-                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                         mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, truthTable, variables, -20, this.historyElement));
                         // Falsche Eingabe
-                    }else if(pe.getFehlercode()==-10){
+                    } else if (pe.getFehlercode() == -10) {
                         this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
-                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                         mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -10, this.historyElement));
                         // Falsche Eingabe
-                    }else if(pe.getFehlercode()==-30){
+                    } else if (pe.getFehlercode() == -30) {
                         this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, zweiteFormel);
-                        this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
+                        this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                         mainActivity.replaceFragment(new ZweiFormelFragment(mainActivity, -30, this.historyElement));
                         // Falsche Eingabe
-                    }else{
-                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getContext());
+                    } else {
+                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getContext());
                         dlgAlert.setMessage(ErrorHandler.getErrorMessage(pe.getFehlercode()));
                         dlgAlert.setTitle("Fehleingabe");
                         dlgAlert.setPositiveButton("Ok",
@@ -483,15 +557,15 @@ public class MainFragment extends Fragment implements IOnBackPressed {
 
                     }
                 }
-            }else if(modus==Modi.WERTETABELLE){
+            } else if (modus == Modi.WERTETABELLE) {
                 try {
                     int[][] truthTable = parser.buildTruthTable(eingabeFormel);
                     ArrayList<Character> variables = parser.getVariables(eingabeFormel);
                     this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, null);
                     this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
                     mainActivity.replaceFragment(new TruthTableFragment(mainActivity, truthTable, variables, this.historyElement));
-                }catch (ParserException pe){
-                    AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getContext());
+                } catch (ParserException pe) {
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(getContext());
                     dlgAlert.setMessage(ErrorHandler.getErrorMessage(pe.getFehlercode()));
                     dlgAlert.setTitle("Fehleingabe");
                     dlgAlert.setPositiveButton("Ok",
@@ -503,20 +577,18 @@ public class MainFragment extends Fragment implements IOnBackPressed {
                     dlgAlert.setCancelable(true);
                     dlgAlert.create().show();
                 }
-            }
-            else if(modus==Modi.KNF || modus==Modi.DNF) {
+            } else if (modus == Modi.KNF || modus == Modi.DNF) {
                 parser.setModus(modus);
                 String resultFormel = parser.parseFormula(eingabeFormel);
                 resultText.setText(resultFormel);
                 this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, resultFormel);
-                this.historyElement=dataSource.addHistoryEntry(this.newHistoryElement);
-            }
-            else if(modus== Modi.RESOLUTION){
+                this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
+            } else if (modus == Modi.RESOLUTION) {
                 // Hier würde die Resolution gestartet werden
                 mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
             }
             this.buttonRechenweg.setEnabled(true);
-        }catch (ParserException pe){
+        } catch (ParserException pe) {
             // Falsche Eingabe
             int fehlercode = pe.getFehlercode();
             resultText.setText(ErrorHandler.getErrorMessage(fehlercode));
@@ -524,9 +596,13 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         }
     }
 
-    private void changeLayout(Modi modus){
+    /**
+     *
+     * @param modus
+     */
+    private void changeLayout(Modi modus) {
 
-        if(modus == Modi.DNF || modus == Modi.KNF || modus == Modi.TABLEAUX || modus == Modi.RESOLUTION ){
+        if (modus == Modi.DNF || modus == Modi.KNF || modus == Modi.TABLEAUX || modus == Modi.RESOLUTION) {
             buttonRechenweg.setVisibility(view.VISIBLE);
             resultText.setVisibility(view.VISIBLE);
             textIhreFormelErgebnis.setVisibility(view.VISIBLE);
@@ -535,8 +611,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             resultText.setText("");
             resultText.setHint("Lösung");
             inputText.setFocusedByDefault(true);
-        }
-        else if(modus == Modi.FORMELN){
+        } else if (modus == Modi.FORMELN) {
             buttonRechenweg.setVisibility(view.INVISIBLE);
             resultText.setVisibility(view.VISIBLE);
             textIhreFormelErgebnis.setVisibility(view.VISIBLE);
@@ -545,8 +620,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             resultText.setText("");
             resultText.setHint("Bitte geben Sie hier ihre zweite Formel ein.");
             inputText.setFocusedByDefault(true);
-        }
-        else if(modus == Modi.WERTETABELLE){
+        } else if (modus == Modi.WERTETABELLE) {
             buttonRechenweg.setVisibility(view.INVISIBLE);
             resultText.setVisibility(view.INVISIBLE);
             textIhreFormelErgebnis.setVisibility(view.INVISIBLE);
@@ -556,17 +630,13 @@ public class MainFragment extends Fragment implements IOnBackPressed {
 
     }
 
-    public void setInputFormula(String inputFormula){
-        this.firstFormula = inputFormula;
-    }
-
-    public void setResultFormula(String resultFormula){
-        this.secondFormula = resultFormula;
-    }
-
-
-    private String getModiText(Modi modus){
-        switch (modus){
+    /**
+     *
+     * @param modus
+     * @return
+     */
+    private String getModiText(Modi modus) {
+        switch (modus) {
             case DNF:
                 return "DNF";
             case KNF:
@@ -583,8 +653,13 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         return "";
     }
 
-    private Modi getModusByString(String modus){
-        switch (modus){
+    /**
+     *
+     * @param modus
+     * @return
+     */
+    private Modi getModusByString(String modus) {
+        switch (modus) {
             case "KNF":
                 return Modi.KNF;
             case "DNF":
@@ -601,31 +676,38 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         return null;
     }
 
-    private void writeToTextField(String s){
-        if(textFieldFocus==FIRST_FORMULA_FOCUS){
+    /**
+     *
+     * @param s
+     */
+    private void writeToTextField(String s) {
+        if (textFieldFocus == FIRST_FORMULA_FOCUS) {
             int cursorPos = inputText.getSelectionEnd();
-            inputText.setText(inputText.getText().toString().substring(0, cursorPos)+s+
-                            inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
-            inputText.setSelection(cursorPos+1);
-        }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+            inputText.setText(inputText.getText().toString().substring(0, cursorPos) + s +
+                    inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
+            inputText.setSelection(cursorPos + 1);
+        } else if (textFieldFocus == SECOND_FORMULA_FOCUS) {
             int cursorPos = resultText.getSelectionEnd();
-            resultText.setText(resultText.getText().toString().substring(0, cursorPos)+s+
+            resultText.setText(resultText.getText().toString().substring(0, cursorPos) + s +
                     resultText.getText().toString().substring(cursorPos, resultText.getText().toString().length()));
-            resultText.setSelection(cursorPos+1);
+            resultText.setSelection(cursorPos + 1);
         }
     }
 
-    private void deleteCharacter(){
-        if(textFieldFocus==FIRST_FORMULA_FOCUS){
+    /**
+     *
+     */
+    private void deleteCharacter() {
+        if (textFieldFocus == FIRST_FORMULA_FOCUS) {
             int cursorPos = inputText.getSelectionEnd();
-            if(cursorPos>0) {
+            if (cursorPos > 0) {
                 inputText.setText(inputText.getText().toString().substring(0, cursorPos - 1) +
                         inputText.getText().toString().substring(cursorPos, inputText.getText().toString().length()));
                 inputText.setSelection(cursorPos - 1);
             }
-        }else if(textFieldFocus==SECOND_FORMULA_FOCUS){
+        } else if (textFieldFocus == SECOND_FORMULA_FOCUS) {
             int cursorPos = resultText.getSelectionEnd();
-            if(cursorPos>0) {
+            if (cursorPos > 0) {
                 resultText.setText(resultText.getText().toString().substring(0, cursorPos - 1) +
                         resultText.getText().toString().substring(cursorPos, resultText.getText().toString().length()));
                 resultText.setSelection(cursorPos - 1);
@@ -633,10 +715,9 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         }
     }
 
-    public History getNewHistoryElement(){
-        return this.newHistoryElement;
-    }
-
+    /**
+     *
+     */
     @Override
     public void goBackToMainFragment() {
 // do nothing

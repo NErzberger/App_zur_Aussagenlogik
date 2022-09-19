@@ -1,6 +1,9 @@
 package com.dhbw.app_zur_aussagenlogik.dnf;
 
 
+
+import static org.junit.Assert.assertArrayEquals;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.dhbw.app_zur_aussagenlogik.Modi;
@@ -8,11 +11,11 @@ import com.dhbw.app_zur_aussagenlogik.core.Ausmultiplizieren;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
 
-import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 
 
 @RunWith(AndroidJUnit4.class)
@@ -27,12 +30,12 @@ public class DNFTestsWithNegation {
 
     @Test
     public void negation1() {
-    	Formel formel = new Formel("na*(nb+c)");
+        Formel formel = new Formel("na*(nb+c)");
         Formel expectedFormel = new Formel("(na*nb)+(na*c)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest1() {
         Formel formel = new Formel("c*(na+nb*ne)");
@@ -40,7 +43,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest2() {
         Formel formel = new Formel("(a+nb*e)*nc");
@@ -48,7 +51,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest3() {
         Formel formel = new Formel("(na+b)*c*ne");
@@ -56,7 +59,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest4() {
         Formel formel = new Formel("c*e*(na+nb)");
@@ -64,7 +67,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest5() {
         Formel formel = new Formel("c*nh*(na+nb*ne)");
@@ -72,7 +75,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest6() {
         Formel formel = new Formel("(a+nb*ne)*c*nh");
@@ -80,7 +83,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public  void negationTest7() {
         Formel formel = new Formel("nh*(a+b*e)*nc");
@@ -88,7 +91,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest8() {
         Formel formel = new Formel("c*nh*(b*ne+na)");
@@ -96,7 +99,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest9() {
         //Parser.getInstance().setModus(Modi.DNF);
@@ -105,7 +108,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest10() {
         Formel formel = new Formel("c*(na+nb*ne)+nf");
@@ -113,7 +116,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public  void negationTest11() {
         Formel formel = new Formel("(a+nb*e)*nc+nf");
@@ -121,7 +124,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest12() {
         Formel formel = new Formel("(a+b)*nc*ne+nf");
@@ -129,7 +132,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest13() {
         Formel formel = new Formel("nc*ne*(na+nb)+f");
@@ -137,7 +140,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest14() {
         Formel formel = new Formel("f+c*(na+nb*ne)");
@@ -145,7 +148,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest15() {
         Formel formel = new Formel("nf+(a+nb*e)*nc");
@@ -153,7 +156,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest16() {
         Formel formel = new Formel("f+(na+nb)*c*ne");
@@ -161,7 +164,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest17() {
         Formel formel = new Formel("f+nc*e*(na+nb)");
@@ -255,7 +258,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest40() {
         Formel formel = new Formel("(nx+c*nd)*(a+nb*e)*(f*g+nh)");
@@ -391,7 +394,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public void negationTest57() {
         Formel formel = new Formel("nx+(a*ne*(b+nc))");
@@ -399,7 +402,7 @@ public class DNFTestsWithNegation {
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
-    
+
     @Test
     public  void negationTest58() {
         Formel formel = new Formel("nr*(na+b+h)*(c+nd+e)*(g+j+nk)");
