@@ -21,24 +21,49 @@ import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
+ * Das Fragment <b>TruthTableFragment</b> dient dazu, die Wahrheitstabellen der eingegebenen Formel darzustellen.
+ * Die Klasse erbt von der Klasse {@link Fragment} und implementiert das Interface {@link IOnBackPressed}.
+ * Das Fragment wird aus dem MainFragment im Modus <i>Wertetabelle</i> heraus aufgerufen.
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @version 1.0
  */
 public class TruthTableFragment extends Fragment implements IOnBackPressed {
 
-    private MainActivity mainActivity;
+    /**
+     * Um auf den Kontext zugreifen zu können, wird die mainActivity als Klassenattribut verwendet.
+     */
+    private final MainActivity mainActivity;
 
-    private Button homeButton;
-
-    private TableLayout truthTable;
-
+    /**
+     * Es wird dem Fragment ZweiFromelFragment ein zweidimensionaler int Array mitgegeben, welcher in truthTableByInt geschrieben wird.
+     */
     private int[][] truthTableByInt;
+
+    /**
+     * Um mögliche Fehlerfälle zu erkennen, wird ein fehlercode benötigt.
+     */
     private int fehlercode = 0;
+
+    /**
+     * Zur Verarbeitung ist eine Liste mit Charactern notwendig.
+     */
     private ArrayList<Character> variables;
 
+    /**
+     * Um korrekt in das MainFragment zurück zu wechseln ist ein History Element notwendig. Anhand von diesem können beide Formeln und
+     *      * der Modus mitgegeben werden.
+     */
     private History history;
 
-
+    /**
+     * Um ein Objekt des Fragments erstellen zu können, ist die MainActivity, ein zweidimensionales Integerarray, eine Liste mit Charactern und
+     * ein historisches Element notwendig.
+     * @param mainActivity Übergabeparameter der Klasse {@link MainActivity}.
+     * @param truthTableByInt Übergabeparameter als zweidimensionales int Array.
+     * @param variables Liste mit Character - Generics
+     * @param history Übergabeparameter der Klasse {@link History}.
+     */
     public TruthTableFragment(MainActivity mainActivity, int[][] truthTableByInt, ArrayList<Character> variables, History history) {
         this.mainActivity = mainActivity;
         this.truthTableByInt = truthTableByInt;
@@ -57,13 +82,29 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Die Methode onCreateView erzeugt die View des Fragments.
+     * Zunächst wird die View XML Ressource fragment_truth_table geladen und der MainActivty das aktuelle Fragment gemeldet.
+     * Daraufhin wird der HomeButton erstellt.
+     * <br>
+     * Zunächst wird der TableHead aufgebaut, indem die Variablen gelesen und als Tabellen Überschriften geschrieben werden
+     * und anschließend F geschreiben wird. Daraufhin wird zeilenweise der Tabellenrumpf aufgebaut. Hierfür wird für
+     * jeden Wert eine TextVeiw erzeugt und der Wert der Variable als Text geschrieben. Die Schriftgröße wird auf 25 gesetzt,
+     * der Text zentriet und der Hintergrund auf Weiß gesetzt, um den Effekt eines schwarzen Rahmens zu erzeugen.
+     * Daraufhin wird die TextView der view hinzugefügt.
+     *
+     * @param inflater Übergabeparameter der Klasse {@link LayoutInflater}
+     * @param container Übergabeparameter der Klasse {@link ViewGroup}
+     * @param savedInstanceState Übergabeparameter der Klasse {@link Bundle}
+     * @return Es wird die view zurückgegeben.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_truth_table, container, false);
         mainActivity.setActiveFragment(this);
-        homeButton = view.findViewById(R.id.buttonHome2);
+        Button homeButton = view.findViewById(R.id.buttonHome2);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +113,7 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
             }
         });
 
-        this.truthTable = view.findViewById(R.id.truthTable);
+        TableLayout truthTable = view.findViewById(R.id.truthTable);
 
         TableRow header = new TableRow(truthTable.getContext());
         for (int i = 0; i < variables.size() + 1; i++) {
@@ -111,6 +152,10 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
         return view;
     }
 
+    /**
+     * Implementierung der Mehtode goBackToMainFragment. Es wird eine replace Aktion durchgeführt und
+     * über die mainActivity zum mainFragment zurück gewechselt.
+     */
     @Override
     public void goBackToMainFragment() {
         mainActivity.replaceFragment(new MainFragment(mainActivity, history));

@@ -20,6 +20,10 @@ import com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDataSource;
 /**
  * Die Klass MainActivity dient als Container für alle Fragments vom Typ {@link IOnBackPressed}.
  * Der User bleibt ständig in dieser Activity und wechselt immer durch die Fragments.
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @author Laura Mayer
+ * @version 1.0
  */
 public class MainActivity extends AppCompatActivity {
 

@@ -14,37 +14,30 @@ import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ResolutionFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Das <b>ResolutionFragment</b> dient zum visualisieren der Rechenschritte der Resolution und der Schritte des Resolutionsverfahren.
+ * Die Klasse erbt von der Klasse {@link Fragment} und implementiert das Interface {@link IOnBackPressed}.
+ * Das Fragment wird vom MainFragment und im Modus <i>Resolution</i> aufgerufen.
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @version 1.0
  */
 public class ResolutionFragment extends Fragment implements IOnBackPressed {
 
+    /**
+     * Um auf den Kontext zugreifen zu können, wird die mainActivity als Klassendiagramm benötigt.
+     */
+    private final MainActivity mainActivity;
 
-    private MainActivity mainActivity;
-
-    private View view;
-
-    private Button homeButton;
-
+    /**
+     * Um ein Objekt der Klasse {@link ResolutionFragment} erstellen zu können, ist ein Objekt der Klasse
+     * MainFragment erforderlich.
+     * @param mainActivity Übergabeparameter der Klasse {@link MainActivity}
+     */
     public ResolutionFragment(MainActivity mainActivity) {
        super(R.layout.fragment_resolution);
        this.mainActivity = mainActivity;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-
-     * @return A new instance of fragment Resolution.
-     */
-    public static ResolutionFragment newInstance(MainActivity mainActivity) {
-        ResolutionFragment fragment = new ResolutionFragment(mainActivity);
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     /**
      * Die Methode onCreate ruft lediglich die super Methode onCreate auf und gibt die
@@ -56,13 +49,20 @@ public class ResolutionFragment extends Fragment implements IOnBackPressed {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Die Methode onCreateView lädt die XML View Ressource fragment_resolution und erstellt den homeButton und belegt diesen mit einem OnClickListener.
+     * @param inflater Übergabeparameter der Klasse {@link LayoutInflater}
+     * @param container Übergabeparameter der Klasse {@link ViewGroup}
+     * @param savedInstanceState Übergabeparameter der Klasse {@link Bundle}
+     * @return Es wird eine View zurückgegeben.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_resolution, container, false);
+        View view = inflater.inflate(R.layout.fragment_resolution, container, false);
         mainActivity.setActiveFragment(this);
-        homeButton = view.findViewById(R.id.buttonHome);
+        Button homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +73,10 @@ public class ResolutionFragment extends Fragment implements IOnBackPressed {
 
         return view;
     }
-
+    /**
+     * Implementierung der Mehtode goBackToMainFragment. Es wird eine replace Aktion durchgeführt und
+     * über die mainActivity zum mainFragment zurück gewechselt.
+     */
     @Override
     public void goBackToMainFragment() {
         mainActivity.replaceFragment(new MainFragment(mainActivity));

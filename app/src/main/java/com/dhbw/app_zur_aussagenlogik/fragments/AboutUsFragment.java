@@ -16,6 +16,9 @@ import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
  * Das Fragment AboutUs dient als Impressum in der App und soll die Entwickler als auch den Zweck der App vorstellen.
  * Das Fragment erbt von der parent Klasse {@link Fragment} und implementiert das Interface {@link IOnBackPressed},
  * um den Home-Button zu implementieren.
+ * @author Nico Erzberger
+ * @author Laura Mayer
+ * @version 1.0
  */
 public class AboutUsFragment extends Fragment implements IOnBackPressed {
 
@@ -23,7 +26,7 @@ public class AboutUsFragment extends Fragment implements IOnBackPressed {
      * Das Klassenattribut mainActivity der Klasse {@link MainActivity} ist notewendig,
      * um auf den Kontext zugreifen zu können.
      */
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     /**
      * Der Home Button wird verwendet, um auf das mainFragment zurück zu kommen.

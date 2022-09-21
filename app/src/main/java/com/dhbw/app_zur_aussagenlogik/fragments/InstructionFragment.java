@@ -14,19 +14,24 @@ import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 
 /**
- * A simple {@link Fragment} subclass.
- *
- * create an instance of this fragment.
+ * Das Fragment <b>InstructionFragment</b> dient zur Darstellung der Anleitung der App. Das Fragment erbt von der Klasse {@link Fragment}
+ * und implementiert das Interface {@link IOnBackPressed}, um zurück ins MainFragment wechseln zu können.
+ * Das Fragment wird aus dem Menü der MainActivity heraus aufgerufen.
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @version 1.0
  */
 public class InstructionFragment extends Fragment implements IOnBackPressed {
 
-    private MainActivity mainActivity;
+    /**
+     * Für den Konstext ist die MainActivity als Klassenattribut notwendig.
+     */
+    private final MainActivity mainActivity;
 
-    private Button buttonHome;
-
-    private View view;
-
-
+    /**
+     * Der Konstruktor benötigt zur Erstellung eines Objektes ein Objekt der Klasse {@link MainActivity}
+     * @param mainActivity Übergabeparameter der Klasse {@link MainActivity}.
+     */
     public InstructionFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -42,13 +47,20 @@ public class InstructionFragment extends Fragment implements IOnBackPressed {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Die Methode onCreateView lädt die XML View Ressource fragment_instruction und gibt dem buttonHome einen OnClickListener mit.
+     * @param inflater Übergabeparameter der Klasse LayoutInflater
+     * @param container Übergabeparameter der Klasse ViewGroup
+     * @param savedInstanceState Übergabeparameter der Klasse Bundle
+     * @return Die Methode gibt eine View zurück.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        this.view = inflater.inflate(R.layout.fragment_instruction, container, false);
+        View view = inflater.inflate(R.layout.fragment_instruction, container, false);
         mainActivity.setActiveFragment(this);
-        this.buttonHome = view.findViewById(R.id.buttonHome);
+        Button buttonHome = view.findViewById(R.id.buttonHome);
         buttonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +70,10 @@ public class InstructionFragment extends Fragment implements IOnBackPressed {
         return view;
     }
 
+    /**
+     * Implementierung der Mehtode goBackToMainFragment. Es wird eine replace Aktion durchgeführt und
+     * über die mainActivity zum mainFragment zurück gewechselt.
+     */
     @Override
     public void goBackToMainFragment() {
         mainActivity.replaceFragment(new MainFragment(mainActivity));

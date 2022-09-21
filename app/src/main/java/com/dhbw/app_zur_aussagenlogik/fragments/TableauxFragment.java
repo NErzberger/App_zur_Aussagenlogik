@@ -14,34 +14,28 @@ import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.interfaces.IOnBackPressed;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link TableauxFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Das Fragment <b>TableauxFragment</b> stellt das Tableaux Verfahren dar.
+ * Es erbt von der Klasse {@link Fragment} und implementiert das Interface {@link IOnBackPressed}.
+ * Das Fragment ist nicht in Verwendung.
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @author Laura Mayer
+ * @version 1.0
+ * @deprecated Das Fragment ist nicht in Verwendung
  */
 public class TableauxFragment extends Fragment implements IOnBackPressed {
 
-    private MainActivity mainActivity;
-
-    private View view;
-
-    private Button homeButton;
-
-    public TableauxFragment(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
+    /**
+     * Um auf den Kontext zugreifen zu können ist die mainActivity als Klassenattribut notwendig.
+     */
+    private final MainActivity mainActivity;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment Tableaux.
+     * Um eine Objekt erzeugen zu können, ist ein Objekt der Klasse {@link MainActivity} notwendig.
+     * @param mainActivity Übergabeparameter der Klasse {@link MainActivity}
      */
-    // TODO: Rename and change types and number of parameters
-    public static TableauxFragment newInstance(MainActivity mainActivity) {
-        TableauxFragment fragment = new TableauxFragment(mainActivity);
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    public TableauxFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     /**
@@ -54,13 +48,20 @@ public class TableauxFragment extends Fragment implements IOnBackPressed {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Die Methode onCreateView lädt die XML View Ressource fragment_tableaux und erstellt den homeButton und stattet diesen mit einem OnClickListener aus.
+     * @param inflater Übergabeparameter der Klasse {@link LayoutInflater}
+     * @param container Übergabeparameter der Klasse {@link ViewGroup}
+     * @param savedInstanceState Übergabeparameter der Klasse {@link Bundle}
+     * @return Es wird eine View zurückgegeben.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_tableaux, container, false);
+        View view = inflater.inflate(R.layout.fragment_tableaux, container, false);
         mainActivity.setActiveFragment(this);
-        homeButton = view.findViewById(R.id.buttonHome);
+        Button homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +72,10 @@ public class TableauxFragment extends Fragment implements IOnBackPressed {
 
         return view;
     }
-
+    /**
+     * Implementierung der Mehtode goBackToMainFragment. Es wird eine replace Aktion durchgeführt und
+     * über die mainActivity zum mainFragment zurück gewechselt.
+     */
     @Override
     public void goBackToMainFragment() {
         mainActivity.replaceFragment(new MainFragment(mainActivity));

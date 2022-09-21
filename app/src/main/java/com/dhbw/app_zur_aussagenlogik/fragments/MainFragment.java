@@ -53,6 +53,11 @@ import java.util.ArrayList;
  *     <li>Wertetabelle</li>
  * </ul>
  * gehen. Dies ist für die jeweilige Funktionen wichtig, in welchen der {@link Parser} ausgeführt werden soll.
+ *
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @author Laura Mayer
+ * @version 1.0
  */
 public class MainFragment extends Fragment implements IOnBackPressed {
 
@@ -60,7 +65,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
      * Das Klassenattribut mainActivity der Klasse {@link MainActivity} ist notewendig,
      * um auf den Kontext zugreifen zu können.
      */
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     /**
      * Die view beinhaltet alle grafischen Komponenten.
