@@ -53,6 +53,11 @@ import java.util.ArrayList;
  *     <li>Wertetabelle</li>
  * </ul>
  * gehen. Dies ist für die jeweilige Funktionen wichtig, in welchen der {@link Parser} ausgeführt werden soll.
+ *
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @author Laura Mayer
+ * @version 1.0
  */
 public class MainFragment extends Fragment implements IOnBackPressed {
 
@@ -60,7 +65,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
      * Das Klassenattribut mainActivity der Klasse {@link MainActivity} ist notewendig,
      * um auf den Kontext zugreifen zu können.
      */
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     /**
      * Die view beinhaltet alle grafischen Komponenten.
@@ -201,11 +206,14 @@ public class MainFragment extends Fragment implements IOnBackPressed {
 
 
     /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * Die onCreateView Methode baut die Logik für die view auf. Alle Tastatur Buttons werden mit OnClickListenern ausgestattet
+     * und die Textfelder mit OnFokusListenern, um den jeweiligen Fokus festzustellen.
+     * Darüber hinaus wird das TabLayout mit OnClickListenern belegt, um auf einen Klick auf einen Tab den Modus entsprechend anzupassen.
+     * Desweiteren wird auf den Eter-Button der Parser gestartet, indem die Methode launchParser ausgeführt wird.
+     * @param inflater Übergabeparameter der Klasse {@link LayoutInflater}
+     * @param container Übergabeparameter der Klasse {@link ViewGroup}
+     * @param savedInstanceState Übergabeparameter der Klasse {@link Bundle}
+     * @return Es wird die view zurückgegeben.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -213,8 +221,11 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
         mainActivity.setActiveFragment(this);
+
+        // Deklaration des TabLayouts
         layout = view.findViewById(R.id.tabLayout);
 
+        // Deklaration der DataSource
         dataSource = new HistoryDataSource(getContext());
 
         // Deklaration der Tastatur
@@ -236,10 +247,11 @@ public class MainFragment extends Fragment implements IOnBackPressed {
         buttonRechenweg = view.findViewById(R.id.buttonRechenweg);
         buttonOneBack = view.findViewById(R.id.buttonOneBack);
 
-
+        // Deklaration der EditText Felder
         inputText = view.findViewById(R.id.input);
         resultText = view.findViewById(R.id.solution);
 
+        // Unterdrückung der Android Swift Tastatur
         inputText.setShowSoftInputOnFocus(false);
         resultText.setShowSoftInputOnFocus(false);
 
@@ -264,6 +276,8 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // Es wird auf den Namen des Tabs geachtet. Dieser wird abgefragt und daraufhin der Modus gesetzt.
+        // Danach wird das Layout angepasst.
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -280,8 +294,6 @@ public class MainFragment extends Fragment implements IOnBackPressed {
                         break;
                     case "2 For-\nmeln":
                         modus = Modi.FORMELN;
-                        //changeLayout(modus);
-                        //mainActivity.replaceFragment(new Resolution(mainActivity));
                         break;
                     case "Tab-\nleaux":
                         modus = Modi.TABLEAUX;
@@ -302,7 +314,13 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        /*
+        * ******************************************************
+        * OnClickListener für die Tastatur - Beginn
+        * ******************************************************
+        */
 
+        // OnClickListener für den ButtonA
         buttonA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -310,6 +328,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonB
         buttonB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -317,6 +336,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonC
         buttonC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -324,6 +344,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonD
         buttonD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -331,6 +352,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonE
         buttonE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -338,12 +360,15 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonNegation
         buttonNegation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 writeToTextField("\u00AC");
             }
         });
+
+        // OnClickListener für den ButtonDelete
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -351,6 +376,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonCE
         buttonCE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -359,6 +385,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonAnd
         buttonAnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -366,6 +393,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonOr
         buttonOr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -373,6 +401,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonImplikation
         buttonImplikation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -380,6 +409,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonImpleikationBeidseitig
         buttonImplikationBeidseitig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -387,31 +417,15 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonReturn
         buttonReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (modus) {
-                    case KNF:
-                        launchParser(Modi.KNF);
-                        break;
-                    case DNF:
-                        launchParser(Modi.DNF);
-                        break;
-                    case FORMELN:
-                        launchParser(Modi.FORMELN);
-                        break;
-                    case RESOLUTION:
-                        mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
-                        break;
-                    case TABLEAUX:
-                        mainActivity.replaceFragment(new TableauxFragment(mainActivity));
-                        break;
-                    case WERTETABELLE:
-                        launchParser(Modi.WERTETABELLE);
-                }
+                launchParser();
             }
         });
 
+        // OnClickListener für den ButtonKlammerAuf
         buttonKlammerAuf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -419,6 +433,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonKlammerZu
         buttonKlammerZu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -426,6 +441,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonRechenweg
         buttonRechenweg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -433,6 +449,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        // OnClickListener für den ButtonOneBack
         buttonOneBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -450,6 +467,11 @@ public class MainFragment extends Fragment implements IOnBackPressed {
             }
         });
 
+        /*
+        * ***********************************************************
+        * OnClickListener für die Tastatur - Ende
+        * ***********************************************************
+         */
         switchModi();
 
         setFormulas();
@@ -458,7 +480,9 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
+     * Die Methde switchModi ist wichtig, falls das MainFragment mit einem Historischen Element geöffnet wird und
+     * der Modus des Fragments geändert werden muss. So muss eventuell das Layout abgeändert werden und der richtige
+     * Tab gesetzt werden.
      */
     private void switchModi() {
         /*
@@ -497,7 +521,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
+     * Die Methode setFormulas wird verwendet, um die Formel von Historischen Elementen in die EditText Felder zu schreiben.
      */
     private void setFormulas() {
         if (historyElement != null) {
@@ -507,14 +531,51 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
+     * Die Methode launchParser startet den Parser in den entsprechenden Modis.
+     * Es wird die Instanz des Parsers der Klasse {@link Parser} gezogen und in eine lokale Variable geschrieben.
+     * Daraufhin wird dem Parser den Modus mitgegeben, um den Parser korrekt zu konfigurieren.
+     * <h1>Fall 2 Formeln:</h1>
+     * Im Modus von zwei Formeln wird dem Parser beide Formel mitgegeben. Es kommt vom Parser eine Warheitstabelle in Form eines
+     * zweidimensionalen int - Arrays zurück. Im Fehlerfall wird eine Exception der Klasse {@link ParserException} geworfen.
+     * Es können folgnde Fehler eintreten:
+     * <ul>
+     *     <li>Fehlercode -10: Es erfolgte eine falsche Eingabe</li>
+     *     <li>Fehlercode -20: Die Formeln stimmen nicht überein</li>
+     *     <li>Fehlercode -30: Die Variablen der Formeln stimmen nicht überein</li>
+     *     <li>Es wurde eine Falscheingabe getätigt, es liegt ein Fehlercode zwischen -1 bis -13 vor.
+     *     Dem User wird eine Alert-Box gezeigt, in welchem er die Fehlermeldungen der Klasse {@link ErrorHandler} zu sehen bekommt.</li>
+     * </ul>
+     * Wird kein Fehler geworfen, so wird ein neues Historisches Element erzeugt und dieses in die Datenbank über die Klasse {@link HistoryDataSource}
+     * geschrieben. Daraufhin wechselt das mainFragment zum Fragment {@link ZweiFormelFragment} und zeigt dort die Wertetabelle an.
+     * Auch in den Fehlerfällen mit den Codes -20 und -30 wird das Fragment gewechselt, wobei entweder die Wahrheitstabelle
+     * dargestellt wird bzw. die Fehlermeldung dargestellt wird.
+     * <br>
+     * <h1>Fall Wertetabelle:</h1>
+     * Im Fall der Wertetabelle wird der Parser mit der Methode buildTruthTable und als Übergabeparameter die eingegebeneFormel gestartet.
+     * Auch hier wird eine Wertetabelle als zweidimensionales int - Array zurückgegeben. Bezüglich der Fehlerfälle können die Fehler
+     * -1 bis -13 geworfen werden, welche durch falsche Usereingaben ausgelöst werden. In diesen Fällen wird dem User eine Alert-Box
+     * dargestellt, in welchem die Fehlertexte der Klasse {@link ErrorHandler} zu sehen sind. Wird kein Fehler geworfen, so wechselt
+     * das MainFragment in das Fragment {@link TruthTableFragment}, nachdem das History Element erstellt und in der Datenbank gespeichert
+     * wurde.
      *
-     * @param modus
+     * <h1>Fall KNF oder DNF:</h1>
+     * Im Fall, dass der Modus in KNF oder DNF ist, wird der Parser mit der Methode parseFormula mit dem Übergabeparameter eingabeFormel
+     * gestartet. Liegt ein Fehler in der Usereingabe vor, so wird der Fehlertext in das resultText Feld geschrieben und die Schrift
+     * rot formatiert. Wird kein Fehler geworfen, so wird die Lösung, die als Rückgabewert vom Parser zurück kommt, in das resultText
+     * Feld geschrieben und ein History Element erstellt und gespeichert.
+     *
+     * <h1>Fall Resolution:</h1>
+     *
+     *
      */
-    private void launchParser(Modi modus) {
+    private void launchParser() {
         Parser parser = Parser.getInstance();
+        parser.setModus(modus);
         String eingabeFormel = inputText.getText().toString();
         resultText.setTextColor(Color.BLACK);
         try {
+
+            // Ausführung für den Modus 2 Formeln
             if (modus == Modi.FORMELN) {
                 String zweiteFormel = resultText.getText().toString();
                 try {
@@ -557,7 +618,10 @@ public class MainFragment extends Fragment implements IOnBackPressed {
 
                     }
                 }
-            } else if (modus == Modi.WERTETABELLE) {
+            }
+
+            // Modus Wertetabelle
+            else if (modus == Modi.WERTETABELLE) {
                 try {
                     int[][] truthTable = parser.buildTruthTable(eingabeFormel);
                     ArrayList<Character> variables = parser.getVariables(eingabeFormel);
@@ -577,18 +641,29 @@ public class MainFragment extends Fragment implements IOnBackPressed {
                     dlgAlert.setCancelable(true);
                     dlgAlert.create().show();
                 }
-            } else if (modus == Modi.KNF || modus == Modi.DNF) {
+            }
+
+            // Modis KNF und DNF
+            else if (modus == Modi.KNF || modus == Modi.DNF) {
                 parser.setModus(modus);
                 String resultFormel = parser.parseFormula(eingabeFormel);
                 resultText.setText(resultFormel);
                 this.newHistoryElement = new History(0, getModiText(modus), eingabeFormel, resultFormel);
                 this.historyElement = dataSource.addHistoryEntry(this.newHistoryElement);
-            } else if (modus == Modi.RESOLUTION) {
+            }
+
+            // Modus Resolution
+            else if (modus == Modi.RESOLUTION) {
                 // Hier würde die Resolution gestartet werden
                 mainActivity.replaceFragment(new ResolutionFragment(mainActivity));
             }
+
+            // Den Rechenweg auf Enabled gleich true setzen.
             this.buttonRechenweg.setEnabled(true);
-        } catch (ParserException pe) {
+        }
+
+        // Errorhandling, falls ein Fehler aufgetreten ist.
+        catch (ParserException pe) {
             // Falsche Eingabe
             int fehlercode = pe.getFehlercode();
             resultText.setText(ErrorHandler.getErrorMessage(fehlercode));
@@ -597,7 +672,19 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
+     * Die Methode changeLayout passt das Layout entsprechend dem Modi an.
+     * Im Modus der <b>DNF</b>, <b>KNF</b>, <b>Tableaux</b>, <b>Resolution</b> wird der Button Rechenweg, der Text
+     * des Lösungsfeldes und das EditText Feld resultText sichtbar gemacht, der Text des TextView textIhreFormelErgebnis
+     * auf 'Lösung' gesetzt und das resultText Feld auf Enabled gleich False, der Text geleert, der Hintergrundtext auf 'Lösung'
+     * gesetzt und der Fokus auf das EditText Feld inputText gesetzt.
+     * <br>
+     * Ist der Modus <b>Formeln</b>, so wird der Button Rechenweg unsichtbar gemacht, das EditText Feld resultText und
+     * der TextView textIhreFormelErgebnis sichtbar gemacht und der Text von textIhreFormelErgebnis auf '2. Formel' gesetzt.
+     * Bei dem EditText Feld resultText wird Enabled auf true gesetzt, der Text geleert und der Hintergrundtext auf
+     * 'Bitte geben Sie hier ihre zweite Formel ein.' gesetzt. Den Fokus bekommt ebenfalls das EditText Feld inputText.
+     * <br>
+     * Ist der Modus <b>Wertetabelle</b>, so werden der Button buttonRechenweg, das EditText Feld resultText und
+     * die TextView textIhreFormelErgebnis unsichtbar gemacht.
      * @param modus
      */
     private void changeLayout(Modi modus) {
@@ -631,9 +718,9 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
-     * @param modus
-     * @return
+     * Die Methode getModiText überführt das Enum {@link Modi} in String Werte.
+     * @param modus Übergabeparameter des Typs {@link Modi}
+     * @return Die Methode gibt einen String zurück.
      */
     private String getModiText(Modi modus) {
         switch (modus) {
@@ -654,9 +741,9 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
-     * @param modus
-     * @return
+     * Die Methode getModusByString gibt anhand eines Strings den richtigen Modus zurück.
+     * @param modus Übergabeparameter des Typs String
+     * @return Die Mehtode gibt einen Modus der Klasse {@link Modi} zurück
      */
     private Modi getModusByString(String modus) {
         switch (modus) {
@@ -677,8 +764,13 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
-     * @param s
+     * Die Methode writeToTextField wird durch die App-eigene Tastaturbuttons ausgelöst. Die Buttons schrieben nicht
+     * selbst in die Textfelder, sondern über dise Methode. Die Methode prüft zunächst den Fokus mittels dem
+     * Klassenattribut textFieldFocus. Das Klassenattribut wird mit den Variablen FIRST_FORMULA_FOCUS und
+     * SECOND_FORMULA_FOCUS vergleichen. Es werden entsprechende EditText Felder gezogen. Nun wird die Position des
+     * Cursors ermittelt und der Text bis zum Cursor und ab dem Cursor übernommen und das neue Zeichen dazwischen
+     * eingefügt. Daraufhin wird der Cursor um eine Stelle nach rechts verschoben.
+     * @param s Die Methode benötigt einen String, welcher von dem jeweiligen Button übergeben wird.
      */
     private void writeToTextField(String s) {
         if (textFieldFocus == FIRST_FORMULA_FOCUS) {
@@ -695,7 +787,8 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
+     * Die Methode deleteCharacter funktioniert ähnlich wie die Methode writeToTextField, mit dem Unterschied, dass
+     * kein Buchstabe / Zeichen geschrieben wird, sonder einfach an der Stelle des Cursers eine Stelle nach link gelöscht wird.
      */
     private void deleteCharacter() {
         if (textFieldFocus == FIRST_FORMULA_FOCUS) {
@@ -716,7 +809,7 @@ public class MainFragment extends Fragment implements IOnBackPressed {
     }
 
     /**
-     *
+     * Diese Methode wird im MainFragment nicht verwendet, da die MainActivity im Falle der MainFragment die Anwendung schließt.
      */
     @Override
     public void goBackToMainFragment() {

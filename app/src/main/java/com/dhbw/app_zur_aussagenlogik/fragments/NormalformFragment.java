@@ -22,42 +22,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link NormalformFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Das <b>NormalformFragment</b> dient zur Darstellung des Rechenwegs zu einer Normalform.
+ * Die Klasse erbt von der Klasse {@link Fragment} und implementiert das Interface IOnBackPressed.
+ * Es wird vom MainFragment aus aufgerufen, wenn auf den den Button buttonRechenweg geklickt wird.
+ * @author Nico Erzberger
+ * @author Daniel Miller
+ * @author Laura Mayer
+ * @version 1.0
  */
 public class NormalformFragment extends Fragment implements IOnBackPressed {
 
+    /**
+     * Um auf den Kontext zugreifen zu können, ist die mainActivity als Klassendiagramm notwendig.
+     */
+    private final MainActivity mainActivity;
 
-    private MainActivity mainActivity;
-
-    private View view;
-
-    private Button homeButton;
-    private TextView pfeileErgebnis;
-    private TextView deMorganErgebnis;
-    private TextView normalformErgebnis;
-    private TextView normalformText;
-    private TextView orginalformel;
-
+    /**
+     * Um festzustellen, ob es sich um eine KNF oder DNF handelt, ist der Modi notwendig.
+     * Hierzu wird das Attribut als Klassenatribut deklariet.
+     */
     private Modi modi;
+
+    /**
+     * Um einen Rechenweg darzustellen, wird der rechenweg als Klassenattribut vom Typ List mit dem
+     * Generic {@link Formel} deklariert.
+     */
     private List<Formel> rechenweg;
 
-    private History historyElement;
+    /**
+     * Um auf das MainFragment zurückwechseln zu können und dort die mitegebene Formel darstellen zu können,
+     * wird ein historischen Element als Klassenattribut gespeichert.
+     */
+    private final History historyElement;
 
-    public NormalformFragment(MainActivity mainActivity) {
-        super(R.layout.fragment_normalform);
-        this.mainActivity = mainActivity;
-    }
-
-
+    /**
+     * Um ein Objekt der Klasse NormalformFragment erstellen zu können, ist ein Objekt der {@link MainActivity} und ein
+     * historisches Element {@link History} erforderlich.
+     * @param mainActivity Übergabeparameter der Klasse {@link MainActivity}
+     * @param historyElement Übergabeparameter der Klasse {@link History}
+     */
     public NormalformFragment(MainActivity mainActivity, History historyElement) {
         super(R.layout.fragment_normalform);
         this.mainActivity = mainActivity;
         this.historyElement = historyElement;
     }
 
-
+    /**
+     * Die Methode onCreate holt eine Instanz des Parsers und erstellt die Liste rechenweg und schreibt den Rechenweg des Parsers in die erstellte Liste.
+     * Daraufhin wird der Modus des Parsers übernommen.
+     * @param savedInstanceState Übergabeparameter der Klasse {@link Bundle}
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +81,43 @@ public class NormalformFragment extends Fragment implements IOnBackPressed {
         modi = p.getModus();
     }
 
+    /**
+     * Die Methode onCreateView lädt die XML View Ressource fragment_normalform. Daraufhin wird der Button homeButton erstellt und mit einem OnClickListener
+     * ausgestattet. Es werden daraufhin die TextViews aus der XML Resscourcen View geladen und mit den Formel der Liste belegt.
+     * <table border="3" style="border-collapse: collapse;">
+     *     <tr>
+     *         <th>TextView</th>
+     *         <th>ListenIndex</th>
+     *     </tr>
+     *     <tr>
+     *         <td>pfeileErgebnis</td>
+     *         <td>0</td>
+     *     </tr>
+     *     <tr>
+     *         <td>deMorganErgebnis</td>
+     *         <td>1</td>
+     *     </tr>
+     *     <tr>
+     *         <td>normalformErgebnis</td>
+     *         <td>2</td>
+     *     </tr>
+     *     <tr>
+     *         <td>orginalformel</td>
+     *         <td>3</td>
+     *     </tr>
+     * </table>
+     * @param inflater Übergabeparameter der Klasse {@link LayoutInflater}
+     * @param container Übergabeparameter der Klasse {@link ViewGroup}
+     * @param savedInstanceState Übergabeparameter der Klasse {@link Bundle}
+     * @return Es wird eine View zurückgegeben.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_normalform, container, false);
+        View view = inflater.inflate(R.layout.fragment_normalform, container, false);
         mainActivity.setActiveFragment(this);
-        homeButton = view.findViewById(R.id.buttonHome);
+        Button homeButton = view.findViewById(R.id.buttonHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,11 +126,11 @@ public class NormalformFragment extends Fragment implements IOnBackPressed {
             }
         });
 
-        pfeileErgebnis = view.findViewById(R.id.pfeileErgebnis);
-        deMorganErgebnis = view.findViewById(R.id.deMorganErgebnis);
-        normalformErgebnis = view.findViewById(R.id.normalformErgebnis);
-        normalformText = view.findViewById(R.id.normalformText);
-        orginalformel = view.findViewById(R.id.orginalformel);
+        TextView pfeileErgebnis = view.findViewById(R.id.pfeileErgebnis);
+        TextView deMorganErgebnis = view.findViewById(R.id.deMorganErgebnis);
+        TextView normalformErgebnis = view.findViewById(R.id.normalformErgebnis);
+        TextView normalformText = view.findViewById(R.id.normalformText);
+        TextView orginalformel = view.findViewById(R.id.orginalformel);
 
         if(modi == Modi.DNF){
             normalformText.setText("DNF");
@@ -94,7 +138,7 @@ public class NormalformFragment extends Fragment implements IOnBackPressed {
             normalformText.setText("KNF");
         }
 
-        /**
+        /*
          * Rechenweg 0 = Orginale Formel
          * Rechenweg 1 = Pfeile Auflösen Ergebnis
          * Rechenweg 2 = DeMorgan Ergebnis
@@ -108,6 +152,10 @@ public class NormalformFragment extends Fragment implements IOnBackPressed {
         return view;
     }
 
+    /**
+     * Implementierung der Mehtode goBackToMainFragment. Es wird eine replace Aktion durchgeführt und
+     * über die mainActivity zum mainFragment zurück gewechselt.
+     */
     @Override
     public void goBackToMainFragment() {
         mainActivity.replaceFragment(new MainFragment(mainActivity, historyElement));
