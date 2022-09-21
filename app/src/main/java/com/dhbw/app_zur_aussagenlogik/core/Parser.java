@@ -426,8 +426,18 @@ public class Parser {
                 fDeMorgan.zeichenHinzufügen('(');
                 i = i + 2;
                 while (i < formel.length()) {
+                    if(klammern<0){
+                        fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                        i++;
+                        continue;
+                    }
                     if (klammern != 0) {
                         fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                        if(bFormel.getChar(i) == '('){
+                            klammern++;
+                        }else if(bFormel.getChar(i) == ')'){
+                            klammern--;
+                        }
                     } else if (Character.toString(bFormel.getChar(i)).matches("[a-e]") && bFormel.getChar(i - 1) == 'n') {
                         fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
                     } else if (Character.toString(bFormel.getChar(i)).matches("[a-e]") && bFormel.getChar(i - 1) != 'n') {
@@ -484,7 +494,7 @@ public class Parser {
                 continue;
             }
             if (deMorganGefunden) {
-                deMorgan(fDeMorgan);
+                return deMorgan(fDeMorgan);
             }
         }
         fDeMorgan.klammernPrüfen();
@@ -800,7 +810,10 @@ public class Parser {
                 provedFormula.add(list.get(i));
             }
         }
-        provedFormula.add(list.get(0));
+        if(list.size()>0){
+            provedFormula.add(list.get(0));
+        }
+
         Collections.reverse(provedFormula);
 
         return provedFormula;

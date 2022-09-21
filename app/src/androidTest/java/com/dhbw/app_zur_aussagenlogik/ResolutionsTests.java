@@ -5,13 +5,21 @@ import static org.junit.Assert.assertArrayEquals;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
+import com.dhbw.app_zur_aussagenlogik.core.Parser;
 import com.dhbw.app_zur_aussagenlogik.core.Resolution;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class ResolutionsTests {
+
+    @Before
+    public void setup(){
+        Parser.getInstance().setModus(Modi.RESOLUTION);
+    }
+
 
     @Test
     public void test1(){

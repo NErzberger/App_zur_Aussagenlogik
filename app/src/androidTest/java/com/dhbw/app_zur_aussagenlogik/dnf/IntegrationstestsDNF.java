@@ -66,7 +66,7 @@ public class IntegrationstestsDNF {
     @Test
     public void negationTest3() throws ParserException {
         Formel formel = new Formel("(na+b)1c1ne");
-        Formel expectedFormel = new Formel("(na*b)+(nc)+(ne)");
+        Formel expectedFormel = new Formel("(na*nc)+(b*nc)+(ne)");
         expectedFormel = Parser.getInstance().zeichenersetzungZurueck(expectedFormel);
         formel = Parser.getInstance().zeichenersetzungZurueck(formel);
         String ausmultipliziert = Parser.getInstance().parseFormula(formel.toString());

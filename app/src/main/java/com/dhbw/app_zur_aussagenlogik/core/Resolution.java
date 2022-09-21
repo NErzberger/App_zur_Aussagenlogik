@@ -18,27 +18,31 @@ public class Resolution {
 
     public Formel klauselschreibweise(Formel formel){
 
-
         Formel ergebnisFormel = new Formel();
+        List<char[]> endmenge = new ArrayList<>();
 
-        List<Formel> endmenge = new ArrayList<>();
-        Parser.getInstance().zeichenErsetzen(formel).stream().forEach(f -> endmenge.add(new Formel(f)));
+        formel = Parser.getInstance().negationenStreichen(formel);
+        endmenge = Parser.getInstance().parseFormelToList(formel);
+        endmenge = Parser.getInstance().zeichenErsetzen(endmenge);
+        endmenge = Parser.getInstance().teilmengenErsetzten(endmenge);
+
+        //Parser.getInstance().zeichenErsetzen(formel).stream().forEach(f -> endmenge.add(new Formel(f)));
         for(int i = 0; i < endmenge.size(); i++){
             if(i > 0){
                 ergebnisFormel.zeichenHinzufügen(';');
                 ergebnisFormel.zeichenHinzufügen(' ');
             }
             ergebnisFormel.zeichenHinzufügen('{');
-            Formel subFormel = endmenge.get(i);
-            for(int j = 0; j < subFormel.length(); j++){
-                if(subFormel.getChar(j)=='n'){
-                    ergebnisFormel.zeichenHinzufügen(subFormel.getChar(j));
+            char[] subMenge = endmenge.get(i);
+            for(int j = 0; j < subMenge.length; j++){
+                if(subMenge[j]=='n'){
+                    ergebnisFormel.zeichenHinzufügen(subMenge[j]);
                     j++;
-                    ergebnisFormel.zeichenHinzufügen(subFormel.getChar(j));
+                    ergebnisFormel.zeichenHinzufügen(subMenge[j]);
                 }else {
-                    ergebnisFormel.zeichenHinzufügen(subFormel.getChar(j));
+                    ergebnisFormel.zeichenHinzufügen(subMenge[j]);
                 }
-                if(j < subFormel.length()-1){
+                if(j < subMenge.length-1){
                     ergebnisFormel.zeichenHinzufügen(',');
                 }
             }
