@@ -45,7 +45,7 @@ public class AusmultiplizierenTest {
     public void zweiKlammernTest(){
         Parser p = new Parser();
         Formel formel = new Formel("(a+b)*(b+c)");
-        Formel expectedFormel = new Formel("(a*b)+(a*c)+(b*b)+(b*c)");
+        Formel expectedFormel = new Formel("(a*b)+(b*b)+(a*c)+(b*c)");
         char[] ausmultipliziert = Ausmultiplizieren.ausmultiplizieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausmultipliziert);
     }
@@ -54,7 +54,7 @@ public class AusmultiplizierenTest {
     public void zweiKlammern4VarTest() {
         Parser p = new Parser();
         Formel formel = new Formel("(a+b)*(c+d)");
-        Formel expectedFormel = new Formel("(a*c)+(a*d)+(b*c)+(b*d)");
+        Formel expectedFormel = new Formel("(a*c)+(b*c)+(a*d)+(b*d)");
         char[] ausmultipliziert = Ausmultiplizieren.ausmultiplizieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausmultipliziert);
     }

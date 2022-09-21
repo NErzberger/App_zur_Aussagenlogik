@@ -16,9 +16,27 @@ import java.text.Normalizer;
 public class PfeileAufloesenTest {
 
     @Test
+    public void ersterTest(){
+        Parser p = new Parser();
+        Formel formel = new Formel("a1b");
+        Formel expectedFormel = new Formel("na+b");
+        Formel result = p.pfeileAufloesen(formel);
+        assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
+    }
+
+    @Test
     public void einfacherTest(){
         Parser p = new Parser();
         Formel formel = new Formel("(a*b)1c");
+        Formel expectedFormel = new Formel("n(a*b)+c");
+        Formel result = p.pfeileAufloesen(formel);
+        assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
+    }
+
+    @Test
+    public void einfacherTest3(){
+        Parser p = new Parser();
+        Formel formel = new Formel("a*b1c");
         Formel expectedFormel = new Formel("n(a*b)+c");
         Formel result = p.pfeileAufloesen(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());

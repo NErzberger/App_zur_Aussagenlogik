@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 import com.dhbw.app_zur_aussagenlogik.core.Ausaddieren;
 import com.dhbw.app_zur_aussagenlogik.core.Formel;
 import com.dhbw.app_zur_aussagenlogik.core.Parser;
+import com.dhbw.app_zur_aussagenlogik.core.ParserException;
 
 import java.util.Arrays;
 
@@ -90,6 +91,22 @@ public class AusaddierenTest {
     }
 
     @Test
+    public void einfacheRekursion2() {
+        Formel formel = new Formel("a+(b*e)+(c*d)");
+        Formel expectedFormel = new Formel("(a+b+c)*(a+b+d)*(a+e+c)*(a+e+d)");
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
+    }
+
+    @Test
+    public void einfacheRekursion3() {
+        Formel formel = new Formel("(b*e)+(c*d)+a");
+        Formel expectedFormel = new Formel("(b+c+a)*(b+d+a)*(e+c+a)*(e+d+a)");
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
+    }
+
+    @Test
     public void einfacheRekursionZwei() {
         Formel formel = new Formel("a+((b*c)*(d+e))");
         Formel expectedFormel = new Formel("(a+b)*(a+c)*(a+d+e)");
@@ -108,9 +125,32 @@ public class AusaddierenTest {
     @Test
     public void asdf(){
         Formel formel = new Formel("(a*(b+c))+((b*a)+c)");
-        Formel expectedFormel = new Formel("(a+b+c)*(a+c)*(b+c)*(a+b+c)");
+        Formel expectedFormel = new Formel("(a+b+c)*(a+a+c)*(b+c+b+c)*(b+c+a+c)");
         char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
         assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
+    }
+
+    @Test
+    public void asdf3(){
+        Formel formel = new Formel("(a*(b+c))+(b*a)+c");
+        Formel expectedFormel = new Formel("(a+b+c)*(a+a+c)*(b+c+b+c)*(b+c+a+c)");
+        char[] ausaddiert = Ausaddieren.ausaddieren(formel).getFormel();
+        assertArrayEquals(expectedFormel.getFormel(), ausaddiert);
+    }
+/*
+    n = '\u00AC'
+    + = '\u22C1'
+    * = '\u2227'
+    1 = '\u2192'
+    2 = '\u2194'
+    }
+*/
+    @Test
+    public void asdf2() throws ParserException {
+        Formel formel = new Formel("(a*(b+c))+((b*a)+c)");
+        String expectedFormel = "(a\u22C1b\u22C1c)\u2227(a\u22C1c)\u2227(b\u22C1c)";
+        String ausaddiert = Parser.getInstance().parseFormula("(a*(b+c))+((b*a)+c)");
+        assertEquals(expectedFormel, ausaddiert);
     }
 
     /*@Test

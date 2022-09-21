@@ -75,4 +75,22 @@ public class DeMorganTest {
         Formel result = p.deMorgan(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
+
+    @Test
+    public void testSechs(){
+        Parser p = new Parser();
+        Formel formel = new Formel("n(n(na+b)+c)+ne");
+        Formel expectedFormel = new Formel("(na+b)*nc+ne");
+        Formel result = p.deMorgan(formel);
+        assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
+    }
+
+    @Test
+    public void testSieben(){
+        Parser p = new Parser();
+        Formel formel = new Formel("n((na+b)+c)");
+        Formel expectedFormel = new Formel("n(na+b)*nc");
+        Formel result = p.deMorgan(formel);
+        assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
+    }
 }

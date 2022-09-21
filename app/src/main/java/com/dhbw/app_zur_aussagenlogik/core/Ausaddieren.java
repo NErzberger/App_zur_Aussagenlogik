@@ -243,6 +243,7 @@ public class Ausaddieren{
                 int counter1 = innererBlock.size();
                 int counter2 = 0;
                 int counter2Alt = 0;
+                int counterGemachteEintraege = 0;
                 for (b = b + 1; b < blockList.size() && keepGoing; b++) {
                     for (int l = 0; l < innererBlock.size(); l++) {
                         // Im Falle, wenn ein Mal kommt
@@ -258,7 +259,7 @@ public class Ausaddieren{
                                     // Clonen vom ersten Teil
                                     char[] chars = innererBlock.get(l).clone();
                                     ergebnisBloecke.add(chars);
-
+                                    counterGemachteEintraege++;
                                 }
 
                             }
@@ -285,6 +286,7 @@ public class Ausaddieren{
                                     char[] chars = innererBlock.get(m).clone();
                                     ergebnisBloecke.add(chars);
                                     einstieg++;
+                                    counterGemachteEintraege++;
                                 }
                             } else if (blockList.get(b).get(0)[0] != '*') {
 
@@ -292,7 +294,7 @@ public class Ausaddieren{
                                 char[] chars = innererBlock.get(l).clone();
                                 ergebnisBloecke.add(chars);
                                 einstieg++;
-
+                                counterGemachteEintraege++;
                             }
 
                             keepGoing = false;
@@ -319,6 +321,16 @@ public class Ausaddieren{
                             counter2Alt = temp;
                         }
                         counter1 = counter2;
+                    }
+                }
+
+                int beginn = ergebnisBloecke.size() - counterGemachteEintraege;
+                for (int i = beginn; i < ergebnisBloecke.size(); i++) {
+                    for (int j = 0; j < innererBlock.size(); j++) {
+                        ergebnisBloecke.set(i,innererBlock.get(j));
+                        if(j<innererBlock.size()-1){
+                            i++;
+                        }
                     }
                 }
 
@@ -369,14 +381,16 @@ public class Ausaddieren{
                         }
 
                         // if((ergebnisBloecke.size()%blockCounter)%2==1) {
-                        if (n < b - 1) {
+                        //if (n < b - 1) {
 
                             if (bereitsEingetrag < eintrag) {
                                 for (int l = 0; l < innererBlock.get(counter).length; l++) {
                                     neuerBlock[counterNeuerBlock + l] = innererBlock.get(counter)[l];
                                 }
                                 bereitsEingetrag++;
+
                             }
+
                             if (bereitsEingetrag == eintrag) {
                                 bereitsEingetrag = 0;
                                 counter++;
@@ -384,12 +398,12 @@ public class Ausaddieren{
 
                             // Ungearade
                             // }else if((ergebnisBloecke.size()%blockCounter)%2==0) {
-                        } else if (n == b - 1) {
+                        /*} else if (n == b - 1) {
                             for (int l = 0; l < innererBlock.get(counter).length; l++) {
                                 neuerBlock[counterNeuerBlock + l] = innererBlock.get(counter)[l];
                             }
                             counter++;
-                        }
+                        }*/
                         ergebnisBloecke.set(j, neuerBlock);
 
                     }
@@ -407,11 +421,13 @@ public class Ausaddieren{
             }
         }
         // }
+/*
         Formel parseFormel = Parser.getInstance().parseListToFormel(ergebnisBloecke);
         parseFormel = Parser.getInstance().negationenStreichen(parseFormel);
         ergebnisBloecke = Parser.getInstance().parseFormelToList(parseFormel);
         ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
-
+        ergebnisBloecke = Parser.getInstance().teilmengenErsetzten(ergebnisBloecke);
+*/
         String loesung = "";
         for (int i = 0; i < ergebnisBloecke.size(); i++) {
             loesung = loesung + "(";

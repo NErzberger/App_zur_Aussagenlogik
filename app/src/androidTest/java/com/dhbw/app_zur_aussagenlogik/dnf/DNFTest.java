@@ -54,8 +54,8 @@ public class DNFTest {
 
     @Test
     public void test6() {
-        Formel formel = new Formel("(x+c*d)*(a+b*e)+f");
-        Formel expectedFormel = new Formel("(x*a)+(x*b*e)+(c*d*a)+(c*d*b*e)+(f)");
+        Formel formel = new Formel("(g+c*d)*(a+b*e)+f");
+        Formel expectedFormel = new Formel("(g*a)+(c*d*a)+(g*b*e)+(c*d*b*e)+(f)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }

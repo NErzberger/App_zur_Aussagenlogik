@@ -142,6 +142,8 @@ public class Parser {
         }
 
         //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
+
+        //Formel test = this.formula.copy();
         Formel pfeileAufgeloest = pfeileAufloesen(this.formula);
         pfeileAufgeloest = negationenStreichen(pfeileAufgeloest);
         Formel rPA = pfeileAufgeloest.copy();
@@ -152,13 +154,19 @@ public class Parser {
 
         switch (getModus()) {
             case KNF:
+                //resultFormula = Ausaddieren.ausaddieren(test);
                 resultFormula = Ausaddieren.ausaddieren(deMorgan);
                 break;
             case DNF:
+                //resultFormula = Ausmultiplizieren.ausmultiplizieren(test);
                 resultFormula = Ausmultiplizieren.ausmultiplizieren(deMorgan);
                 break;
         }
-        resultFormula = negationenStreichen(resultFormula);
+
+        List<char[]> resultList = new ArrayList<>();
+        resultList = zeichenErsetzen(resultFormula);
+        resultList = teilmengenErsetzten(resultList);
+        resultFormula = parseListToFormel(resultList);
         resultFormula = zeichenersetzungZurueck(resultFormula);
         rechenweg.add(zeichenersetzungZurueck(rPA));
         rechenweg.add(zeichenersetzungZurueck(rDM));
@@ -282,7 +290,7 @@ public class Parser {
     }
 
 
-    private Formel zeichenersetzungZurueck(Formel formel) {
+    public Formel zeichenersetzungZurueck(Formel formel) {
         /*
         Zeichenersetzung
         oder wird +
@@ -764,20 +772,36 @@ public class Parser {
         return provedFormel;
     }
 
-    public Formel teilmengenErsetzten(Formel formel){
+    public List<char[]> teilmengenErsetzten(List<char[]> list){
 
-        Formel provedFormula = new Formel();
+        List<char[]> provedFormula = new ArrayList<>();
 
-        for(int i = formel.length()-1; i>=0; i--){
-            for(int j = 0; j<formel.length(); j++){
+        for(int i = list.size()-1; i>0; i--){
+            boolean match = false;
+            for(int j = 0; j<list.size(); j++){
                 if(i!=j){
-                    //if(formel.getChar()){
+                    if(list.get(i).length == list.get(j).length){
 
-                    //}
+                        for(int k = 0; k<list.get(i).length; k++){
+                            if(list.get(i)[k]!=list.get(j)[k]){
+                                match = false;
+                                break;
+                            }else{
+                                match = true;
+                            }
+                        }
+                        if(match){
+                            break;
+                        }
+                    }
                 }
             }
+            if(match==false){
+                provedFormula.add(list.get(i));
+            }
         }
-
+        provedFormula.add(list.get(0));
+        Collections.reverse(provedFormula);
 
         return provedFormula;
     }

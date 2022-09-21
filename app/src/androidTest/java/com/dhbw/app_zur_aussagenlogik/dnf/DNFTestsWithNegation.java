@@ -104,7 +104,7 @@ public class DNFTestsWithNegation {
     public void negationTest9() {
         //Parser.getInstance().setModus(Modi.DNF);
         Formel formel = new Formel("(nb*e+na)*nc*d");
-        Formel expectedFormel = new Formel("(nb*nc*d*e)+(na*nc*d)");
+        Formel expectedFormel = new Formel("(nb*e*nc*d)+(na*nc*d)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
@@ -230,159 +230,159 @@ public class DNFTestsWithNegation {
     }
     @Test
     public void negationTest26() {
-        Formel formel = new Formel("(nx+c*nd)*(na+nb*ne)+f");
-        Formel expectedFormel = new Formel("(nx*na)+(nx*nb*ne)+(c*nd*na)+(c*nd*nb*ne)+(f)");
+        Formel formel = new Formel("(ng+c*nd)*(na+nb*ne)+f");
+        Formel expectedFormel = new Formel("(ng*na)+(c*nd*na)+(ng*nb*ne)+(c*nd*nb*ne)+(f)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
     @Test
     public void negationTest27() {
-        Formel formel = new Formel("(c*d+nx)*(na+nb*e)+nf");
-        Formel expectedFormel = new Formel("(c*d*na)+(c*d*nb*e)+(nx*na)+(nx*nb*e)+(nf)");
+        Formel formel = new Formel("(c*d+ng)*(na+nb*e)+nf");
+        Formel expectedFormel = new Formel("(c*d*na)+(ng*na)+(c*d*nb*e)+(ng*nb*e)+(nf)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest28() {
-        Formel formel = new Formel("(nx+nc*d)*(b*ne+na)+nf");
-        Formel expectedFormel = new Formel("(nx*b*ne)+(nx*na)+(nc*d*b*ne)+(nc*d*na)+(nf)");
+        Formel formel = new Formel("(ng+nc*d)*(b*ne+na)+nf");
+        Formel expectedFormel = new Formel("(ng*b*ne)+(nc*d*b*ne)+(ng*na)+(nc*d*na)+(nf)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest29() {
-        Formel formel = new Formel("nf+(x+c*nd)*(na+nb*ne)");
-        Formel expectedFormel = new Formel("(nf)+(x*na)+(x*nb*ne)+(c*nd*na)+(c*nd*nb*ne)");
+        Formel formel = new Formel("nf+(g+c*nd)*(na+nb*ne)");
+        Formel expectedFormel = new Formel("(nf)+(g*na)+(c*nd*na)+(g*nb*ne)+(c*nd*nb*ne)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest40() {
-        Formel formel = new Formel("(nx+c*nd)*(a+nb*e)*(f*g+nh)");
-        Formel expectedFormel = new Formel("(nx*a*f*g)+(nx*a*nh)+(c*nd*a*f*g)+(c*nd*a*nh)+(nx*nb*e*f*g)+(nx*nb*e*nh)+(c*nd*nb*e*f*g)+(c*nd*nb*e*nh)");
+        Formel formel = new Formel("(ng+c*nd)*(a+nb*e)*(f*g+nh)");
+        Formel expectedFormel = new Formel("(ng*a*f*g)+(c*nd*a*f*g)+(ng*a*nh)+(c*nd*a*nh)+(ng*nb*e*f*g)+(c*nd*nb*e*f*g)+(ng*nb*e*nh)+(c*nd*nb*e*nh)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest41() {
-        Formel formel = new Formel("(x+nc*d)*(na+b+ne)");
-        Formel expectedFormel = new Formel("(x*na)+(x*b)+(x*ne)+(nc*d*na)+(nc*d*b)+(nc*d*ne)");
+        Formel formel = new Formel("(g+nc*d)*(na+b+ne)");
+        Formel expectedFormel = new Formel("(g*na)+(nc*d*na)+(g*b)+(nc*d*b)+(g*ne)+(nc*d*ne)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest42() {
-        Formel formel = new Formel("(nx+c+nd)*(na+b*e)");
-        Formel expectedFormel = new Formel("(nx*na)+(nx*b*e)+(c*na)+(c*b*e)+(nd*na)+(nd*b*e)");
+        Formel formel = new Formel("(ng+c+nd)*(na+b*e)");
+        Formel expectedFormel = new Formel("(ng*na)+(c*na)+(nd*na)+(ng*b*e)+(c*b*e)+(nd*b*e)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest43() {
-        Formel formel = new Formel("(nx+nc+d)*(a+nb+e)");
-        Formel expectedFormel = new Formel("(nx*a)+(nx*nb)+(nx*e)+(nc*a)+(nc*nb)+(nc*e)+(d*a)+(d*nb)+(d*e)");
+        Formel formel = new Formel("(ng+nc+d)*(a+nb+e)");
+        Formel expectedFormel = new Formel("(ng*a)+(nc*a)+(d*a)+(ng*nb)+(nc*nb)+(d*nb)+(ng*e)+(nc*e)+(d*e)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest44() {
-        Formel formel = new Formel("(x+nc*d)+(na+b*e)+f*ns");
-        Formel expectedFormel = new Formel("(x)+(nc*d)+(na)+(b*e)+(f*ns)");
+        Formel formel = new Formel("(g+nc*d)+(na+b*e)+f*ns");
+        Formel expectedFormel = new Formel("(g)+(nc*d)+(na)+(b*e)+(f*ns)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest45() {
-        Formel formel = new Formel("nx+(na*(nb+c))");
-        Formel expectedFormel = new Formel("(nx)+(na*nb)+(na*c)");
+        Formel formel = new Formel("ng+(na*(nb+c))");
+        Formel expectedFormel = new Formel("(ng)+(na*nb)+(na*c)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest46() {
-        Formel formel = new Formel("x+(na*(b+nc))+nz");
-        Formel expectedFormel = new Formel("(x)+(na*b)+(na*nc)+(nz)");
+        Formel formel = new Formel("g+(na*(b+nc))+nd");
+        Formel expectedFormel = new Formel("(g)+(na*b)+(na*nc)+(nd)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest47() {
-        Formel formel = new Formel("nx*(a*(nb+c))+nz");
-        Formel expectedFormel = new Formel("(nx*a*nb)+(nx*a*c)+(nz)");
+        Formel formel = new Formel("ng*(a*(nb+c))+nd");
+        Formel expectedFormel = new Formel("(ng*a*nb)+(ng*a*c)+(nd)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest48() {
-        Formel formel = new Formel("x*(na*(b+nc))*nz");
-        Formel expectedFormel = new Formel("(x*na*b*nz)+(x*na*nc*nz)");
+        Formel formel = new Formel("g*(na*(b+nc))*nd");
+        Formel expectedFormel = new Formel("(g*na*b*nd)+(g*na*nc*nd)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest49() {
-        Formel formel = new Formel("nx*(a*(nb*c))");
-        Formel expectedFormel = new Formel("(nx*a*nb*c)");
+        Formel formel = new Formel("ng*(a*(nb*c))");
+        Formel expectedFormel = new Formel("(ng*a*nb*c)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest50() {
-        Formel formel = new Formel("x*(na+(nb*nc))");
-        Formel expectedFormel = new Formel("(x*na)+(x*nb*nc)");
+        Formel formel = new Formel("g*(na+(nb*nc))");
+        Formel expectedFormel = new Formel("(g*na)+(g*nb*nc)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest51() {
-        Formel formel = new Formel("nx*(a+(nb+nc))");
-        Formel expectedFormel = new Formel("(nx*a)+(nx*nb)+(nx*nc)");
+        Formel formel = new Formel("ng*(a+(nb+nc))");
+        Formel expectedFormel = new Formel("(ng*a)+(ng*nb)+(ng*nc)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest52() {
-        Formel formel = new Formel("((nb+c)*na)+nx");
-        Formel expectedFormel = new Formel("(nb*na)+(c*na)+(nx)");
+        Formel formel = new Formel("((nb+c)*na)+ng");
+        Formel expectedFormel = new Formel("(nb*na)+(c*na)+(ng)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest53() {
-        Formel formel = new Formel("((b+nc)*na)+x+nz");
-        Formel expectedFormel = new Formel("(b*na)+(nc*na)+(x)+(nz)");
+        Formel formel = new Formel("((b+nc)*na)+g+nd");
+        Formel expectedFormel = new Formel("(b*na)+(nc*na)+(g)+(nd)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public void negationTest54() {
-        Formel formel = new Formel("((b+nc)*na)*nx+z");
-        Formel expectedFormel = new Formel("(b*na*nx)+(nc*na*nx)+(z)");
+        Formel formel = new Formel("((b+nc)*na)*ng+d");
+        Formel expectedFormel = new Formel("(b*na*ng)+(nc*na*ng)+(d)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
 
     @Test
     public  void negationTest55() {
-        Formel formel = new Formel("nz+((a+nb)*(nc+nd))*(ne+f)+nx");
-        Formel expectedFormel = new Formel("(nz)+(a*nc*ne)+(a*nc*f)+(a*nd*ne)+(a*nd*f)+(nb*nc*ne)+(nb*nc*f)+(nb*nd*ne)+(nb*nd*f)+(nx)");
+        Formel formel = new Formel("ni+((a+nb)*(nc+nd))*(ne+f)+ng");
+        Formel expectedFormel = new Formel("(ni)+(a*nc*ne)+(nb*nc*ne)+(a*nd*ne)+(nb*nd*ne)+(a*nc*f)+(nb*nc*f)+(a*nd*f)+(nb*nd*f)+(ng)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }
@@ -397,8 +397,8 @@ public class DNFTestsWithNegation {
 
     @Test
     public void negationTest57() {
-        Formel formel = new Formel("nx+(a*ne*(b+nc))");
-        Formel expectedFormel = new Formel("(nx)+(a*ne*b)+(a*ne*nc)");
+        Formel formel = new Formel("ng+(a*ne*(b+nc))");
+        Formel expectedFormel = new Formel("(ng)+(a*ne*b)+(a*ne*nc)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
         assertArrayEquals(expectedFormel.getFormel(), result.getFormel());
     }

@@ -243,6 +243,7 @@ public class Ausmultiplizieren{
                 int counter1 = innererBlock.size();
                 int counter2 = 0;
                 int counter2Alt = 0;
+                int counterGemachteEintraege = 0;
                 for (b = b + 1; b < blockList.size() && keepGoing; b++) {
                     for (int l = 0; l < innererBlock.size(); l++) {
                         // Im Falle, wenn ein Mal kommt
@@ -258,7 +259,7 @@ public class Ausmultiplizieren{
                                     // Clonen vom ersten Teil
                                     char[] chars = innererBlock.get(l).clone();
                                     ergebnisBloecke.add(chars);
-
+                                    counterGemachteEintraege++;
                                 }
 
                             }
@@ -285,6 +286,7 @@ public class Ausmultiplizieren{
                                     char[] chars = innererBlock.get(m).clone();
                                     ergebnisBloecke.add(chars);
                                     einstieg++;
+                                    counterGemachteEintraege++;
                                 }
                             } else if (blockList.get(b).get(0)[0] != '+') {
 
@@ -292,7 +294,7 @@ public class Ausmultiplizieren{
                                 char[] chars = innererBlock.get(l).clone();
                                 ergebnisBloecke.add(chars);
                                 einstieg++;
-
+                                counterGemachteEintraege++;
                             }
 
                             keepGoing = false;
@@ -321,6 +323,18 @@ public class Ausmultiplizieren{
                         counter1 = counter2;
                     }
                 }
+
+                    int beginn = ergebnisBloecke.size() - counterGemachteEintraege;
+                    for (int i = beginn; i < ergebnisBloecke.size(); i++) {
+                        for (int j = 0; j < innererBlock.size(); j++) {
+                            ergebnisBloecke.set(i,innererBlock.get(j));
+                            if(j<innererBlock.size()-1){
+                                i++;
+                            }
+                        }
+                    }
+
+
 
                 /*
                  * for(int l = 0; l<blockList.size();l++) { for(int z = 0;
@@ -369,7 +383,7 @@ public class Ausmultiplizieren{
                         }
 
                         // if((ergebnisBloecke.size()%blockCounter)%2==1) {
-                        if (n < b - 1) {
+                        //if (n < b - 1) {
 
                             if (bereitsEingetrag < eintrag) {
                                 for (int l = 0; l < innererBlock.get(counter).length; l++) {
@@ -384,12 +398,13 @@ public class Ausmultiplizieren{
 
                             // Ungearade
                             // }else if((ergebnisBloecke.size()%blockCounter)%2==0) {
-                        } else if (n == b - 1) {
+                        //}
+                         /*else if (n == b - 1) {
                             for (int l = 0; l < innererBlock.get(counter).length; l++) {
                                 neuerBlock[counterNeuerBlock + l] = innererBlock.get(counter)[l];
                             }
                             counter++;
-                        }
+                        }*/
                         ergebnisBloecke.set(j, neuerBlock);
 
                     }
@@ -406,11 +421,13 @@ public class Ausmultiplizieren{
                 }
             }
         }
+/*
         Formel parseFormel = Parser.getInstance().parseListToFormel(ergebnisBloecke);
         parseFormel = Parser.getInstance().negationenStreichen(parseFormel);
         ergebnisBloecke = Parser.getInstance().parseFormelToList(parseFormel);
         ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
-
+        ergebnisBloecke = Parser.getInstance().teilmengenErsetzten(ergebnisBloecke);
+*/
         // }
         String loesung = "";
         for (int i = 0; i < ergebnisBloecke.size(); i++) {
