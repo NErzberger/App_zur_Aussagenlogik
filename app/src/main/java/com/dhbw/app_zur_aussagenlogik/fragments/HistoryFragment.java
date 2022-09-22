@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author Nico Erzberger
  * @author Laura Mayer
  * @version 1.0
- * @see Adapter_for_HistroyView
+ * @see Adapter_for_HistoryView
  */
 public class HistoryFragment extends Fragment implements IOnBackPressed {
 
@@ -43,7 +43,7 @@ public class HistoryFragment extends Fragment implements IOnBackPressed {
      * Der Verlauf wird in der grafischen Componente history_view der Klasse {@link RecyclerView} dargestellt.
      * Hierzu ist die Variable als Klassenattribut notwendig.
      * Es ist für die Liste erforderlich, dass ein Adapter mit eingebunden werden kann, um die Verbindung zwischen der GUI und dem Background zu steuern.
-     * Der Adapter wird von der Klasse {@link Adapter_for_HistroyView} gestellt, welcher über die Klasse {@link HistoryDataSource}
+     * Der Adapter wird von der Klasse {@link Adapter_for_HistoryView} gestellt, welcher über die Klasse {@link HistoryDataSource}
      * mittels dem {@link com.dhbw.app_zur_aussagenlogik.sql.dbHelper.HistoryDbHelper} auf die Datenbank geht und die historischen Daten abfragt.
      */
     private RecyclerView history_view;
@@ -104,7 +104,7 @@ public class HistoryFragment extends Fragment implements IOnBackPressed {
 
         // Liste darstellen
         history_view.setLayoutManager(new LinearLayoutManager(getContext()));
-        Adapter_for_HistroyView adapter = new Adapter_for_HistroyView(historyList);
+        Adapter_for_HistoryView adapter = new Adapter_for_HistoryView(historyList);
         history_view.setAdapter(adapter);
 
         // onClick listener
