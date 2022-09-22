@@ -47,14 +47,14 @@ public class Parser {
             fehlercode = checkUserInput();
             Formel f1 = pfeileAufloesen(this.formula).copy();
             Formel f1DeMorgan = deMorgan(f1);
-            Formel f1KNF = Ausmultiplizieren.ausmultiplizieren(f1DeMorgan);
+            Formel f1KNF = Ausaddieren.ausaddieren(f1DeMorgan);
 
             // Formel 2
             this.formula = new Formel(formulaTwo);
             fehlercode = checkUserInput();
             Formel f2 = pfeileAufloesen(this.formula).copy();
             Formel f2DeMorgan = deMorgan(f2);
-            Formel f2KNF = Ausmultiplizieren.ausmultiplizieren(f2DeMorgan);
+            Formel f2KNF = Ausaddieren.ausaddieren(f2DeMorgan);
 
             ZweiFormeln zweiFormelnParser = new ZweiFormeln();
             //Die zwei Formeln haben unterschiedliche Variablen
