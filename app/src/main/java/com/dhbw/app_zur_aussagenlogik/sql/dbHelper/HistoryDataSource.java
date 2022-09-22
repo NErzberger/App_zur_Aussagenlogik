@@ -114,9 +114,13 @@ public class HistoryDataSource {
     }
 
     /**
-     * Die Methode getOneBeforeHistory wird dazu verwendet,
-     * @param id
-     * @return
+     * Die Methode getOneBeforeHistory wird dazu verwendet, um das direkt vorhergegangene Element zu lesen.
+     * Es wird eine ID des aktuellen historischen Elementes übergeben. Es wird direkt ein Select-Befehl an
+     * die Datenbank geschickt, in dem die Id um eins kleiner ist als der Übergabeparameter.
+     * <b>Achtung:</b> Wird nichts gefunden, so ist das historische Element null.
+     *
+     * @param id Übergabeparameter des Typs int. Es wird die ID des aktuellen historischen Elementes übergeben.
+     * @return Es wird das direkt vorgehende Elementen zurückgegeben, in welchem die ID um eins kleiner ist.
      */
     public History getOneBeforeHistory(int id){
         Cursor cursor = database.query(HistoryDbHelper.TABLE_HISTORY, HistoryDbHelper.columns, "_id="+id+"-1", null, null, null, HistoryDbHelper.COLUMN_ID);
@@ -127,7 +131,8 @@ public class HistoryDataSource {
     }
 
     /**
-     *
+     * Die Methode cursorToHistory wird dazu verwendet, um die ein Objekt der Klasse {@link History}
+     * in einen Cursor zu mappen.
      * @param cursor
      * @return
      */
