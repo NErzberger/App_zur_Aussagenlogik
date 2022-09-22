@@ -5,6 +5,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Die Klasse <b>Resolution</b> ist für die Klauselschreibweise und die Bildung der Resolution
+ * zuständig.
+ *
+ *    !!!WICHTIG!!!
+ * Diese Klasse ist noch nicht fertig implementiert oder komplett getestet worden!!!
+ *    !!!WICHTIG!!!
+ *
+ * @author Nico Erzberg, Daniel Miller
+ * @version 1.0
+ */
+
 public class Resolution {
 
     private List<Formel> resolutionsliste;
@@ -16,6 +28,12 @@ public class Resolution {
     }
 
 
+    /**
+     * In dieser Methode wird die übergebene Formel, welche in der KNF ist, in die Klauselschreibweise
+     * überführt.
+     * @param formel übergebene Formel in KNF
+     * @return Formel in der Klauselschreibweise
+     */
     public Formel klauselschreibweise(Formel formel){
 
         Formel ergebnisFormel = new Formel();
@@ -26,7 +44,6 @@ public class Resolution {
         endmenge = Parser.getInstance().zeichenErsetzen(endmenge);
         endmenge = Parser.getInstance().teilmengenErsetzten(endmenge);
 
-        //Parser.getInstance().zeichenErsetzen(formel).stream().forEach(f -> endmenge.add(new Formel(f)));
         for(int i = 0; i < endmenge.size(); i++){
             if(i > 0){
                 ergebnisFormel.zeichenHinzufügen(';');
@@ -53,6 +70,11 @@ public class Resolution {
     }
 
 
+    /**
+     * In dieser Methode wird die übergebene Formel resolviert.
+     * @param formel übergebene Formel
+     * @return boolean ob Tautologie oder nicht
+     */
     public boolean resolvieren(Formel formel){
 
         // Es wird eine Gesamtmenge gebildet mit allen Teilmengen drin
