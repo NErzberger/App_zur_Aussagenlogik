@@ -8,165 +8,101 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+
+/**
+ * Die Klasse <b>Parser</b> steuert die Logik der Aussagenlogik.
+ * Sie wird aus dem Main Fragment heraus aufgerufen und löst die Formel je nach Modus.
+ */
 public class Parser {
 
+    /**
+     * Statische private Instanz eines Parser Ojektes
+     */
     private static Parser parser = new Parser();
 
+    /**
+     * Die Mehtode getInstance gibt die Instanz des Parser Objektes zurück.
+     * @return Es wird die Parser Instanz zurück gegeben.
+     */
     public static Parser getInstance() {
         return Parser.parser;
     }
 
+    /**
+     * Über den modus wird das jeweilige Verfahren angesteuert und im späteren Veralauf die Formel anders bearbeitet.
+     */
     private Modi modus;
 
+    /**
+     * Die Formel, mit welcher der Parser gestartet wird.
+     */
     private Formel formula;
 
+    /**
+     * Die Ergebnis Formel
+     */
     private Formel resultFormula;
 
+    /**
+     * Um den Rechenweg festzuhalten wird eine Liste mit Formeln verwendet, in der die Ergebnisse
+     * der Zwischenschritte eingetragen werden.
+     */
     private List<Formel> rechenweg;
 
-    // Methode zum setzen
-
-    public void setParserParameter(Modi modus, String formula) throws ParserException {
-        setModus(modus);
-        parseFormula(formula);
-    }
-
-    public ArrayList<Character> getVariables(String formulaOne) {
-        ZweiFormeln zweiFormelnParser = new ZweiFormeln();
-        this.formula = new Formel(formulaOne);
-
-        return zweiFormelnParser.checkVariables(formula.getFormel());
-    }
-
-    public int[][] parseTwoFormula(String formulaOne, String formulaTwo) throws ParserException {
-        int fehlercode = 0;
-        try {
-
-            // Formel 1
-            this.formula = new Formel(formulaOne);
-            fehlercode = checkUserInput();
-            Formel f1 = pfeileAufloesen(this.formula).copy();
-            Formel f1DeMorgan = deMorgan(f1);
-            Formel f1KNF = Ausaddieren.ausaddieren(f1DeMorgan);
-
-            // Formel 2
-            this.formula = new Formel(formulaTwo);
-            fehlercode = checkUserInput();
-            Formel f2 = pfeileAufloesen(this.formula).copy();
-            Formel f2DeMorgan = deMorgan(f2);
-            Formel f2KNF = Ausaddieren.ausaddieren(f2DeMorgan);
-
-            ZweiFormeln zweiFormelnParser = new ZweiFormeln();
-            //Die zwei Formeln haben unterschiedliche Variablen
-            if (zweiFormelnParser.compareVariables(f1KNF.getFormel(), f2KNF.getFormel()) == false) {
-                fehlercode = -30;
-                ParserException pe = new ParserException(fehlercode);
-                throw pe;
-            } else if (zweiFormelnParser.compareFormulas(f1KNF.getFormel(), f2KNF.getFormel(), zweiFormelnParser.checkVariables(f1KNF.getFormel()))) {
-                //Die zwei Formeln stimmen überein
-                return zweiFormelnParser.getTruthTable();
-            } else {
-                // Zwei Formel stimmen nicht über ein
-                fehlercode = -20;
-                ParserException pe = new ParserException(fehlercode);
-                pe.setTruthTable(zweiFormelnParser.getTruthTable());
-                pe.setVariables(zweiFormelnParser.checkVariables(f1KNF.getFormel()));
-                throw pe;
-            }
-
-        } catch (ParserException pe) {
-          /*  // Bei 2 Formeln ist etwas schief gelaufen -> checkUserInput
-            if(fehlercode==0){
-                // nicht durch checkUserInput
-                fehlercode = -10;
-                throw new ParserException(fehlercode);
-            }else{*/
-            throw pe;
-            //}
-
-        }
-    }
-
-    public int[][] buildTruthTable(String formula) throws ParserException {
-        this.formula = new Formel(formula);
-
-        rechenweg = new ArrayList<>();
-
-        try {
-            checkUserInput();
-        } catch (ParserException e) {
-            throw e;
-        }
-
-        //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
-        Formel pfeileAufgeloest = pfeileAufloesen(this.formula);
-        Formel rPA = pfeileAufgeloest.copy();
-
-        Formel deMorgan = deMorgan(pfeileAufgeloest);
-        Formel rDM = deMorgan.copy();
-
-        Formel knf = Ausaddieren.ausaddieren(rDM);
-
-        Wertetabelle wertetabelle = new Wertetabelle();
-        int[][] truthTable = wertetabelle.createFinishedTruthTable(knf.getFormel(), wertetabelle.checkVariables(knf.getFormel()));
-        return truthTable;
-    }
-
-
-    public boolean isTautologie(String formula) {
-        return false;
-    }
-
-
+    /**
+     * Mit der Mehtode parseFormula wird eine Formel als String eingegeben und im jeweiligen Modus
+     * in die KNF oder DNF Überführt.
+     * @param formula Übergabeparameter vom Typ String - Eingegebene Formel
+     * @return Gibt eine Formel als String in KNF oder DNF zurück
+     */
     public String parseFormula(String formula) throws ParserException {
-
 
         // Formel übernehmen
         this.formula = new Formel(formula);
 
+        // Liste für den Rechenweg deklarieren
         rechenweg = new ArrayList<>();
 
+        // Orginale Formel im Rechenweg festhalten
         rechenweg.add(new Formel(formula));
 
+        // Userinput auf Fehler prüfen
+        checkUserInput();
 
-        /*
-        Fehlercodes
-        -1 = Ungerade Anzahl der Klammern
-        42 = alles in Ordnung
-         */
-
-        try {
-            checkUserInput();
-        } catch (ParserException e) {
-            throw e;
-        }
-
-        //char[] knfNormalform = ausaddieren(deMorgan(pfeileAufloesen(this.formulaArray)));
-
-        //Formel test = this.formula.copy();
+        // Pfeile der übergebenen Formel auflösen und überflüssige negationen Streichen
         Formel pfeileAufgeloest = pfeileAufloesen(this.formula);
         pfeileAufgeloest = negationenStreichen(pfeileAufgeloest);
+
+        // Für den Rechenweg muss die Formel kopiert und separat gespeichert werden.
         Formel rPA = pfeileAufgeloest.copy();
 
+        // DeMorgan auf die Formel pfeileAufgeloest anwenden
         Formel deMorgan = deMorgan(pfeileAufgeloest);
+
+        // Für den Rechenweg muss die Fromel kopiert nd separat gespeichert werden.
         Formel rDM = deMorgan.copy();
 
-
+        // Je nach Modus wird die Formel ausaddiert oder ausmultipiliziert
         switch (getModus()) {
             case KNF:
-                //resultFormula = Ausaddieren.ausaddieren(test);
+                // Ausaddierungs - Verfahren anwenden
                 resultFormula = Ausaddieren.ausaddieren(deMorgan);
                 break;
             case DNF:
-                //resultFormula = Ausmultiplizieren.ausmultiplizieren(test);
+                // Ausmultipilizierungs - Verfahren anwenden
                 resultFormula = Ausmultiplizieren.ausmultiplizieren(deMorgan);
                 break;
         }
+        // Ergebnissformel als String aufbauen
         String resultString = "";
-        int fall = 0;
-        List<char[]> resultList = new ArrayList<>();
 
-        resultList = zeichenErsetzen(resultFormula);
+        // Die ErgebnissFormel wird zurück in die Listenschreibweise überführt und überflüssige
+        // zeichen gestrichen, um die Formel zu verkürzen
+        List<char[]> resultList = zeichenErsetzen(resultFormula);
+
+        // Es wird geprüft, ob durch das Kürzen eine Leere Menge entstanden ist
+        // und ob es sich in KNF um ein Verum oder in DNF um Falsum handelt.
+        int fall = 0;
         if(resultList.size()==0){
             if(getModus()==Modi.KNF){
                 resultString="Verum";
@@ -177,6 +113,7 @@ public class Parser {
             }
         }
 
+        // Es wird geprüft, ob Teilmengen / Blöcke doppelt vorkommen -> Wenn ja, werden sie gestrichen
         resultList = teilmengenErsetzten(resultList);
 
         /*
@@ -192,50 +129,172 @@ public class Parser {
             }
         }
         */
+
+        // Die Liste wird zurück in das Formel - Objekt konvertiert
         resultFormula = parseListToFormel(resultList);
+        // Die Rechenzeichen werden zurück gesetzt in Unicode Rechenzeichen
         resultFormula = zeichenersetzungZurueck(resultFormula);
-        rechenweg.add(zeichenersetzungZurueck(rPA));
-        rechenweg.add(zeichenersetzungZurueck(rDM));
+
+        // Der Rechenweg wird aufgebaut
+        rechenweg.add(zeichenersetzungZurueck(rPA)); // Zustand nach Pfeile Auflösen
+        rechenweg.add(zeichenersetzungZurueck(rDM)); // Zustand nach DeMorgan
         if(resultFormula.getFormel().length==0){
             if(fall == 1){
-                rechenweg.add(new Formel("Verum"));
+                rechenweg.add(new Formel("Verum")); // Wenn es sich um Verum handelt
             }else if(fall == 2){
-                rechenweg.add(new Formel("Falsum"));
+                rechenweg.add(new Formel("Falsum")); // Wenn es sich um Falsum handelt
             }
         }else{
-            rechenweg.add(resultFormula);
+            rechenweg.add(resultFormula); // Ergebnisformel
         }
 
+        // Formel in einen String schreiben
         for (int i = 0; i < resultFormula.length(); i++) {
             resultString = resultString + resultFormula.getChar(i);
         }
+        // Formel zurückgeben.
         return resultString;
     }
 
+    /**
+     * Mit der Methode parseTwoFormula werden zwei Formeln miteinander verglichen und eine Wertetabelle aufgebaut.
+     * @param formulaOne
+     * @param formulaTwo
+     * @return
+     * @throws ParserException
+     */
+    public int[][] parseTwoFormula(String formulaOne, String formulaTwo) throws ParserException {
+
+        // Da mit Fehlercodes gearbeitet wird, wird die Variable fehlercode gesetzt.
+        int fehlercode;
+
+        /*
+        * Formel 1
+        */
+        this.formula = new Formel(formulaOne);
+        // Prüfung der ersten Formel und auflösung der Pfeile, anwenden von DeMorgen und überführung in KNF
+        checkUserInput();
+        Formel f1 = pfeileAufloesen(this.formula).copy();
+        f1 = negationenStreichen(f1);
+        Formel f1DeMorgan = deMorgan(f1);
+        Formel f1KNF = Ausaddieren.ausaddieren(f1DeMorgan);
+        f1KNF = negationenStreichen(f1KNF);
+
+        /*
+        Formel 2
+         */
+        this.formula = new Formel(formulaTwo);
+        // Prüfung der ersten Formel und auflösung der Pfeile, anwenden von DeMorgen und überführung in KNF
+        checkUserInput();
+        Formel f2 = pfeileAufloesen(this.formula).copy();
+        f2 = negationenStreichen(f2);
+        Formel f2DeMorgan = deMorgan(f2);
+        Formel f2KNF = Ausaddieren.ausaddieren(f2DeMorgan);
+        f2KNF = negationenStreichen(f2KNF);
+
+        // Erstellung eines Objektes der Klasse ZweiFormeln
+        ZweiFormeln zweiFormelnParser = new ZweiFormeln();
+        //Die zwei Formeln haben unterschiedliche Variablen
+        if (zweiFormelnParser.compareVariables(f1KNF.getFormel(), f2KNF.getFormel()) == false) {
+            // Zwei Formeln haben unterschiedliche Variablen. So wird ein Fehler mit dem Fehlercode -30 geworfen
+            fehlercode = -30;
+            throw new ParserException(fehlercode);
+        }
+        // Es wird geprüft, ob die eingegebenen zwei Formeln übereinstimmen
+        else if (zweiFormelnParser.compareFormulas(f1KNF.getFormel(), f2KNF.getFormel(), zweiFormelnParser.checkVariables(f1KNF.getFormel()))) {
+            //Die zwei Formeln stimmen überein
+            return zweiFormelnParser.getTruthTable();
+        }
+        // Die Formeln stimmen nicht überein
+        else {
+            // Es wird ein Fehler erzeugt mit dem Fehlercode -20, um zu signalisieren, dass die Formeln nicht überienstimmen
+            fehlercode = -20;
+            ParserException pe = new ParserException(fehlercode);
+            pe.setTruthTable(zweiFormelnParser.getTruthTable());
+            pe.setVariables(zweiFormelnParser.checkVariables(f1KNF.getFormel()));
+            throw pe;
+        }
+    }
+
+    /**
+     * Methode getVariables ist eine Hilfsmethode für den Bereich 2 Formeln, um
+     * eine ArrayListe mit Characten zu erstellen, welche die Variablen in einer Formel wiedergeben
+     * @param formulaOne
+     * @return
+     */
+    public ArrayList<Character> getVariables(String formulaOne) {
+        ZweiFormeln zweiFormelnParser = new ZweiFormeln();
+        this.formula = new Formel(formulaOne);
+
+        return zweiFormelnParser.checkVariables(formula.getFormel());
+    }
+
+
+    /**
+     * Die Methode buildTruthTable wird dazu verwendet, um die Wertetabelle zu einer Formel aufzubauen.
+     * @param formula
+     * @return
+     * @throws ParserException
+     */
+    public int[][] buildTruthTable(String formula) throws ParserException {
+
+        // Formel übernehmen
+        this.formula = new Formel(formula);
+
+        // Es wird die Formel auf Eingabefehler geprüft
+        checkUserInput();
+
+        // Es werden die Pfeile der Formel aufgelöst, daraufhin deMorgen angewendet und anschließend die KNF gebildet.
+        Formel pfeileAufgeloest = pfeileAufloesen(this.formula);
+        Formel deMorgan = deMorgan(pfeileAufgeloest);
+        Formel knf = Ausaddieren.ausaddieren(deMorgan);
+
+        // Es wird ein Objekt der Wertetabelle erstellt.
+        Wertetabelle wertetabelle = new Wertetabelle();
+
+        // Wertetabelle erstellen und zurück geben.
+        int[][] truthTable = wertetabelle.createFinishedTruthTable(knf.getFormel(), wertetabelle.checkVariables(knf.getFormel()));
+        return truthTable;
+    }
+
+    /**
+     * <b>Unused!</b>
+     * isTautologie kann in einer späteren Entwicklungsphase als Einstiegsunkt für die Resolution dienen.
+     * @param formula
+     * @return
+     */
+    public boolean isTautologie(String formula) {
+        return false;
+    }
+
+    /**
+     * Die Methode checkUserInput prüft die Formel im Klassenattribut formula auf Eingabefehler.
+     * @return
+     * @throws ParserException
+     */
     private int checkUserInput() throws ParserException {
         // Zähler für Klamern
         int countOpen = 0;
         int countClose = 0;
 
+        // Falls keine Formel eingegeben sein sollte und sich der Parser im Modus Wertetabelle oder Modus befindet,
+        // soll ein Fehler mit -13 ausgelöst werden.
         if (this.formula.length()==0 && (getModus()==Modi.WERTETABELLE || getModus()==Modi.FORMELN)) {
             // Fehlermeldung
             throw new ParserException(-13);
         }
 
+        // Es wird die gesamte Formel durchgegangen
         for (int i = 0; i < this.formula.length(); i++) {
             char c = this.formula.getChar(i);
 
-            /*
-            Character.compare vergleicht die Character nach der Ascii Tabelle
-            Größer = 1
-            Kleiner = -1
-            Gleich = 0
-             */
-            if (Character.compare(c, '(') == 0) {
+            // Klammern zählen
+            if (c=='(') {
                 countOpen++;
-            } else if (Character.compare(c, ')') == 0) {
+            } else if (c==')') {
                 countClose++;
             }
+
             /*
             \\u00AC = Negation
             \\u2192 = Pfeil
@@ -243,39 +302,52 @@ public class Parser {
             \\u22C1 = Oder
             \\u2227 = Und
              */
-
+            // Es wird geprüft, ob i auf dem letzten Char steht
             if ((i + 1) < this.formula.length()) {
+                // Handelt es sich um einen Buchstaben und folgt eine Negation direkt auf den Buchstaben -> Fehler mit -2
                 if (Character.toString(c).matches("[a-n]")) {
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[a-e(\\u00AC]")) {
                         // Fehler: Nach Buchstabe muss ein Operator kommen
                         throw new ParserException(-2);
                     }
-                } else if (c == '(') {
+                }
+                // Handlet es sich um eine öffnende Klammer
+                else if (c == '(') { // Folgen Operatoren auf die öffnende Klammer -> Fehler mit -3
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2194\\u2192]")) {
                         throw new ParserException(-3);
-                    } else if (i + 1 == formula.length()) {
+                    } // Steht die Klammer an der letzten Stelle -> Fehler -8
+                    else if (i + 1 == formula.length()) {
                         throw new ParserException(-8);
                     }
-                } else if (c == ')') {
+                }
+                // Handelt es sich um eine schließende Klammer
+                else if (c == ')') { // Folgt ein Buchstabe, Negation oder öffnende Klammer -> Fehler -4
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[a-e\\u00AC(]")) {
                         throw new ParserException(-4);
-                    } else if (i == 0) {
+                    } // Steht die schließende Klammer an erster Stelle -> Fehler -9
+                    else if (i == 0) {
                         throw new ParserException(-9);
                     }
                 }
-                // Es darf kein Operator auf eine negation folgen
-                else if (Character.toString(c).matches("[\\u00AC]")) {
+                // Handelt es sich um eine Negation
+                else if (Character.toString(c).matches("[\\u00AC]")) { // Folgt ein Operator oder eine schließende Klammer -> Fehler -5
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[\\u22C1\\u2227\\u2192\\u2194)]")) {
                         throw new ParserException(-5);
                     }
-                } else if (Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")) {
+                }
+                // Handelt es sich um ein Operator
+                else if (Character.toString(c).matches("[\\u22C1\\u2227\\u2192\\u2194]")) {
+                    // Folgt ein Operator oder eine schießende Klammer -> Fehler -6
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[\\u2192\\u2194\\u22C1\\u2227)]")) {
                         throw new ParserException(-6);
-                    } else if (i == 0) {
+                    } // Steht der Operator an erster Stelle -> Fehler -7
+                    else if (i == 0) {
                         throw new ParserException(-7);
                     }
                 }
-            } else if (i + 1 == formula.length()) {
+            }
+            // Steht i auf der letzten Stelle
+            else if (i + 1 == formula.length()) {
                 // keine öffnende Klammer an letzter Stelle
                 if (c == '(') {
                     throw new ParserException(-8);
@@ -291,13 +363,14 @@ public class Parser {
             }
 
         }
+        // liegen unterschiedlich viele öffnende und schließende Klammern vor -> Fehler -1
         if (countOpen != countClose) {
             // Fehlermeldung
             throw new ParserException(-1);
         }
 
         /*
-        Zeichenersetzung
+        Zeichenersetzung durchführen
         oder wird +
         und wird *
         -> wird 1
@@ -324,12 +397,19 @@ public class Parser {
             }
         }
 
+        // erste negationen streichen
         this.formula = negationenStreichen(this.formula);
 
+        // Erfolgsfall ist 42
         return 42;
     }
 
 
+    /**
+     * Mit der Mehtode zeichenersetzungZurück sollen alle Zeichen wieder in Unicode Zeichen zurück gesetzt werden
+     * @param formel
+     * @return
+     */
     public Formel zeichenersetzungZurueck(Formel formel) {
         /*
         Zeichenersetzung
@@ -340,6 +420,7 @@ public class Parser {
         negation wird n
          */
 
+        //
         for (int i = 0; i < formel.length(); i++) {
 
             //Negation
@@ -502,33 +583,7 @@ public class Parser {
                     i++;
                 }
 
-                /*if(i-1>0 && count+1 <= bFormel.length()){
-                    if((bFormel.getChar(i-1)=='1'||bFormel.getChar(i-1)=='2'||bFormel.getChar(i-1)=='*')||
-                            (bFormel.getChar(count+1)=='1'||bFormel.getChar(count+1)=='2'||bFormel.getChar(count+1)=='*')){
-                        // Klammer muss bestehen bleiben
-                        bFormel.blockEinsetzen(fDeMorgan, i, count);
-                    }else{
-                        // Klammer kann weg gemacht werden
-                        Formel neueDeMorgan = new Formel();
-                        for (int j = 1; j < fDeMorgan.length()-1; j++){
-                            neueDeMorgan.zeichenHinzufügen(fDeMorgan.getChar(j));
-                        }
-                        bFormel.blockEinsetzen(neueDeMorgan, i, count);
-                    }
-                }else if(i==0 && count+1 == bFormel.length()){
-                    // Klammer unnötig
-                    Formel neueDeMorgan = new Formel();
-                    for (int j = 1; j < fDeMorgan.length()-1; j++){
-                        neueDeMorgan.zeichenHinzufügen(fDeMorgan.getChar(j));
-                    }
-                    return neueDeMorgan;
-                }else if(i>=0 && count+1 < bFormel.length()){
-                    Formel neueDeMorgan = new Formel();
-                    for (int j = 0; j < fDeMorgan.length(); j++){
-                        neueDeMorgan.zeichenHinzufügen(fDeMorgan.getChar(j));
-                    }
-                    bFormel.blockEinsetzen(neueDeMorgan, i, count);
-                }*/
+
             } else {
                 fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
                 continue;
@@ -915,10 +970,6 @@ public class Parser {
 
     public List<Formel> getRechenweg() {
         return rechenweg;
-    }
-
-    public void setRechenweg(List<Formel> rechenweg) {
-        this.rechenweg = rechenweg;
     }
 
     public void setModus(Modi modus) {

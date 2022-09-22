@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dhbw.app_zur_aussagenlogik.R;
 import com.dhbw.app_zur_aussagenlogik.sql.dataObjects.History;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -27,7 +23,7 @@ import java.util.List;
  * @version 1.0
  * @see HistoryFragment
  */
-public class Adapter_for_HistroyView extends RecyclerView.Adapter<Adapter_for_HistroyView.MyViewHolder> {
+public class Adapter_for_HistoryView extends RecyclerView.Adapter<Adapter_for_HistoryView.MyViewHolder> {
 
     /**
      * Es wird eine Liste mit historischen Elementen der Klasse {@link History} als Klassenvariablen deklariert.
@@ -43,7 +39,7 @@ public class Adapter_for_HistroyView extends RecyclerView.Adapter<Adapter_for_Hi
      * Zum Erstellen eines Adapters ist eine Liste mit historischen Elementen notwendig.
      * @param historyList Als Übergabeparameter ist eine Liste mit dem Generik {@link History} erwartet.
      */
-    public Adapter_for_HistroyView(List<History> historyList){
+    public Adapter_for_HistoryView(List<History> historyList){
         this.historyList = historyList;
     }
 
