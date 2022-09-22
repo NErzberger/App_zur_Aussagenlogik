@@ -144,14 +144,12 @@ public class Wertetabelle {
             }
         }
 
-        //Falls die übergebene Formel nur aus einer Variablen besteht
+        //Falls die übergebene Formel keine UND Verknüpfungen hat
         if(counterUnd == 0){
-            charResult = formel.get(0);
-            if(charResult == '0') {
+            if(formel.contains('1') == false){
                 integerResult = 0;
                 return integerResult;
-            }else if(charResult == '1') {
-                integerResult = 1;
+            }else{
                 return integerResult;
             }
         }
@@ -257,7 +255,7 @@ public class Wertetabelle {
     private ArrayList<Character> negativeZeichenErsetzen(char[] formel) {
 
         //Hier wird lediglich durch die Formel mit eingesetzten 1ern und 0ern durchiteriert und geprüft, ob vor der 1
-        //oder 0 eine Negation steht. Wenn die der Fall ist wird eine 1 zu einer 0 und eine 0 zu einer 1.
+        //oder 0 eine Negation steht. Wenn dies der Fall ist wird eine 1 zu einer 0 und eine 0 zu einer 1.
         //Die Negationszeichen fallen ein paar Zeilen weiter unten raus.
         for(int i=0; i<formel.length; i++) {
 

@@ -174,14 +174,12 @@ public class ZweiFormeln {
             }
         }
 
-        //Falls die übergebene Formel nur aus einer Variablen besteht
+        //Falls die übergebene Formel keine UND Verknüpfungen hat
         if(counterUnd == 0){
-            charResult = formel.get(0);
-            if(charResult == '0') {
+            if(formel.contains('1') == false){
                 integerResult = 0;
                 return integerResult;
-            }else if(charResult == '1') {
-                integerResult = 1;
+            }else{
                 return integerResult;
             }
         }
