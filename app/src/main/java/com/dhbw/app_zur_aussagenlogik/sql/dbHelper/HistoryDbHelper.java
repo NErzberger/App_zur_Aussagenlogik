@@ -17,6 +17,9 @@ import java.util.List;
  * Verlauf der eingegebenen Formeln gespeichert wird.
  * Die Klasse erbt von der Klasse {@link SQLiteOpenHelper}.
  * Die Funktion der Klasse ist an sich, die Datenbank beim ersten Aufruf zu erzeugen und zurückzugeben.
+ *
+ * @author Nico Erzberger
+ * @version 1.0
  */
 public class HistoryDbHelper extends SQLiteOpenHelper {
 
