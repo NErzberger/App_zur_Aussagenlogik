@@ -157,13 +157,4 @@ public class AusaddierenTest {
         assertEquals(expectedFormel, ausaddiert);
     }
 
-    /*@Test
-    public void mehrfacheRekursionZwei() {
-        Parser p = new Parser();
-        char[] formel = {'(', '(', 'a', '*', 'b', '*', 'c', '*', 'd', ')', '+', 'e', '+', 'a', ')', '+', '(', 'a', '*', 'e', ')', '+',
-                '(', 'e', '*', 'd', '*', 'c', '*', 'b', ')', '+', '(', 'd', '*', 'b', ')', '+', '(', 'b', '*', 'a', ')', '+', '(', 'd', '*', 'e', ')'};
-        char[] expectedFormel = {};
-        char[] ausaddiert = p.ausaddieren(formel);
-        assertArrayEquals(expectedFormel, ausaddiert);
-    }*/
 }

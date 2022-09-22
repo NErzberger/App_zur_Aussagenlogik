@@ -39,9 +39,6 @@ public class IntegrationTest {
         assertEquals(expectedFormel.toString(), ausaddiert);
     }
 
-    /*
-    Test läuft noch nicht, weil beim Ausaddieren der zweite Block mit ausaddiert wird, was falsch ist.
-     */
     @Test
     public void testZwei() throws ParserException {
         Formel formel = new Formel("(a+b)2c");
@@ -132,16 +129,4 @@ public class IntegrationTest {
         assertEquals(expectedFormel.toString(), ausaddiert);
     }
 
- /*  @Test
-    public void endgegner(){
-        Parser p = new Parser();
-        char[] formel = {'(', '(', 'a', '+', 'b', ')', '2', 'c', '2', 'b', ')', '1',
-                '(', 'a', '*', '(', 'b', '2', 'c', '+', 'd', '*', '(', 'e', '+', 'a', ')', ')', ')'};
-        char[] expectedFormel = {'(', 'n', 'c', '+', 'a', '+', 'b', ')', '*', '(', 'n', 'a', '+', 'c', ')', '*', '(', 'n', 'b', '+', 'c', ')'};
-
-        char[] aufgelöstePfeile = p.pfeileAufloesen(formel);
-        char[] deMorgan = p.deMorgan(aufgelöstePfeile);
-        char[] ausaddiert = p.ausaddieren(deMorgan);
-        assertArrayEquals(expectedFormel, ausaddiert);
-    }*/
 }

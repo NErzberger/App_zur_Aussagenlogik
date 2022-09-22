@@ -102,7 +102,6 @@ public class DNFTestsWithNegation {
 
     @Test
     public void negationTest9() {
-        //Parser.getInstance().setModus(Modi.DNF);
         Formel formel = new Formel("(nb*e+na)*nc*d");
         Formel expectedFormel = new Formel("(nb*e*nc*d)+(na*nc*d)");
         Formel result = Ausmultiplizieren.ausmultiplizieren(formel);
