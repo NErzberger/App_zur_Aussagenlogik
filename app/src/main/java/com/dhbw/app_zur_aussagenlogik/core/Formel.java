@@ -1,9 +1,17 @@
 package com.dhbw.app_zur_aussagenlogik.core;
 
+/**
+ * Die Klasse <b>Formel</b> ist die zentrale Klasse, mit welcher neue Instanzen einer Formel
+ * erstellt werden können.
+ *
+ * @author Nico Erzberger, Daniel Miller
+ * @version 1.0
+ */
 public class Formel {
 
     private char[] formel = new char[0];
 
+    //Konstruktor
     public Formel(String formel){
         this.formel = new char[formel.length()];
         for(int i = 0; i<formel.length(); i++){
@@ -11,18 +19,18 @@ public class Formel {
         }
     }
 
+    //Konstruktor
     public Formel(char[] formel){
         this.formel = formel;
     }
 
-    public Formel(){
+    //Konstruktor
+    public Formel(){ }
 
-    }
-
+    //Konstruktor
     public Formel(int length){
         this.formel = new char[length];
     }
-
 
     public char getChar(int index){
         return this.formel[index];
@@ -52,27 +60,18 @@ public class Formel {
         return new Formel(this.formel);
     }
 
-    /*
-    public Formel negationPruefen(){
 
-        Formel newFormel = new Formel();
-
-        for(int i = 0; i<formel.length; i++){
-            if(i<formel.length-1){
-                if(getChar(i)=='n' && getChar(i+1) == 'n'){
-                    i = i + 2;
-                }
-            }
-
-            newFormel.zeichenHinzufügen(getChar(i));
-        }
-        return newFormel;
-    }
-    */
-
+    /**
+     * In dieser Methode werden unnötige Klammern aus der Formel genommen
+     * Hier wird die Methode klammernNotwendig() aufgerufen, um zu wissen, ob die Klammern notwendig
+     * sind oder nicht.
+     * @return
+     */
     public Formel klammernPrüfen(){
+        //Hier wird durch die Formel iteriert
         for (int j = 0; j<formel.length; j++) {
             if (getChar(j) == '(') {
+                //Wenn die Klammer notwendig ist, wird zum nächsten Zeichen gesprungen
                 if (klammerNotwendig(j)) {
                     continue;
                 } else {
@@ -98,6 +97,12 @@ public class Formel {
         return this;
     }
 
+    /**
+     * In dieser Methode wird überprüft, ob die gefundene Klammer in der Formel notwendig ist oder
+     * weg kann.
+     * @param indexÖffnedeKlammer der Index der gefunden öffnenden Klammer
+     * @return boolean wahr oder falsch ob die Klammer notwendig ist oder nicht
+     */
     public boolean klammerNotwendig(int indexÖffnedeKlammer){
         if(indexÖffnedeKlammer>=0 && indexÖffnedeKlammer+1 <= formel.length) {
             boolean endklammerNichtGefunden = true;
@@ -161,20 +166,35 @@ public class Formel {
         return false;
     }
 
+    /**
+     * In dieser Methode wird die neue Formel aufgebaut, indem der neue Formelteil in die bestehende
+     * Formel überführt wird.
+     * @param newArray übergebener Formelteil
+     * @param anfang an welcher Stelle soll der Formelteil ausgefüllt werden
+     * @param ende bis zu welcher Stelle soll der Formelteil ausgefüllt werden
+     */
     public void blockEinsetzen(Formel newArray, int anfang, int ende) {
         Formel neueFormel = new Formel();
+        //Anfang originale Formel
         for (int i = 0; i < anfang; i++) {
             neueFormel.zeichenHinzufügen(getChar(i));
         }
+        //Neuer Formelteil
         for (int i = 0; i < newArray.length(); i++) {
             neueFormel.zeichenHinzufügen(newArray.getChar(i));
         }
+        //Ende der originalen Formel
         for (int i = ende+1; i < this.formel.length; i++) {
             neueFormel.zeichenHinzufügen(getChar(i));
         }
         this.formel = neueFormel.formel;
     }
 
+    /**
+     * Mit dieser Methode können Zeichen einem char[] hinzugefügt werden.
+     * @param z das Zeichen, welches hinzugefügt werden soll.
+     * @return neues char[]
+     */
     public void zeichenHinzufügen(char z) {
         char[] newZeichenSatz = new char[this.formel.length+1];
         for (int i = 0; i < this.formel.length; i++) {
