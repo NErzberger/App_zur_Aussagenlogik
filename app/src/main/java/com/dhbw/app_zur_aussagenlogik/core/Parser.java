@@ -162,16 +162,50 @@ public class Parser {
                 resultFormula = Ausmultiplizieren.ausmultiplizieren(deMorgan);
                 break;
         }
-
+        String resultString = "";
+        int fall = 0;
         List<char[]> resultList = new ArrayList<>();
+
         resultList = zeichenErsetzen(resultFormula);
+        if(resultList.size()==0){
+            if(getModus()==Modi.KNF){
+                resultString="Verum";
+                fall = 1;
+            }else if(getModus()==Modi.DNF){
+                resultString="Falsum";
+                fall = 2;
+            }
+        }
+
         resultList = teilmengenErsetzten(resultList);
+
+        /*
+        //Diese Abprüfung wird noch nicht ziehen.
+        //Hierfür müssen die übrigen Teilmengen noch auf Gegensätzlichkeit geprüft werden (z.B. (a)und(nicht a)).
+        //Bisher wird nur geprüft, ob es gleiche Teilmengen gibt und davon bleibt nur eine stehen.
+        //Die IF in Zeile 196 muss dann auch noch angepasst werden
+        if(resultList.size()==0 && resultString.equals("")){
+            if(getModus()==Modi.KNF){
+                resultString="Falsum";
+            }else if(getModus()==Modi.DNF){
+                resultString="Verum";
+            }
+        }
+        */
         resultFormula = parseListToFormel(resultList);
         resultFormula = zeichenersetzungZurueck(resultFormula);
         rechenweg.add(zeichenersetzungZurueck(rPA));
         rechenweg.add(zeichenersetzungZurueck(rDM));
-        rechenweg.add(resultFormula);
-        String resultString = "";
+        if(resultFormula.getFormel().length==0){
+            if(fall == 1){
+                rechenweg.add(new Formel("Verum"));
+            }else if(fall == 2){
+                rechenweg.add(new Formel("Falsum"));
+            }
+        }else{
+            rechenweg.add(resultFormula);
+        }
+
         for (int i = 0; i < resultFormula.length(); i++) {
             resultString = resultString + resultFormula.getChar(i);
         }
