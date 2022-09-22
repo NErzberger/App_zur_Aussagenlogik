@@ -23,6 +23,24 @@
     <string name="aboutUs">Über uns</string>
     <string name="historyMenu">Verlauf</string>
     <string name="homeSymbol">\u2302</string>
+    <string name="text_Introduction">Auf dieser Seite wird kurz beschrieben, wie die App aufgebaut
+        ist und wie sie bedient wird.
+        \n\n<b>Auswahl der Rechenart:</b>
+        \nÜber die Reiter am oberen Bildschirmrand können die unterschiedlichen Rechenarten
+            ausgewählt werden.
+        \n\n<b>Tastatur:</b>
+        \nDie Tastatur verfügt zum einen über die herkömmlich Zeichen der Aussagenlogik. Zum anderen
+    gibt es zusätzliche Buttons, welche die Bedienung vereinfachen sollen.\n
+    - <b>\u232B:</b> Löschen einzelner Zeichen vor dem Cursor.\n
+    - <b>ce:</b> Löschen der kompletten Formeleingabe/n.\n
+    - <b>\u23CE:</b> Bestätigen der Formel, um die Lösung zu erhalten.\n
+    - <b>\u21E4:</b> Im gespeicherten Verlauf eine Formel nach hinten gehen.\n
+    - <b>Rechenweg:</b> Nach Bestätigung der Formel, kann hierüber ein genauerer Rechenweg angezeigt werden.
+    \n\n<b>Menü:</b>
+    \n- <b>About us:</b> Kurzinformation über die Ersteller dieser App.\n
+    - <b>Anleitung:</b> Ja, Sie haben hierher gefunden!\n
+    - <b>Verlauf:</b> Hier werden die letzten eingegebenen 50 Formel mit Ergebnissen gespeichert.
+    Beim Draufdrücken auf die Zeile, springt die App in die richtige Rechenart, Formel und dessen Ergebnis.\n</string>
 
 
 </resources>

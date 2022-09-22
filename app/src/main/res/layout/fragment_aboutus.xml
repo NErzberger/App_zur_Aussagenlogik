@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:autoText="false"
+        android:textStyle="bold"
         android:text="Über uns"
         android:textSize="20dp"
         android:textColor="@color/black"
@@ -37,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
         android:autoText="false"
         android:text="Wir sind eine Gruppe von Studenten an der DHBW Ravensburg, die im Zuge eines
@@ -49,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text"
         app:layout_constraintVertical_bias="0.005" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
