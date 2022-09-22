@@ -4,57 +4,110 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Die Klasse <b>Ausaddieren</b> ist zum ausaddieren der übergebenen Formel. Also es
+ * geht hier um die Bildung der KNF.
+ *
+ * Diese Klasse ist genauso aufgebaut wie die Klasse "Ausmultiplizieren". Es wurden nur die "* Zeichen"
+ * mit den "+ Zeichen" vertauscht. Ansonsten ist die Logik die selbe.
+ *
+ * @author Nico Erzberger, Daniel Miller
+ * @version 1.0
+ */
+
 public class Ausaddieren{
 
+    /**
+     * Dies ist die Hauptmethode der Klasse "Ausaddieren". Alles andere sind Hilfsmethoden.
+     * Genaues funktionieren steht an den Codestellen selbst.
+     * Diese Mehtode ruft sich rekursiv auf.
+     *
+     * @param formel übergebene Formel
+     * @return Formel in KNF-Schreibweise
+     */
     public static Formel ausaddieren(Formel formel) {
+
+        /*
+         * Die Liste "blockList" besteht aus weiteren Listen (Variable: innererBlock), welche
+         * widerum aus char[] (Variable: block) bestehen.
+         * In "block" stehen Variablen, welche ODER-verknüpft sind.
+         * In "innererBlock" stehen Variablen, UND-verknüpft sind.
+         * In "blockList" stehen die innerenBlöcke und nach jedem innerenBlock steht ein Operator
+         * (UND/ODER), welche die innerenBlöcke verbindet.
+         */
         List<List<char[]>> blockList = new ArrayList<>();
         List<char[]> innererBlock = new ArrayList<>();
         char[] block = new char[0];
+
+        /*
+         * In "klammern" zählen wir unsere Klammern. Offene Klammer zählen wir hoch und
+         * bei geschlossenen Klammern zählen wir runter. Wenn die Klammer == 0 ist, wird dieser Teil
+         * dem innerenBlock hinzugefügt.
+         */
         int klammer = 0;
+
+        /*
+        indexKlammer steht immer auf dem Index unserer Formel, wo unsere letzte öffnende Klammer ist.
+        Dies brauchen wir später, um einen Block wieder an die richtige Stelle in der Formel einzufügen.
+         */
         int indexKlammer = 0;
+
+        /*
+        Hier gehen wir durch die ganze übergebene Formel und bauen unsere Struktur in der Liste
+        "blockList" auf.
+        In der Formel können rekursive Aufrufe stattfinden.
+         */
         for (int i = 0; i < formel.length(); i++) {
 
             char c = formel.getChar(i);
 
+            //Wenn wir einen Buchstaben haben, schreib ihn in den Block.
             if (Character.toString(c).matches("[a-z]")) {
-
                 block = zeichenHinzufügen(block, c);
 
-// C ist ein Mal und die Zeichen davor und danach sind Buchstaben
+                // "c" ist ein + und die Zeichen davor und danach sind Buchstaben
+                //Also schreibe + nicht, da + schon durch die Verbindung in "block" dargestellt wird
             } else if (c == '+' && Character.toString(formel.getChar(i - 1)).matches("[a-z]")
                     && Character.toString(formel.getChar(i + 1)).matches("[a-z]")) {
                 continue;
 
-// C ist ein Plus oder C ist ein Mal und entweder das Zeichen davor oder danach ist kein Buchstabe
+                // "c" ist ein *
             } else if (c == '*' && block.length > 0) {
                 innererBlock.add(block);
                 block = new char[0];
                 if (klammer == 0) {
+                    //Füge "innerBlock" der "blockList" hinzu und danach ein *
                     blockList.add(innererBlock);
                     blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { '*' })));
                     innererBlock = new ArrayList<>();
                 }
+                //"c" ist ein +, wir haben keine Klammern und das Zeichen davor oder danach ist
+                //kein Buchstabe.
             } else if (block.length > 0 && klammer == 0 && c == '+'
                     && (!Character.toString(formel.getChar(i - 1)).matches("[a-z]")
                     || !Character.toString(formel.getChar(i + 1)).matches("[a-z]"))) {
                 innererBlock.add(block);
                 block = new char[0];
 
+                //Füge "innerBlock" der "blockList" hinzu und danach ein +
                 blockList.add(innererBlock);
                 blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { '+' })));
                 innererBlock = new ArrayList<>();
 
                 /*
-                 * Rekursion Rechts
-                 *
+                 * Rekursion rechts
+                 * Da Klammer größer 0 kommt und auf das * eine weitere Klammer folgt, wird nun
+                 * eine Rekursion folgen.
                  */
             } else if (klammer > 0 && c == '+' && !Character.toString(formel.getChar(i + 1)).matches("[a-z]")) {
-// Neue Formel bilden
+                // Neue Formel bilden
                 String formelString = "";
 
-				/*for (int j = 0; j < block.length; j++) {
-					formelString = formelString + block[j] + "*";
-				}*/
+				/*
+                Wir brauchen nun den linken und den rechten Teil von unserem +.
+                Hier bauen wir den linken Teil auf. Das heißt, wir gehen von unserem + nach links
+                durch die Formel.
+                 */
                 int counterLinks = 0;
                 int klammernLinks = 0;
                 while(true) {
@@ -74,8 +127,14 @@ public class Ausaddieren{
                     formelString = formelString + formelChar;
                     counterLinks++;
                 }
+                //Der String muss umgedreht werden, da wir ihn falschherum einlesen.
                 formelString = new StringBuilder(formelString).reverse().toString();
 
+                /*
+                Wir brauchen nun den linken und den rechten Teil von unserem +.
+                Hier bauen wir den rechten Teil auf. Das heißt, wir gehen von unserem + nach rechts
+                durch die Formel.
+                 */
                 int klammernRechts = 1;
                 int counterRechts = 1;
                 while (true) {
@@ -91,22 +150,37 @@ public class Ausaddieren{
                     formelString = formelString + formelChar;
                     counterRechts++;
                 }
+
+                //Rekursiveraufruf
                 Formel newFormel = ausaddieren(new Formel(formelString));
 
+                //Die ausmultiplizierte Teilformel ("newFormel") wird nun an die richtige Stelle in
+                //unsere originalen Formel eingesetzt.
                 formel.blockEinsetzen(newFormel, i - counterLinks + 1, i - 1 + counterRechts);
                 klammer++;
+
+                //Grund für den zweiten rekursiven Aufruf ist, dass unsere größeren Variablen wieder
+                //geresetet (denglish) werden müssen und dies die einfachst Methode dafür ist.
                 return ausaddieren(formel);
-                // i = i + newFormel.length();
+
 
                 /*
                  * Linke Rekursion
-                 *
+                 * Da Klammer größer 0 kommt und vor dem * eine weitere Klammer steht, wird nun
+                 * eine Rekursion folgen.
                  */
             } else if (klammer > 0 && c == '+' && !Character.toString(formel.getChar(i - 1)).matches("[a-z]")) {
                 // Neue Formel bilden
+                //Man könnte auch nur einen String wie oben verwenden, doch dann muss man die zweite
+                //While zuerst machen.
                 String formelStringRechts = "";
                 String formelStringLinks = "";
 
+                /*
+                Wir brauchen nun den linken und den rechten Teil von unserem +.
+                Hier bauen wir den rechten Teil auf. Das heißt, wir gehen von unserem + nach rechts
+                durch die Formel.
+                 */
                 int counterRechts = 0;
                 int klammernRechts = 0;
                 while (true) {
@@ -127,6 +201,10 @@ public class Ausaddieren{
                     counterRechts++;
                 }
 
+                /*
+                Hier bauen wir den linken Teil auf. Das heißt, wir gehen von unserem + nach linken
+                durch die Formel.
+                 */
                 int innereKlammerLinks = 1;
                 int counterLinks = 1;
                 while (true) {
@@ -143,31 +221,41 @@ public class Ausaddieren{
                     counterLinks++;
                 }
 
+                //Der String muss umgedreht werden, da wir ihn falschherum einlesen.
                 formelStringLinks = new StringBuilder(formelStringLinks).reverse().toString();
+
+                //Zusammenbauen des linken und rechten Teils
                 formelStringLinks = formelStringLinks + formelStringRechts;
+
+                //Rekursiveraufruf
                 Formel newFormel = ausaddieren(new Formel(formelStringLinks));
+
+                //Die ausmultiplizierte Teilformel ("newFormel") wird nun an die richtige Stelle in
+                //unsere originalen Formel eingesetzt.
                 formel.blockEinsetzen(newFormel, indexKlammer, indexKlammer + formelStringLinks.length()-1);
                 klammer++;
+
+                //Grund für den zweiten rekursiven Aufruf ist, dass unsere größeren Variablen wieder
+                //geresetet (denglish) werden müssen und dies die einfachst Methode dafür ist.
                 return ausaddieren(formel);
-                // i = i + newFormel.length();
+
             } else if (c == '(') {
                 klammer++;
+                //"indexKlammer" damit wir später wissen, wo wir einen rekursiven Block einfügen müssen.
                 indexKlammer = i;
             } else if (c == ')') {
                 klammer--;
+                //Wenn Klammer == 0 und "c" == ')' sind wir am Ende von "block"
                 if (klammer == 0) {
-// bin ich am Ende von meinem Block
                     innererBlock.add(block);
                     block = new char[0];
-
-//Hier,an der Stelle
                     blockList.add(innererBlock);
-                    // for(i=i;i+2 <= formel.length()&&formel.getChar(i)==')';i++) {
-                    // klammer--;
+
+                    //Da wir einen innerenBlock der "blockList" zugefügt haben, muss als nächstes ein
+                    //* oder ein + in die "blockList" eingefügt werden.
                     if (i + 2 <= formel.length() && (formel.getChar(i + 1) == '*' || formel.getChar(i + 1) == '+')) {
                         blockList.add(new ArrayList<char[]>(Arrays.asList(new char[] { formel.getChar(i + 1) })));
                     }
-                    // }
 
                     innererBlock = new ArrayList<>();
                 }
@@ -182,14 +270,24 @@ public class Ausaddieren{
 
         }
 
+        /*
+        ---------------------------------------------
+        Unsere Struktur in "blockList" ist nun fertig aufgebaut und kann ausaddiert werden.
+        ---------------------------------------------
+         */
+
+
+        //In "ergebnisBloecke" wird nach und nach unsere ausaddierte Lösung eingefügt.
+        //Das Ausaddieren folgt nun.
         List<char[]> ergebnisBloecke = new ArrayList<>();
 
-        // nur wenn alles + ist
+        //Der Check ist eingebaut, falls die Formel nur aus * Zeichen besteht. Dann geht das
+        //ausaddieren schneller und die untere IF zieht.
+        //In "sonderfall" wird dann schnell die Formel aufgebaut.
         boolean check = true;
         char[] sonderfall = new char[0];
         for (int k = 0; k < formel.length(); k++) {
             if (formel.getChar(k) == '*') {
-                // sonderfall = new char[0];
                 check = false;
                 break;
             }
@@ -217,12 +315,15 @@ public class Ausaddieren{
                 ergebnisBloecke.addAll(blockList.get(0));
             }
 
+            //"b" ist der Index, mit welchem wir durch "blockList" iterieren.
+            //"einstieg" wird später benötigt, damit der Einstieg in ergebnisBloecke gefunden wird,
+            //wo angefangen werden muss Variablen einzufügen. Die Stellen vor "einstieg" sind nämlich
+            //schon fertig ausgefüllt.
             int b = 0;
             int einstieg = 0;
             while (b < blockList.size()) {
-                // Hier haben wir innereBloecke abgelöst ------------------
-// for (int i = 0; i < blockList.size(); i++) {
                 innererBlock = null;
+                //Wenn wir an der ersten Stelle sind, soll "innererBlock" die erste Stelle aus "blockList" sein.
                 if (b == 0) {
                     innererBlock = blockList.get(0);
                 } else {
@@ -232,12 +333,18 @@ public class Ausaddieren{
                         break;
                     }
                 }
-// int originLength = ergebnisBloecke.size();
-//if (originLength == 0) {
-//for (int k = 0; k < innereBloecke.size(); k++) {
-//ergebnisBloecke.add(innereBloecke.get(k));
-//}
-//}
+
+                /*
+                In der folgenden For-Schleife schauen wir auf unseren nächsten innerenBlock, um zu
+                wissen, wie häufig wir die Variablen in unserem aktuellen innerenBlock duplizieren müssen.
+                In dieser Schleife wird auch die erste Hälfte in die ergebnisBloecke geschrieben. Die
+                zweite Hälfte geschieht weiter unten.
+                "counter2" sind die bisher geschriebenen Einträge.
+                "counter1" ist dasselbe wie "counter2", außer im ersten Durchlauf, muss dieser die
+                Anzahl der Variablen im innerenBlock haben.
+                "counter2Alt" merkt sich die die bisher geschriebenen Einträge eins vor diesem Durchlauf.
+                "counterGemachteEintraege" zählt, wie viele Einträge wir in diesem Durchlauf machen.
+                 */
                 int bAlt = b;
                 boolean keepGoing = true;
                 int counter1 = innererBlock.size();
@@ -245,15 +352,31 @@ public class Ausaddieren{
                 int counter2Alt = 0;
                 int counterGemachteEintraege = 0;
                 for (b = b + 1; b < blockList.size() && keepGoing; b++) {
+
+                    //Hier wird durch den aktuellen innerenBlock iteriert und die Variablen darin dupliziert.
                     for (int l = 0; l < innererBlock.size(); l++) {
-                        // Im Falle, wenn ein Mal kommt
+
+                        //Im ersten Durchlauf muss counter2 immer 0 sein.
                         if (counter1 == innererBlock.size()) {
                             counter2 = 0;
                         }
 
+                        //Wenn unserer innererBlock ein * ist und wir danach noch einen Block haben
                         if (blockList.get(b).get(0)[0] == '+') {
                             if (b + 1 < blockList.size()
                                     && (1 < blockList.get(b + 1).size() || 1 < innererBlock.size())) {
+
+                                /*
+                                Bedingung:
+                                - counter1 = Wie viele Variablen haben wir im aktuellen innerenBlock, welche
+                                           mit einem * verbunden sind
+                                - Mal die Anzahl der Variablen des nächsten innerenBlock, welche mit einem
+                                * verbunden sind.
+                                - Minus counter2.
+                                - Dividiert durch Anzahl der Variablen des aktuellen innerenBlock, welche
+                                mit einem * verbunden sind.
+                                --> Dies ergibt, wie häufig wir die Variablen in die Ergebnisliste duplizieren müssen.
+                                 */
                                 for (int m = 0; m < (counter1 * blockList.get(b + 1).size() - counter2) / innererBlock.size(); m++) {
 
                                     // Clonen vom ersten Teil
@@ -263,15 +386,13 @@ public class Ausaddieren{
                                 }
 
                             }
-                            // Wenn ein + kommt
 
-                            // Oder wenn der Teil an Stelle b die Länge 1 hat und an der letzten Stelle
-                            // steht und vor oder nach der Stelle b ein + kommt
                             /*
-                             * 1. ich bin am Anfang der Formel und es kommt ein Plus an der nächsten Stelle
-                             * | b=0 und b+1 = + 2. ich bin am Ende der Formel und direkt vor mir kommt ein
-                             * Plus | b+1=blockList.get(b).size() und b-1 = + 3. ich bin irgendwo und direkt
-                             * vor mir und nach mir kommt ein Plus
+                             * 1. ich bin am Ende der Formel und direkt vor mir kommt ein * | b+1=blockList.get(b).size()
+                             * und b-1 = *
+                             * 2. ich bin am Anfang der Formel und es kommt ein * an der nächsten Stelle
+                             * | b=0 und b+1 = *
+                             * 3. ich bin irgendwo und direkt vor mir und nach mir kommt ein *
                              */
                         } else if (// blockList.get(b).size()==1 &&
                                 ((b + 1 == blockList.size() && blockList.get(b - 1).get(0)[0] == '*')
@@ -279,6 +400,9 @@ public class Ausaddieren{
                                         || (b > 0 && b < blockList.size() && blockList.get(b - 1).get(0)[0] == '*'
                                         && blockList.get(b + 1).get(0)[0] == '*'))) {
 
+                            //Wenn unserer aktueller innererBlock ein * ist, müssen wir die Variablen
+                            //aus dem innerenBlock davor jeweils nur einmal in die ergebnisBloeacke schreiben,
+                            //da sie mit nichts ausaddiert werden müssen.
                             if (blockList.get(b).get(0)[0] == '*') {
                                 for (int m = 0; m < blockList.get(b - 1).size(); m++) {
 
@@ -299,7 +423,7 @@ public class Ausaddieren{
 
                             keepGoing = false;
 
-                            // Wenn b ein Plus ist, soll es für die nachfolgende Logik um eins reduziert
+                            // Wenn b ein * ist, soll es für die nachfolgende Logik um eins reduziert
                             // werden
                             if (blockList.get(b).get(0)[0] == '*') {
                                 b--;
@@ -311,11 +435,20 @@ public class Ausaddieren{
                         }
 
                     }
+
+                    /*
+                    "counter2" sind die bisher geschriebenen Einträge.
+                    "counter1" ist dasselbe wie "counter2", außer im ersten Durchlauf, muss dieser die
+                    Anzahl der Variablen im innerenBlock haben.
+                    "counter2Alt" merkt sich die die bisher geschriebenen Einträge eins vor diesem Durchlauf.
+                    */
                     if (b + 1 < blockList.size() && blockList.get(b).get(0)[0] == '+') {
+                        //Für den ersten Durchlauf
                         if (counter2Alt == 0) {
                             counter2 = blockList.get(b + 1).size() * innererBlock.size();
                             counter2Alt = blockList.get(b + 1).size() * innererBlock.size();
-                        } else {
+                        }//Für alle anderen Durchläufe
+                        else {
                             int temp = (counter1 * blockList.get(b + 1).size() - counter2);
                             counter2 = counter1 * blockList.get(b + 1).size() - counter2 + counter2Alt;
                             counter2Alt = temp;
@@ -324,6 +457,9 @@ public class Ausaddieren{
                     }
                 }
 
+                //Hier werden die neu in ergebnnisBloecke geschriebenen Variablen neu in ergebnisBloecke
+                //eingesetzt  und zwar immer abwechselnd und die alte Reihenfolge wird somit ersetzt,
+                //damit sich im folgenden Verlauf die Formel richtig aufbaut
                 int beginn = ergebnisBloecke.size() - counterGemachteEintraege;
                 for (int i = beginn; i < ergebnisBloecke.size(); i++) {
                     for (int j = 0; j < innererBlock.size(); j++) {
@@ -334,23 +470,15 @@ public class Ausaddieren{
                     }
                 }
 
-                /*
-                 * for(int l = 0; l<blockList.size();l++) { for(int z = 0;
-                 * z<blockList.get(1).size();z++) { ergebnisBloecke.add(innereBloecke.get(l)); }
-                 * }
-                 */
 
-//if(i>0) {
-                /*
-                 * List<char[]> coypList = new ArrayList<>(ergebnisBloecke); for (int j = 0; j <
-                 * innereBloecke.size()-1; j++) { for (int k = 0; k < coypList.size(); k++) {
-                 * char[] chars = coypList.get(k).clone(); ergebnisBloecke.add(chars); } }
-                 */
-//}
                 if (bAlt == 0) {
                     bAlt = -1;
                 }
 
+                /*
+                Die erste Hälfte von ergebnisBloecke ist fertig.
+                In dieser Schleife wird die zweite Hälfte in die ergebnisBloecke geschrieben.
+                 */
                 int blockCounter = 0;
                 int eintrag = ergebnisBloecke.size() - einstieg;
                 for (int n = bAlt + 3; n < b; n++) {
@@ -362,10 +490,13 @@ public class Ausaddieren{
                         continue;
                     }
                     blockCounter++;
-                    /*
-                     * if(bAlt==-1) { einstieg=0; }
-                     */
 
+                    /*
+                    Dadurch, dass "eintrag" immer kleiner wird, entsteht ein Muster, wodurch die
+                    Lösungsmengen sich nicht doppeln.
+                    "einsteig" ist der Punkt, wo angefangen werden muss die Variablen einzufügen.
+                    In der FOR-Schleife wird von "einsteig" bis "ergebnisBloecke"-Ende Variablen eingefügt.
+                    */
                     int bereitsEingetrag = 0;
                     eintrag = eintrag / innererBlock.size();
                     for (int j = einstieg; j < ergebnisBloecke.size(); j++) {
@@ -373,16 +504,17 @@ public class Ausaddieren{
                         if (counter == innererBlock.size()) {
                             counter = 0;
                         }
+
+                        //Hier wird berechnet, wie groß der neue Block zum Einfügen in ergebnisBloecke sein muss
                         char[] neuerBlock = new char[ergebnisBloecke.get(j).length + innererBlock.get(counter).length];
                         int counterNeuerBlock = 0;
+                        //Hier werden die bisherigen Variablen in "neuerBlock" eingefügt
                         for (int l = 0; l < ergebnisBloecke.get(j).length; l++) {
                             neuerBlock[l] = ergebnisBloecke.get(j)[l];
                             counterNeuerBlock++;
                         }
 
-                        // if((ergebnisBloecke.size()%blockCounter)%2==1) {
-                        //if (n < b - 1) {
-
+                        //Hier werden die neuen Variablen in "neuerBlock" eingefügt
                             if (bereitsEingetrag < eintrag) {
                                 for (int l = 0; l < innererBlock.get(counter).length; l++) {
                                     neuerBlock[counterNeuerBlock + l] = innererBlock.get(counter)[l];
@@ -396,38 +528,16 @@ public class Ausaddieren{
                                 counter++;
                             }
 
-                            // Ungearade
-                            // }else if((ergebnisBloecke.size()%blockCounter)%2==0) {
-                        /*} else if (n == b - 1) {
-                            for (int l = 0; l < innererBlock.get(counter).length; l++) {
-                                neuerBlock[counterNeuerBlock + l] = innererBlock.get(counter)[l];
-                            }
-                            counter++;
-                        }*/
+                        //Hier wird der fertige "neuerBlock" zu ergebnisBloecke hinzugefügt.
                         ergebnisBloecke.set(j, neuerBlock);
 
                     }
-
-                    /*
-                     * for (int j = 0; j < innereBloecke.size(); j++) { for (int k = 0; k <
-                     * originLength; k++) { char[] neuerBlock = new char[ergebnisBloecke.get(j +
-                     * k).length + innereBloecke.get(j).length]; int counterNeuerBlock = 0; for (int
-                     * l = 0; l < ergebnisBloecke.get(j + k).length; l++) { neuerBlock[l] =
-                     * ergebnisBloecke.get(j + k)[l]; counterNeuerBlock++; } for (int l = 0; l <
-                     * innereBloecke.get(j).length; l++) { neuerBlock[counterNeuerBlock + l] =
-                     * innereBloecke.get(j)[l]; } ergebnisBloecke.set(j + k, neuerBlock); } }
-                     */
                 }
             }
         }
-        // }
-/*
-        Formel parseFormel = Parser.getInstance().parseListToFormel(ergebnisBloecke);
-        parseFormel = Parser.getInstance().negationenStreichen(parseFormel);
-        ergebnisBloecke = Parser.getInstance().parseFormelToList(parseFormel);
-        ergebnisBloecke = Parser.getInstance().zeichenErsetzen(ergebnisBloecke);
-        ergebnisBloecke = Parser.getInstance().teilmengenErsetzten(ergebnisBloecke);
-*/
+
+        //Hier wird ergebnisBloecke in einen String geschrieben, welcher danach in eine Instanz von
+        //Formel geschrieben und ausgegeben wird.
         String loesung = "";
         for (int i = 0; i < ergebnisBloecke.size(); i++) {
             loesung = loesung + "(";
@@ -450,6 +560,12 @@ public class Ausaddieren{
 
     }
 
+    /**
+     * Mit dieser Methode können Zeichen einem char[] hinzugefügt werden.
+     * @param origin bisheriger char[]
+     * @param z das Zeichen, welches hinzugefügt werden soll.
+     * @return neues char[]
+     */
     private static char[] zeichenHinzufügen(char[] origin, char z) {
         char[] newZeichenSatz = new char[origin.length + 1];
         for (int i = 0; i < origin.length; i++) {

@@ -7,6 +7,9 @@ import java.util.HashMap;
  * Dies soll verhindern, dass Fehlermeldungen über die gesamte App verstreut im Quellcode vorzufinden sind.
  * Die Fehlermeldungen werden in einer HashMap gespeichert. Der zugehörige Schlüssel zu einer Fehlermeldung ist der Fehlercode,
  * welcher beim Werfen eines Fehlers mitgegeben werden muss.
+ *
+ * @version 1.0
+ * @author Nico Erzberger
  */
 public class ErrorHandler {
 

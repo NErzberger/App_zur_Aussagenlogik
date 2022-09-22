@@ -4,19 +4,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Die Klasse <b>ZweiFormeln</b> ist für das Erstellen einer Wertetabelle mit zwei Ergebnisspalten.
+ * Hier werden zwei Formeln miteinander verglichen. Wichtig ist, dass die KNF (Klasse
+ * "Ausaddieren") für diese Klasse die Grundlage bildet.
+ *
+ * Diese Klasse ist genauso aufgebaut wie die Klasse "Wertetabelle". Nur das es hier zwei
+ * Ergebnisspalten gibt und die Methode compareVariables().
+ *
+ * @author Daniel Miller
+ * @version 1.0
+ */
 public class ZweiFormeln {
 
     private int[][] truthTable;
 
 
-    //Wertetabelle erstellen ohne Ergebnisspalte
+    /**
+     * Hier wird die Struktur der Wertetabellen mit Nullen und Einsen gefüllt. Die Ergebnisspalten
+     * werden auch schon hinzugefügt, damit sie später befüllt werden können.
+     * @param n Anzahl der verwendeten Variablen
+     * @return fertige Wertetabelle mit leeren Spalten für das Ergebnis
+     */
     private int[][] createTruthTable(int n) {
 
         int rows = (int) Math.pow(2,n);
         //n+2 weil wir 2 weitere Ergebnisspalten für 2 Formeln brauchen
         int[][] truthTable = new int[n+2][rows];
 
-
+        //Befüllen der Wertetabelle mit Nullen und Einsen für die Grundstruktur
         for (int i=0; i<rows; i++) {
             for (int j=0; j<n; j++) {
                 truthTable[j][i]= (i/(int) Math.pow(2, j))%2;
@@ -27,6 +43,12 @@ public class ZweiFormeln {
 
     }
 
+    /**
+     * In dieser Methode wird überprüft, ob die beiden Formeln die selben Variablen verwenden.
+     * @param formel1 erste Formel
+     * @param formel2 zweite Formel
+     * @return boolean wahr oder falsch, ob die Formeln die selben Variablen verwenden
+     */
     public Boolean compareVariables(char[] formel1, char[] formel2){
 
         ArrayList<Character> variablesFormula1 = checkVariables(formel1);
@@ -45,17 +67,29 @@ public class ZweiFormeln {
         return true;
     }
 
-    //Checken, welche Variablen verwendet werden
+    /**
+     * In dieser Methode wird überprüft, welche Variablen in der Formel verwendet wurden, um später
+     * die Wertetabelle genau aufbauen zu können und zu überprüfen, ob die zwei Formeln, welche
+     * verglichen werden von den Variablen übereinstimmen.
+     * @param formel übergebene Formel
+     * @return Liste mit den verwendeten Variablen
+     */
     public ArrayList<Character> checkVariables(char[] formel) {
 
+        //Wenn eine der Variablen gefunden wurde, wird die Variable auf 1 gesetzt, damit jede
+        //Variable nur einmal in die Liste "variables" eingefügt wird
         int foundA = 0;
         int foundB = 0;
         int foundC = 0;
         int foundD = 0;
         int foundE = 0;
 
+        //Die Ergebnisliste, welche gegen Ende zurückgegeben wird.
         ArrayList<Character> variables = new ArrayList<Character>();
 
+        //Hier wird durch die Formel iteriert und für jede neue Variable, welche gefunden wird,
+        //wird die zugehörige Methodenvariable auf 1 gesetzt und die Variable an sich wird der
+        //Liste "variables" hinzugefügt
         for(int i=0; i<formel.length; i++) {
             if(formel[i]=='a' && foundA==0) {
                 foundA = 1;
@@ -79,6 +113,7 @@ public class ZweiFormeln {
             }
         }
 
+        //Die Variablen werden noch sortiert, um später eine sortierte Wertetabelle erstellen zu können
         Collections.sort(variables);
 
         return variables;
@@ -100,7 +135,8 @@ public class ZweiFormeln {
         //Die Anzahl der Reihen ist die maximale Anzahl an Durchläufen, um die beiden Formeln zu vergleichen.
         int rows = (int) Math.pow(2,variables.size());
 
-        //Hier wird eine Wertetabelle ohne Ergebnisspalte erstellt
+        //Hier wird die Grundstruktur einer Wertetabelle erstellt mit leeren Ergebnisspalten.
+        //Die Ergebnisspalten werden im folgenden Verlauf befüllt.
         truthTable = createTruthTable(variables.size());
 
 
@@ -109,8 +145,7 @@ public class ZweiFormeln {
         int[] row = new int[variables.size()];
 
         /*
-         * Die Schleife wird maximal so häufig ausgeführt, wie es Zeilen in der Wertetabelle gibt. Sie kann früher abbrechen,
-         * wenn die beiden Formel schon früher nicht übereinstimmen.
+         * Die Schleife wird maximal so häufig ausgeführt, wie es Zeilen in der Wertetabelle gibt.
          * In der Liste row wird Zeile für Zeile zwischengespeichert, damit die Werte aus der betroffenen Zeile
          * in die beiden Formeln eingefuegt werden können.
          */
@@ -120,35 +155,29 @@ public class ZweiFormeln {
             char[] formelForWork1 = formel1.clone();
             char[] formelForWork2 = formel2.clone();
 
-
             //Wir benötigen nach und nach die Werte aus jeder Zeile der Wertetabelle
             //Hier werden die Werte für eine Zeile aus der Wertetabelle geholt
             for(int j=0; j<variables.size(); j++) {
                 row[j] = truthTable[j][i];
             }
 
-
             //Die Variablen aus beiden Formeln werden durch die Werte aus der aktuellen Zeile der Wertetabelle ersetzt.
             formelForWork1 = werteInFormelnEinfuegen(formel1, row, variables);
             formelForWork2 = werteInFormelnEinfuegen(formel2, row, variables);
-
 
             //Negative Werte werden umgedreht (-0 zu 1 und -1 zu 0)
             ArrayList<Character> formel11 = negativeZeichenErsetzen(formelForWork1);
             ArrayList<Character> formel22 = negativeZeichenErsetzen(formelForWork2);
 
-
             //In diese beiden Integer kommt das Ergebnis der beiden Formeln 0 (falsch) oder 1 (richtig)
             int formel111 = ausrechnen(formel11);
             int formel222 = ausrechnen(formel22);
-
 
             //Wenn die beiden Ergebnisse nicht übereinstimmen für die eingesetzten Werte aus der Zeile der Wertetabelle,
             //dann stimmen die beiden Formeln nicht überein
             if(formel111 != formel222) {
                 result = false;
             }
-
 
             //Hier werden die Ergebnisfelder für die beiden Formeln der Wertetabelle nach und nach gefüllt
             truthTable[variables.size()][i] = formel111;
@@ -160,7 +189,12 @@ public class ZweiFormeln {
 
     }
 
-
+    /**
+     * In dieser Methode wird ermittelt, ob die Formel für eine bestimmte Zeile in der Wertetabelle
+     * 0 oder 1 ist. Das die Formel in der Form der KNF übergeben wird ist hier die Grundlage.
+     * @param formel
+     * @return
+     */
     private int ausrechnen(ArrayList<Character> formel) {
 
         char charResult = '2';

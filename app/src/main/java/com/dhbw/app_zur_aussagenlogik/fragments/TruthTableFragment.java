@@ -101,7 +101,6 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_truth_table, container, false);
         mainActivity.setActiveFragment(this);
         Button homeButton = view.findViewById(R.id.buttonHome2);
@@ -127,7 +126,6 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
 
             textView.setTextSize(25);
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            //textView.setPadding(10, 5, 10, 5);
             textView.setBackground(ContextCompat.getDrawable(truthTable.getContext(), R.drawable.table_border));
             header.addView(textView);
         }
@@ -143,7 +141,6 @@ public class TruthTableFragment extends Fragment implements IOnBackPressed {
                 textView.setText(Integer.toString(truthTableByInt[j][i]));
                 textView.setTextSize(25);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                //textView.setPadding(10, 5, 10, 5);
                 textView.setBackground(ContextCompat.getDrawable(truthTable.getContext(), R.drawable.table_border));
                 tableRow.addView(textView);
             }
