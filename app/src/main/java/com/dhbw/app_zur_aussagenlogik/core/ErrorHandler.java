@@ -20,6 +20,7 @@ public class ErrorHandler {
         errorMessages.put(-9, "Die erste stelle darf keine schließende Klammer sein.");
         errorMessages.put(-11, "Es darf keine Negation an letzter Stelle sein.");
         errorMessages.put(-12, "Es darf kein Operator an letzter Stelle sein.");
+        errorMessages.put(-13, "Bitte geben Sie keine leeren Formeln ein.");
     }
 
     private static ErrorHandler instance;

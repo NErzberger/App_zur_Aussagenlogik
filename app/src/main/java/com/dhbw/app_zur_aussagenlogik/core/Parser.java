@@ -217,6 +217,11 @@ public class Parser {
         int countOpen = 0;
         int countClose = 0;
 
+        if (this.formula.length()==0 && (getModus()==Modi.WERTETABELLE || getModus()==Modi.FORMELN)) {
+            // Fehlermeldung
+            throw new ParserException(-13);
+        }
+
         for (int i = 0; i < this.formula.length(); i++) {
             char c = this.formula.getChar(i);
 
@@ -238,6 +243,7 @@ public class Parser {
             \\u22C1 = Oder
             \\u2227 = Und
              */
+
             if ((i + 1) < this.formula.length()) {
                 if (Character.toString(c).matches("[a-n]")) {
                     if (Character.toString(this.formula.getChar(i + 1)).matches("[a-e(\\u00AC]")) {
