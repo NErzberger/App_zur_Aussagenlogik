@@ -444,10 +444,19 @@ public class Parser {
     }
 
 
-    // Prozedur
-
+    /**
+     * Diese Methode führt den ersten Schritt für die Bildung einer KNF oder DNF aus und zwar
+     * das Pfeile auflösen.
+     * Die Zahl 1 steht für eine einseitige Implikation
+     * Die Zahl 2 steht für eine beidseitige Implikation
+     * @param formel übergebene Formel
+     * @return bearbeitete Formel mit aufgelösten Pfeilen
+     */
     public Formel pfeileAufloesen(Formel formel) {
+        //Formel, welche zurückgegeben wird
         Formel bFormel = formel;
+
+        //Es wird jedes Zeichen der übergebenen Formel überprüft, ob es eine 1 oder 2 ist
         for (int i = 0; i < bFormel.length(); i++) {
 
             // Block vorne
@@ -456,9 +465,10 @@ public class Parser {
              * 2 = beidseitige Implikation
              */
             if (c == '1' || c == '2') {
-                String vordererBlock = "";
-                // vorderer Block bei Klammer
 
+                //Mit dieser While-Schleife wird der linke Teil des gefundenen Pfeils ermittelt
+                //und in "vordererBlock" geschrieben
+                String vordererBlock = "";
                 int innereKlammerLinks = 0;
                 int counterLinks = 1;
                 while (true) {
@@ -477,18 +487,18 @@ public class Parser {
                             } else if (innereKlammerLinks == -1) {
                                 break;
                             }
-
-                        } /*else if (formelChar == '+' && innereKlammerLinks == 0) {
-                            break;
-                        }*/
+                        }
                         vordererBlock = vordererBlock + formelChar;
                         counterLinks++;
                     } else {
                         break;
                     }
                 }
+                //Da wir den vorderen Teil falschherum eingelesen haben, müssen wir ihn nun umdrehen
                 vordererBlock = new StringBuilder(vordererBlock).reverse().toString();
-                // Block hinten
+
+                //Mit dieser While-Schleife wird der rechte Teil des gefundenen Pfeils ermittelt
+                //und in "hintererBlock" geschrieben
                 String hintererBlock = "";
                 int counterRechts = 1;
                 int klammernRechts = 0;
@@ -505,9 +515,7 @@ public class Parser {
                             } else if (klammernRechts == -1) {
                                 break;
                             }
-                        } /*else if ((formelChar == '+' || formelChar == '1' || formelChar == '2') && klammernRechts == 0) {
-                            break;
-                        }*/
+                        }
                         hintererBlock = hintererBlock + formelChar;
                         counterRechts++;
                     } else {
@@ -515,6 +523,8 @@ public class Parser {
                     }
                 }
 
+                //Die Unterscheidung ob wir eine einseitige oder beidseitige Implikation haben, da
+                //die beiden ermittelten Blöcke dementsprechen anders verarbeitet werden
                 if (c == '1') {
                     bFormel.blockEinsetzen(einseitigeImplikation(new Formel(vordererBlock).getFormel(), new Formel(hintererBlock).getFormel()), i - vordererBlock.length(), i + hintererBlock.length());
                     return pfeileAufloesen(bFormel);
@@ -524,34 +534,51 @@ public class Parser {
                 }
             }
         }
+        //Hier werden unnötige Klammern gelöscht
         bFormel.klammernPrüfen();
 
         return bFormel;
     }
 
+    /**
+     * Diese Methode führt den zweiten Schritt für die Bildung einer KNF oder DNF aus und zwar DeMorgan.
+     * Diese Mehtode ruft sich rekursiv auf, falls ein Fall für DeMorgan gefunden wurde.
+     * @param formel übergebene Formel, wo die Pfeile schon aufgelöst wurden
+     * @return bearbeitete Formel mit DeMorgan
+     */
     public Formel deMorgan(Formel formel) {
 
+        //Durch "bformel" wird iteriert und "fDeMorgan" wird befüllt und schlussendlich ausgegeben
         Formel bFormel = formel;
         Formel fDeMorgan = new Formel();
+
+        //Falls in der FOR-Schleife eine Fall für DeMorgan gefunden wird, ruft die Methode sich
+        //nochmal rekursiv auf
         boolean deMorganGefunden = false;
 
         for (int i = 0; i < bFormel.length(); i++) {
             char c = bFormel.getChar(i);
 
-            // Zeichen umdrehen und Buchstaben negieren
+            // Falls wir einen Fall für DeMorgan finden, müssen wir nun die betroffenen Operatoren
+            // umdrehen und Buchstaben negieren
             if (c == 'n' && bFormel.getChar(i + 1) == '(') {
                 deMorganGefunden = true;
-                //int count = i+2;
+
+                //Wenn die Klammern ungleich 0 sind, bedeutet dies, dass es Zeichen gibt, welche
+                //von diesem DeMorgan-Fall nicht betroffen sind und einfach normal übernommen werden
+                //sollen
                 int klammern = 0;
-                //boolean eineKlammerÜberspringen = false;
                 fDeMorgan.zeichenHinzufügen('(');
                 i = i + 2;
                 while (i < formel.length()) {
+                    //Klammern kleiner Null --> weitere Zeichen sollen ohne Abänderung übernommen werden
                     if(klammern<0){
                         fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
                         i++;
                         continue;
                     }
+                    //Klammern ungleich 0 --> weitere Zeichen sollen ohne Abänderungen übernommen werden,
+                    //aber die Klammer kann wieder zu gehen und die Zeichen danach sind wieder betroffen
                     if (klammern != 0) {
                         fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
                         if(bFormel.getChar(i) == '('){
@@ -559,23 +586,30 @@ public class Parser {
                         }else if(bFormel.getChar(i) == ')'){
                             klammern--;
                         }
+                        //negativer Buchstabe wird zu positivem Buchstabe
                     } else if (Character.toString(bFormel.getChar(i)).matches("[a-e]") && bFormel.getChar(i - 1) == 'n') {
                         fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                        //positiver Buchstabe wird zu negativem Buchstabe
                     } else if (Character.toString(bFormel.getChar(i)).matches("[a-e]") && bFormel.getChar(i - 1) != 'n') {
                         fDeMorgan.zeichenHinzufügen('n');
                         fDeMorgan.zeichenHinzufügen(bFormel.getChar(i));
+                        //+ wird zu *
                     } else if (bFormel.getChar(i) == '+') {
                         fDeMorgan.zeichenHinzufügen('*');
+                        //* wird zu +
                     } else if (bFormel.getChar(i) == '*') {
                         fDeMorgan.zeichenHinzufügen('+');
+                        //positive Klammer wird zu negativer Klammer
                     } else if (bFormel.getChar(i) == '(' && bFormel.getChar(i - 1) != 'n') {
                         fDeMorgan.zeichenHinzufügen('n');
                         fDeMorgan.zeichenHinzufügen('(');
                         klammern++;
+                        //negative Klammer wird zu positiver Klammer
                     } else if (bFormel.getChar(i) == 'n' && bFormel.getChar(i + 1) == '(') {
                         fDeMorgan.zeichenHinzufügen('(');
                         i++;
                         klammern++;
+                        //Geschlossene Klammer hinzufügen und runterzählen
                     } else if (bFormel.getChar(i) == ')') {
                         fDeMorgan.zeichenHinzufügen(')');
                         klammern--;
@@ -589,50 +623,70 @@ public class Parser {
                 continue;
             }
             if (deMorganGefunden) {
+                //Die Methode ruft sich rekurisiv auf, da durch das Durchführen von DeMorgan neue
+                //DeMorgan-Fälle enstehen konnten.
                 return deMorgan(fDeMorgan);
             }
         }
+
+        //Hier werden unnötige Klammern gelöscht
         fDeMorgan.klammernPrüfen();
         return fDeMorgan;
     }
 
 
     /*
+    --------------------------------------------------------------
     Helfer - Methoden
+    --------------------------------------------------------------
      */
 
+    /**
+     * In dieser Methode wird die einseitige Implikation durchgeführt.
+     * @param b1 Teil vor der beidseitigen Implikation
+     * @param b2 Teil nach der beidseitigen Implikation
+     * @return neue abgeänderte Formel
+     */
     private Formel einseitigeImplikation(char[] b1, char[] b2) {
+
         Formel result = new Formel();
-        //result.zeichenHinzufügen('(');
+
         result.zeichenHinzufügen('n');
-        //boolean zusätzlicheKlammer = false;
-        //if(b1[0]!='('&&b1.length>1){
-        //    zusätzlicheKlammer=true;
         result.zeichenHinzufügen('(');
-        //}
+
         for (int i = 0; i < b1.length; i++) {
             result.zeichenHinzufügen(b1[i]);
         }
-        //if(zusätzlicheKlammer){
+
         result.zeichenHinzufügen(')');
-        //}
         result.zeichenHinzufügen('+');
+
         for (int i = 0; i < b2.length; i++) {
             result.zeichenHinzufügen(b2[i]);
         }
-        //result.zeichenHinzufügen(')');
+
         return result;
     }
 
+    /**
+     * In dieser Methode wird die beidseitige Implikation durchgeführt, in dem zwei Mal die einseitige
+     * Implikation aufgerufen wird und die beiden Teile dann zusammengesetzt werden.
+     * @param b1 Teil vor der beidseitigen Implikation
+     * @param b2 Teil nach der beidseitigen Implikation
+     * @return neue abgeänderte Formel
+     */
     private Formel beidseitigeImplikation(char[] b1, char[] b2) {
+
         Formel r1 = einseitigeImplikation(b1, b2);
         Formel r2 = einseitigeImplikation(b2, b1);
+
         Formel result = new Formel();
-        //result.zeichenHinzufügen('(');
+
         result.zeichenHinzufügen('(');
         for (int i = 0; i < r1.length(); i++) {
             result.zeichenHinzufügen(r1.getChar(i));
         }
+
         result.zeichenHinzufügen(')');
         result.zeichenHinzufügen('*');
         result.zeichenHinzufügen('(');
@@ -640,7 +694,6 @@ public class Parser {
             result.zeichenHinzufügen(r2.getChar(i));
         }
         result.zeichenHinzufügen(')');
-        //result.zeichenHinzufügen(')');
         return result;
     }
 
@@ -688,7 +741,7 @@ public class Parser {
      * gestrichen werden (z.b. nicht a und a; nicht a oder a).
      *
      * @param formel
-     * @return
+     * @return neue Formel in der Form von List<char[]> mit ersetzten Zeichen
      */
     public List<char[]> zeichenErsetzen(Formel formel) {
 
@@ -716,6 +769,12 @@ public class Parser {
 
     }
 
+    /**
+     * Zweite Methode für das Zeichen ersetzten, wo die Logik drin ist zum ersetzten der Zeichen.
+     * Die zweite Methode wird benötigt, da wir manchmal Formeln und manchmal List<char[]> übergeben.
+     * @param formel
+     * @return neue Formel in der Form von List<char[]> mit ersetzten Zeichen
+     */
     public List<char[]> zeichenErsetzen(List<char[]> formel) {
         // Es wird eine Gesamtmenge gebildet mit allen Teilmengen drin
         List<Formel> gesamtmenge = new ArrayList<>();
@@ -877,16 +936,28 @@ public class Parser {
         return provedFormel;
     }
 
+    /**
+     * In dieser Methode ist die übergebene Liste schon in KNF oder DNF und die Zeichen wurden schon
+     * gekürzt/ersetzt. Hier wird nun geprüft, ob es doppelte Teilmengen gibt und wenn ja, wir nur eine
+     * davon benötigt.
+     * @param list
+     * @return eine List<char[]> wo es keine doppelten Teilmengen mehr gibt
+     */
     public List<char[]> teilmengenErsetzten(List<char[]> list){
 
         List<char[]> provedFormula = new ArrayList<>();
 
+        //Die Formel wird von hinten nach vorne durchlaufen, damit die vordere Teilmenge stehen bleibt
+        //und die hintere nicht in provedFormula geschrieben wird
         for(int i = list.size()-1; i>0; i--){
             boolean match = false;
             for(int j = 0; j<list.size(); j++){
+                //Man darf sich nicht mit sich selbst vergleichen
                 if(i!=j){
+                    //Wenn die Teilmengen gleich sein sollen, müssen sie auch die selbe Größe haben
                     if(list.get(i).length == list.get(j).length){
-
+                        //Nun wird jedes einzelne Zeichen miteinander verglichen und wenn es eine
+                        //Unstimmigkeit gibt, stimmen die Teilmengen nicht überein
                         for(int k = 0; k<list.get(i).length; k++){
                             if(list.get(i)[k]!=list.get(j)[k]){
                                 match = false;
@@ -908,13 +979,17 @@ public class Parser {
         if(list.size()>0){
             provedFormula.add(list.get(0));
         }
-
+        //Da wir von hinten nach vorne durch die List esind, muss diese nun nochmal umgedreht werden
         Collections.reverse(provedFormula);
 
         return provedFormula;
     }
 
-
+    /**
+     * Diese Methode macht aus einer List<char[]> eine Formel.
+     * @param list übergebene Formel in der Form einer List<char[]>
+     * @return Formel
+     */
     public Formel parseListToFormel(List<char[]> list){
 
         Formel formel = new Formel();
@@ -946,13 +1021,19 @@ public class Parser {
         return formel;
     }
 
+    /**
+     * Diese Methode macht aus einer Formel eine List<char[]>.
+     * @param formel
+     * @return übergebene Formel in der Form einer List<char[]>
+     */
     public List<char[]> parseFormelToList(Formel formel){
 
         List<char[]> gesamtmenge = new ArrayList<>();
         // neue Teilmenge
         Formel teilmenge = new Formel();
 
-        // Es wird die Formel ausgelesen und die Teilmengen gebildet und die Teilmengen in die Gesamtmenge hinzugefügt
+        // Es wird die Formel ausgelesen und die Teilmengen gebildet und die Teilmengen in die
+        // Gesamtmenge hinzugefügt
         for (int i = 0; i < formel.length(); i++) {
             if (Character.toString(formel.getChar(i)).matches("[a-n]")) {
                 teilmenge.zeichenHinzufügen(formel.getChar(i));
