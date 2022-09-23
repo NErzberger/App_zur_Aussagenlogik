@@ -41,6 +41,9 @@
     - <b>Anleitung:</b> Ja, Sie haben hierher gefunden!\n
     - <b>Verlauf:</b> Hier werden die letzten eingegebenen 50 Formel mit Ergebnissen gespeichert.
     Beim Draufdrücken auf die Zeile, springt die App in die richtige Rechenart, Formel und dessen Ergebnis.\n</string>
+    <string name="text_about_us">Wir sind eine Gruppe von Studenten an der DHBW Ravensburg,
+        die im Zuge eines Projekts diese App zur Aussagenlogik entwickelt hat.
+        \n\nWir wünschen Ihnen viel Spaß und ein tolles App-Erlebnis!</string>
 
 
 </resources>
